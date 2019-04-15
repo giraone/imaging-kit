@@ -1,0 +1,4 @@
+# Use the simple Java solution
+com.giraone.imaging.java2.ProviderJava2D
+# Use the open source https://github.com/rkalla/imgscalr solution
+# com.giraone.imaging.imgscalr.ProviderImgScalr

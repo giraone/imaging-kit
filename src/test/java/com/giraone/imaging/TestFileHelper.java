@@ -35,9 +35,36 @@ public class TestFileHelper {
                     }
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
+                    return null;
                 }
             }
             return testFile;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static byte[] readTestFile(String fileName) {
+        try {
+            String extension = fileName.substring(fileName.lastIndexOf('.'));
+            File testFile = File.createTempFile("provider-input-", extension);
+            testFile.deleteOnExit();
+
+            try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+                try (InputStream in = TestFileHelper.class.getClassLoader().getResourceAsStream(fileName)) {
+                    if (in != null) {
+                        pipeBlobStream(in, out, 4096);
+                    } else {
+                        System.err.println("Cannot read test file \"" + fileName + "\"");
+                    }
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                    return null;
+                }
+                return out.toByteArray();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;

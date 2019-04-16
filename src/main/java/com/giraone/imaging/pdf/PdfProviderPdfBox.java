@@ -1,11 +1,14 @@
 package com.giraone.imaging.pdf;
 
 import com.giraone.imaging.ConversionCommand;
+import com.giraone.imaging.FileInfo;
+import com.giraone.imaging.FormatNotSupportedException;
 import com.giraone.imaging.java2.ProviderJava2D;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -13,6 +16,7 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -20,12 +24,15 @@ import java.io.OutputStream;
  */
 public class PdfProviderPdfBox implements PdfProvider {
 
+    private static final float POINTS_PER_INCH = 72;
+
     private final static PdfProviderPdfBox _THIS = new PdfProviderPdfBox();
-    private final ProviderJava2D imagingProvider = new ProviderJava2D();
 
     public static PdfProviderPdfBox getInstance() {
         return _THIS;
     }
+
+    private final ProviderJava2D imagingProvider = new ProviderJava2D();
 
     public PdfProviderPdfBox() {
         System.setProperty("sun.java2d.cmm", "sun.java2d.cmm.kcms.KcmsServiceProvider");
@@ -76,13 +83,15 @@ public class PdfProviderPdfBox implements PdfProvider {
     }
 
     @Override
-    public void createPdfFromImages(File[] imageFiles, PdfDocumentInformation documentInformation, File outputPdfFile) throws Exception {
+    public void createPdfFromImages(File[] imageFiles, PdfDocumentInformation documentInformation,
+                                    File outputPdfFile) throws Exception {
 
         try (PDDocument document = new PDDocument()) {
             PDDocumentInformation pdDocumentInformation = documentInformation.build();
             document.setDocumentInformation(pdDocumentInformation);
             for (File imageFile : imageFiles) {
-                PDPage page = new PDPage();
+                PDRectangle rectangle = getPdRectangle(imageFile);
+                PDPage page = new PDPage(rectangle);
                 document.addPage(page);
                 PDImageXObject pdImage = PDImageXObject.createFromFileByExtension(imageFile, document);
                 try (PDPageContentStream contents = new PDPageContentStream(document, page)) {
@@ -91,5 +100,35 @@ public class PdfProviderPdfBox implements PdfProvider {
             }
             document.save(outputPdfFile.getAbsolutePath());
         }
+    }
+
+    @Override
+    public void createPdfFromImages(byte[][] imageFileByteArrays, PdfDocumentInformation documentInformation,
+                                    int width, int height, OutputStream outputStream) throws Exception {
+
+        try (PDDocument document = new PDDocument()) {
+            PDDocumentInformation pdDocumentInformation = documentInformation.build();
+            document.setDocumentInformation(pdDocumentInformation);
+            int imageNumber = 0; // only for error messages
+            for (byte[] imageFileByteArray : imageFileByteArrays) {
+                PDRectangle rectangle = new PDRectangle(width, height);
+                PDPage page = new PDPage(rectangle);
+                document.addPage(page);
+                PDImageXObject pdImage = PDImageXObject.createFromByteArray(document, imageFileByteArray, "image-" + (++imageNumber));
+                try (PDPageContentStream contents = new PDPageContentStream(document, page)) {
+                    contents.drawImage(pdImage, 0, 0);
+                }
+            }
+            document.save(outputStream);
+        }
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    private PDRectangle getPdRectangle(File imageFile) throws IOException, FormatNotSupportedException {
+        FileInfo imageInfo = imagingProvider.fetchFileInfo(imageFile);
+        float width = imageInfo.getWidth();
+        float height = imageInfo.getHeight();
+        return new PDRectangle(0, 0, width, height);
     }
 }

@@ -3,6 +3,7 @@ package com.giraone.imaging.pdf;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class PdfDocumentInformation {
 
@@ -77,6 +78,12 @@ public class PdfDocumentInformation {
 
     public void setModificationDate(Calendar modificationDate) {
         this.modificationDate = modificationDate;
+    }
+
+    public void setDefaultDates() {
+        Calendar now = new GregorianCalendar();
+        this.setCreationDate(now);
+        this.setModificationDate(now);
     }
 
     public PDDocumentInformation build() {

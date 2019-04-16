@@ -13,6 +13,7 @@ import java.util.GregorianCalendar;
 import java.util.Map;
 
 import static com.giraone.imaging.TestFileHelper.cloneTestFile;
+import static com.giraone.imaging.TestFileHelper.readTestFile;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 /**
@@ -101,7 +102,7 @@ class ProviderPdfTest {
         File image4 = cloneTestFile(TEST_FILE_PNG_02);
         File[] imageFiles = new File[] { image1, image2, image3, image4 };
         File pdfFile = File.createTempFile("pdf-from-image", ".pdf");
-        // pdfFile.deleteOnExit();
+        pdfFile.deleteOnExit();
         PdfDocumentInformation documentInformation = new PdfDocumentInformation();
         documentInformation.setTitle("title");
         documentInformation.setSubject("subject");
@@ -126,6 +127,31 @@ class ProviderPdfTest {
         assertThat(providerUnderTest.getDocumentInformation(pdfFile).getCreator()).isEqualTo(documentInformation.getCreator());
         assertThat(providerUnderTest.getDocumentInformation(pdfFile).getCreationDate().getTime()).isCloseTo(documentInformation.getCreationDate().getTime(), 1000);
         assertThat(providerUnderTest.getDocumentInformation(pdfFile).getModificationDate().getTime()).isCloseTo(documentInformation.getModificationDate().getTime(), 1000);
+    }
+
+    @Test
+    void testThat_createPdfFromByteArray_works() throws Exception {
+
+        // arrange
+        byte[] image1 = readTestFile(TEST_FILE_JPEG_01);
+        byte[] image2 = readTestFile(TEST_FILE_JPEG_02);
+        byte[] image3 = readTestFile(TEST_FILE_PNG_01);
+        byte[] image4 = readTestFile(TEST_FILE_PNG_02);
+        byte[][] imageFiles = new byte[][] { image1, image2, image3, image4 };
+        File pdfFile = File.createTempFile("pdf-from-bytes", ".pdf");
+        pdfFile.deleteOnExit();
+        PdfDocumentInformation documentInformation = new PdfDocumentInformation();
+        documentInformation.setTitle("title");
+
+        // act
+        try (FileOutputStream outputStream = new FileOutputStream(pdfFile)) {
+            providerUnderTest.createPdfFromImages(imageFiles, documentInformation, 1440, 1440, outputStream);
+        }
+
+        // assert
+        assertThat(pdfFile.length()).isGreaterThan(1000);
+        assertThat(providerUnderTest.countPages(pdfFile)).isEqualTo(imageFiles.length);
+        assertThat(providerUnderTest.getDocumentInformation(pdfFile).getTitle()).isEqualTo(documentInformation.getTitle());
     }
 
     // -----------------------------------------------------------------------

@@ -31,4 +31,7 @@ public interface PdfProvider {
     int countPages(File pdfFile) throws Exception;
 
     void createPdfFromImages(File[] imageFiles, PdfDocumentInformation documentInformation, File outputPdfFile) throws Exception;
+
+    void createPdfFromImages(byte[][] imageFileByteArrays, PdfDocumentInformation documentInformation,
+                             int width, int height, OutputStream outputStream) throws Exception;
 }

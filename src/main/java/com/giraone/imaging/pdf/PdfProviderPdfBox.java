@@ -3,6 +3,10 @@ package com.giraone.imaging.pdf;
 import com.giraone.imaging.ConversionCommand;
 import com.giraone.imaging.java2.ProviderJava2D;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentInformation;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
@@ -38,7 +42,7 @@ public class PdfProviderPdfBox implements PdfProvider {
      * @param quality       Quality factor for output compression.
      * @param speedHint     Speed factor for conversion.
      */
-
+    @Override
     public void createThumbNail(File inputFile, OutputStream outputStream, String format, int width, int height,
                                 ConversionCommand.CompressionQuality quality, ConversionCommand.SpeedHint speedHint) throws Exception {
         ConversionCommand command = new ConversionCommand();
@@ -53,9 +57,39 @@ public class PdfProviderPdfBox implements PdfProvider {
             // Page 1, do not scale DPIs and use RGB
             BufferedImage image = renderer.renderImage(0, 1.0f, ImageType.RGB);
 
-            // ImageIO.write(image, "JPEG", new File(outputFileName));
-
             imagingProvider.convertAndWriteImageAsJpeg(image, outputStream, command);
+        }
+    }
+
+    @Override
+    public int countPages(File pdfFile) throws Exception {
+
+        PDDocument document = PDDocument.load(pdfFile);
+        return document.getPages().getCount();
+    }
+
+    @Override
+    public PdfDocumentInformation getDocumentInformation(File pdfFile) throws Exception {
+
+        PDDocument document = PDDocument.load(pdfFile);
+        return PdfDocumentInformation.build(document.getDocumentInformation());
+    }
+
+    @Override
+    public void createPdfFromImages(File[] imageFiles, PdfDocumentInformation documentInformation, File outputPdfFile) throws Exception {
+
+        try (PDDocument document = new PDDocument()) {
+            PDDocumentInformation pdDocumentInformation = documentInformation.build();
+            document.setDocumentInformation(pdDocumentInformation);
+            for (File imageFile : imageFiles) {
+                PDPage page = new PDPage();
+                document.addPage(page);
+                PDImageXObject pdImage = PDImageXObject.createFromFileByExtension(imageFile, document);
+                try (PDPageContentStream contents = new PDPageContentStream(document, page)) {
+                    contents.drawImage(pdImage, 0, 0);
+                }
+            }
+            document.save(outputPdfFile.getAbsolutePath());
         }
     }
 }

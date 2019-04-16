@@ -17,3 +17,7 @@ The concrete solutions is wrapped behind an interface.  For bitmap images there 
 - ProviderBitmapImageTest.java - Simple functional tests for bitmap images
 - ProviderPdfTest.java - Simple functional tests for PDF documents
 - JpegScalePerformanceTest.java - A basic performance comparison on the two implementations for bitmap images
+
+## TODO
+
+- Use slf4j with default configuration file

@@ -25,4 +25,10 @@ public interface PdfProvider {
                          String format, int width, int height,
                          ConversionCommand.CompressionQuality quality,
                          ConversionCommand.SpeedHint speedHint) throws Exception;
+
+    PdfDocumentInformation getDocumentInformation(File pdfFile) throws Exception;
+
+    int countPages(File pdfFile) throws Exception;
+
+    void createPdfFromImages(File[] imageFiles, PdfDocumentInformation documentInformation, File outputPdfFile) throws Exception;
 }

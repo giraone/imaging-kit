@@ -8,8 +8,10 @@ import java.util.ServiceLoader;
  * This class is intended to fetch the configured provider from application settings at the first usage.
  */
 public class ImagingFactory {
-    private static ImagingFactory FACTORY;
-    private ServiceLoader<ImagingProvider> provider = null;
+
+    private static ImagingFactory factory;
+
+    private ServiceLoader<ImagingProvider> provider;
 
     private ImagingFactory() {
         this.provider = ServiceLoader.load(ImagingProvider.class);
@@ -19,10 +21,10 @@ public class ImagingFactory {
      * Return singleton instance.
      */
     public static synchronized ImagingFactory getInstance() {
-        if (FACTORY == null) {
-            FACTORY = new ImagingFactory();
+        if (factory == null) {
+            factory = new ImagingFactory();
         }
-        return FACTORY;
+        return factory;
     }
 
     /**

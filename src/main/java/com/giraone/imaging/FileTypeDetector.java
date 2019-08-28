@@ -11,14 +11,15 @@ import java.io.InputStream;
  * A basic file type detection class based on looking for 'magic numbers' or text strings in the file header.
  */
 public class FileTypeDetector {
-    public static enum FileType {
+
+    public enum FileType {
         UNKNOWN, JPEG, PNG, TIFF, GIF, BMP, PGM, DICOM, PDF;
 
-        private FileType() {
+        FileType() {
         }
     }
 
-    final static FileTypeDetector _THIS = new FileTypeDetector();
+    private final static FileTypeDetector _THIS = new FileTypeDetector();
 
     public static FileTypeDetector getInstance() {
         return _THIS;
@@ -31,7 +32,7 @@ public class FileTypeDetector {
      * Determine the file type. Return UNKNOWN. if detection fails.
      *
      * @param file a File object
-     * @throws IOException
+     * @throws IOException on errors opening the file
      */
     public FileType getFileType(File file) throws IOException {
         try (InputStream is = new FileInputStream(file)) {
@@ -40,10 +41,10 @@ public class FileTypeDetector {
     }
 
     /**
-     * Determine the file type. Return UNKNOWN. if detection fails.
+     * Determine the file type. Return UNKNOWN, if detection fails.
      *
      * @param filePath a file path string
-     * @throws IOException
+     * @throws IOException on errors opening the file
      */
     public FileType getFileType(String filePath) throws IOException {
         try (InputStream is = new FileInputStream(filePath)) {
@@ -52,14 +53,15 @@ public class FileTypeDetector {
     }
 
     /**
-     * Determine the file type. Return UNKNOWN. if detection fails.
+     * Determine the file type. Return UNKNOWN, if detection fails.
      *
      * @param is an input stream providing the file. The input stream will NOT be closed after processing is done.
      */
     public FileType getFileType(InputStream is) {
         byte[] buf = new byte[132];
         try {
-            is.read(buf, 0, 132);
+            int r = is.read(buf, 0, 132);
+            if (r < 4) return FileType.UNKNOWN;
             is.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -118,7 +120,6 @@ public class FileTypeDetector {
     public boolean isSupportedImage(FileType fileType) {
         switch (fileType) {
             case JPEG:
-                return true;
             case PNG:
                 return true;
             default:

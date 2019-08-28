@@ -8,7 +8,8 @@ import java.io.FileOutputStream;
  * Simple main program to create thumbnails using an imaging provider.
  */
 public class MakeThumb {
-    public static void main(String[] args) throws Exception {
+
+    public static void main(String[] args) {
         if (args.length != 6) {
             System.err.println("java MakeThumb <provider> <in> <out> <width> <height> <quality>");
             System.err.println("provider: imgscalr|java2");
@@ -21,14 +22,14 @@ public class MakeThumb {
         String providerName = args[0];
         String inFile = args[1];
         String outFile = args[2];
-        int width = new Integer(args[3]).intValue();
-        int height = new Integer(args[4]).intValue();
-        int quality = new Integer(args[5]).intValue();
+        int width = Integer.parseInt(args[3]);
+        int height = Integer.parseInt(args[4]);
+        int quality = Integer.parseInt(args[5]);
 
         try {
             @SuppressWarnings("unchecked")
             Class<ImagingProvider> cls = (Class<ImagingProvider>) Class.forName("de.datev.dms.imaging." + providerName + ".Provider");
-            ImagingProvider provider = (ImagingProvider) cls.newInstance();
+            ImagingProvider provider = cls.newInstance();
             ConversionCommand command = new ConversionCommand();
             command.setOutputFormat("image/jpeg");
             command.setDimension(new Dimension(width, height));
@@ -36,10 +37,10 @@ public class MakeThumb {
             try (FileOutputStream outStream = new FileOutputStream(outFile)) {
                 provider.convertImage(new File(inFile), outStream, command);
             }
-            long inlen = new File(inFile).length();
-            long outlen = new File(outFile).length();
-            System.err.println("Thumbnail created " + inlen + " Bytes -> " + outlen + " Bytes");
-        } catch (Throwable e) {
+            long inLength = new File(inFile).length();
+            long outLength = new File(outFile).length();
+            System.err.println("Thumbnail created " + inLength + " Bytes -> " + outLength + " Bytes");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

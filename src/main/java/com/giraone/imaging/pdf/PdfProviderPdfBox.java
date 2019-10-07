@@ -58,8 +58,8 @@ public class PdfProviderPdfBox implements PdfProvider {
         command.setQuality(quality);
         command.setSpeedHint(speedHint);
 
-        try (PDDocument doc = PDDocument.load(inputFile)) {
-            PDFRenderer renderer = new PDFRenderer(doc);
+        try (PDDocument document = PDDocument.load(inputFile)) {
+            PDFRenderer renderer = new PDFRenderer(document);
 
             // Page 1, do not scale DPIs and use RGB
             BufferedImage image = renderer.renderImage(0, 1.0f, ImageType.RGB);
@@ -71,15 +71,17 @@ public class PdfProviderPdfBox implements PdfProvider {
     @Override
     public int countPages(File pdfFile) throws Exception {
 
-        PDDocument document = PDDocument.load(pdfFile);
-        return document.getPages().getCount();
+        try (PDDocument document = PDDocument.load(pdfFile)) {
+            return document.getPages().getCount();
+        }
     }
 
     @Override
     public PdfDocumentInformation getDocumentInformation(File pdfFile) throws Exception {
 
-        PDDocument document = PDDocument.load(pdfFile);
-        return PdfDocumentInformation.build(document.getDocumentInformation());
+        try (PDDocument document = PDDocument.load(pdfFile)) {
+            return PdfDocumentInformation.build(document.getDocumentInformation());
+        }
     }
 
     @Override
@@ -126,9 +128,7 @@ public class PdfProviderPdfBox implements PdfProvider {
     //------------------------------------------------------------------------------------------------------------------
 
     private PDRectangle getPdRectangle(File imageFile) throws IOException, FormatNotSupportedException {
-        FileInfo imageInfo = imagingProvider.fetchFileInfo(imageFile);
-        float width = imageInfo.getWidth();
-        float height = imageInfo.getHeight();
-        return new PDRectangle(0, 0, width, height);
+        final FileInfo imageInfo = imagingProvider.fetchFileInfo(imageFile);
+        return new PDRectangle(0, 0, imageInfo.getWidth(), imageInfo.getHeight());
     }
 }

@@ -22,7 +22,12 @@ The concrete solutions is wrapped behind an interface.  For bitmap images there 
 
 - V1.0.1 (2019-08-28)
   - Refactoring / Sonar-Issue fixed
-
+- V1.0.2 (2019-10-07)
+  - Upgrade to latest dependencies
+  - Fixed unclosed PDDocument in countPages and getDocumentInformation of PdfProviderPdfBox
+  - Old TIFF decoder removed
+  - More tests added
+  
 ## TODO
 
 - Use slf4j with default configuration file

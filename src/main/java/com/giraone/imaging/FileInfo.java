@@ -1,8 +1,10 @@
 package com.giraone.imaging;
 
+import java.io.File;
+
 /**
  * FileInfo holds information about file formats. It is mainly used as the return value of
- * {@link ImagingFactory#}.
+ * {@link ImagingProvider#fetchFileInfo(File)}}.
  */
 public class FileInfo {
 

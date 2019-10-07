@@ -7,8 +7,6 @@ import javax.imageio.ImageWriter;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
@@ -18,19 +16,19 @@ import java.util.Iterator;
  */
 public class ImageToFileWriter {
 
-    protected static ImageObserver imageObserver = LoggerImageObserver.getInstance();
+    private static final ThreadLocal<ImageWriter> ImageWriterThreadLocal = ThreadLocal.withInitial(() -> {
+        final Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpeg");
+        if (!writers.hasNext())
+            throw new IllegalStateException("No ImageIO writers found");
+        return writers.next();
+    });
 
-    final static ThreadLocal<ImageWriter> ImageWriterThreadLocal = new ThreadLocal<ImageWriter>() {
-        @Override
-        protected ImageWriter initialValue() {
-            final Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpeg");
-            if (!writers.hasNext())
-                throw new IllegalStateException("No ImageIO writers found");
-            return writers.next();
-        }
-    };
+    // Hide constructor
+    private ImageToFileWriter() {
+    }
 
     /**
+     * Save a bitmap as an JPEG image
      * <pre>
      * Some guidelines:
      * 0.75 high quality
@@ -41,26 +39,26 @@ public class ImageToFileWriter {
      * @param bufferedImage the image bitmap to be saved
      * @param outputStream  Stream to write the image to. Stream is flushed, but not closed.
      * @param quality       0.0-1.0 setting of desired quality level.
-     * @throws IOException
+     * @throws IOException On any IO exception (
      */
     public static void saveJpeg(BufferedImage bufferedImage, OutputStream outputStream, float quality)
             throws IOException {
 
         // See also: http://www.java2s.com/Code/Java/2D-Graphics-GUI/WritesanimagetoanoutputstreamasaJPEGfileTheJPEGqualitycanbespecifiedinpercent.htm
-        ImageOutputStream ios = ImageIO.createImageOutputStream(outputStream);
+        final ImageOutputStream ios = ImageIO.createImageOutputStream(outputStream);
 
         final JPEGImageWriteParam jpegParams = new JPEGImageWriteParam(null);
         jpegParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
         jpegParams.setCompressionQuality(quality);
 		
-		/*
-		/ Alternative!
-		ImageWriter writer = null;
-    	Iterator iter = ImageIO.getImageWritersByFormatName("jpg");
-    	if (iter.hasNext()) {
-      	writer = (ImageWriter) iter.next();
-    	}
-		*/
+        /*
+        / Alternative!
+        ImageWriter writer = null;
+          Iterator iter = ImageIO.getImageWritersByFormatName("jpg");
+          if (iter.hasNext()) {
+            writer = (ImageWriter) iter.next();
+          }
+        */
 
         // Performance: we may re-use our ImageWriters
         final ImageWriter writer = ImageWriterThreadLocal.get();
@@ -70,5 +68,4 @@ public class ImageToFileWriter {
         //writer.dispose(); // We do not dispose, because of the re-use!!!
         outputStream.flush();
     }
-
 }

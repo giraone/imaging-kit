@@ -1,25 +1,22 @@
 package com.giraone.imaging;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-// TODO: Check, if Apache Tika or implementations of java.nio.FileTypeDetector have more features.
+// TODO: Check, if Apache Tika or implementations of java.nio.FileTypeDetector has more features.
 
 /**
  * A basic file type detection class based on looking for 'magic numbers' or text strings in the file header.
  */
 public class FileTypeDetector {
 
-    public enum FileType {
-        UNKNOWN, JPEG, PNG, TIFF, GIF, BMP, PGM, DICOM, PDF;
-
-        FileType() {
-        }
-    }
-
-    private final static FileTypeDetector _THIS = new FileTypeDetector();
+    private static final Logger LOGGER = LogManager.getLogger(FileTypeDetector.class);
+    private static final FileTypeDetector _THIS = new FileTypeDetector();
 
     public static FileTypeDetector getInstance() {
         return _THIS;
@@ -64,7 +61,7 @@ public class FileTypeDetector {
             if (r < 4) return FileType.UNKNOWN;
             is.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error reading input stream", e);
             return FileType.UNKNOWN;
         }
 
@@ -125,5 +122,9 @@ public class FileTypeDetector {
             default:
                 return false;
         }
+    }
+
+    public enum FileType {
+        UNKNOWN, JPEG, PNG, TIFF, GIF, BMP, PGM, DICOM, PDF
     }
 }

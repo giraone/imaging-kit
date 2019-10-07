@@ -10,13 +10,20 @@ import java.io.FileOutputStream;
 public class MakeThumb {
 
     public static void main(String[] args) {
+
+        final String packageName = MakeThumb.class.getPackage().getName();
+        final String className = MakeThumb.class.getSimpleName();
         if (args.length != 6) {
-            System.err.println("java MakeThumb <provider> <in> <out> <width> <height> <quality>");
+            System.err.println("java " + packageName + "." + className + " <provider> <in> <out> <width> <height> <quality>");
             System.err.println("provider: imgscalr|java2");
             System.err.println("quality: 0-100");
             System.err.println(" - 0: Lossless compression");
             System.err.println(" - 1: Lossy compression with best quality");
             System.err.println(" - 100: Lossy compression with worst quality");
+            System.err.println("e.g. java " + packageName + "." + className
+                    + " java2.ProviderJava2D src/test/resources/image-01.jpg thumb-java2D.jpg 80 80 1");
+            System.err.println("e.g. java " + packageName + "." + className
+                    + " imgscalr.ProviderImgScalr src/test/resources/image-01.jpg thumb-imgscalr.jpg 80 80 1");
             System.exit(1);
         }
         String providerName = args[0];
@@ -28,7 +35,8 @@ public class MakeThumb {
 
         try {
             @SuppressWarnings("unchecked")
-            Class<ImagingProvider> cls = (Class<ImagingProvider>) Class.forName("de.datev.dms.imaging." + providerName + ".Provider");
+            Class<ImagingProvider> cls = (Class<ImagingProvider>) Class.forName(
+                    packageName + "." + providerName);
             ImagingProvider provider = cls.newInstance();
             ConversionCommand command = new ConversionCommand();
             command.setOutputFormat("image/jpeg");

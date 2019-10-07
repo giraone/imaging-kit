@@ -8,12 +8,12 @@ import java.awt.*;
 import java.awt.image.ImageObserver;
 
 /**
- * Primitive ImageObserver, that logs for debugging only.
- * Its debugging should be enabled only in rare cases.
+ * Primitive ImageObserver, which logs for debugging only.
+ * Its debug level should be enabled only in rare cases.
  */
 public class LoggerImageObserver implements ImageObserver {
 
-    private final static Logger LOGGER = LogManager.getLogger(ImagingProvider.class);
+    private static final Logger LOGGER = LogManager.getLogger(ImagingProvider.class);
 
     private LoggerImageObserver() {
     }

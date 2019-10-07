@@ -15,10 +15,7 @@ import java.io.OutputStream;
  */
 public class ProviderJava2D implements ImagingProvider {
 
-    private final static Logger LOGGER = LogManager.getLogger(ProviderJava2D.class);
-
-    public ProviderJava2D() {
-    }
+    private static final Logger LOGGER = LogManager.getLogger(ProviderJava2D.class);
 
     public FileInfo fetchFileInfo(File file) throws IOException, FormatNotSupportedException {
         FileTypeDetector.FileType fileType = FileTypeDetector.getInstance().getFileType(file);

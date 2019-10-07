@@ -101,7 +101,7 @@ public class ConversionCommand {
      * @param scale Scale factor. 1.0 = keep.
      */
     public void setScale(float scale) {
-        this.scale = new Float(scale);
+        this.scale = scale;
     }
 
     public void setNoScale() {
@@ -121,9 +121,8 @@ public class ConversionCommand {
     }
 
     public Dimension getDimensionFromScale(int originalWidth, int originalHeight) {
-        Float scale = this.getScale();
         if (scale != null) {
-            final float scaleF = scale.floatValue();
+            final float scaleF = scale;
             if (scaleF != 1.0f) {
                 final int newWidth = (int) (originalWidth * scaleF);
                 final int newHeight = (int) (originalHeight * scaleF);
@@ -146,7 +145,7 @@ public class ConversionCommand {
         float dW = (float) maxWidth / (float) originalWidth;
         float dH = (float) maxHeight / (float) originalHeight;
 
-        float scaleF = dW < dH ? dW : dH;
+        float scaleF = Math.min(dW, dH);
 
         final int newWidth = (int) (originalWidth * scaleF);
         final int newHeight = (int) (originalHeight * scaleF);
@@ -156,19 +155,13 @@ public class ConversionCommand {
 
     // ----------------------------------------------------------------------------
 
-    public static enum SpeedHint {
-        SPEED, BALANCED, QUALITY, ULTRA_QUALITY;
-
-        private SpeedHint() {
-        }
+    public enum SpeedHint {
+        SPEED, BALANCED, QUALITY, ULTRA_QUALITY
     }
 
     // ----------------------------------------------------------------------------
 
-    public static enum CompressionQuality {
-        LOSSLESS, LOSSY_BEST, LOSSY_MEDIUM, LOSSY_SPEED;
-
-        private CompressionQuality() {
-        }
+    public enum CompressionQuality {
+        LOSSLESS, LOSSY_BEST, LOSSY_MEDIUM, LOSSY_SPEED
     }
 }

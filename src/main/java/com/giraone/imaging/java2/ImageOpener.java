@@ -5,7 +5,6 @@ package com.giraone.imaging.java2;
 import com.giraone.imaging.FileInfo;
 import com.giraone.imaging.FileTypeDetector;
 import com.giraone.imaging.FormatNotSupportedException;
-import com.giraone.imaging.java2.codecs.Decoder_tiff;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,8 +20,12 @@ import java.io.IOException;
 
 public class ImageOpener {
 
-    private final static Logger LOGGER = LogManager.getLogger(ImageOpener.class);
-    private final static ImageObserver imageObserver = LoggerImageObserver.getInstance();
+    private static final Logger LOGGER = LogManager.getLogger(ImageOpener.class);
+    private static final ImageObserver imageObserver = LoggerImageObserver.getInstance();
+
+    // Hide constructor
+    private ImageOpener() {
+    }
 
     // --------------------------------------------------------------------------------
 
@@ -54,11 +57,11 @@ public class ImageOpener {
                 image = loadImageUsingToolkit(file);
                 fileInfo = getFileInfo(image, "image/png", FileTypeDetector.FileType.PNG);
                 break;
+            /*
             case TIFF:
                 fileInfo = new FileInfo();
                 fileInfo.setMimeType("image/tiff");
                 fileInfo.setProviderFormat(FileTypeDetector.FileType.TIFF.toString());
-
                 try (FileInputStream in = new FileInputStream(file)) {
                     MemoryImageSource imageSource = Decoder_tiff.getImageSource(in, fileInfo);
                     image = new BufferedImage(fileInfo.getWidth(), fileInfo.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -66,10 +69,10 @@ public class ImageOpener {
                     Graphics g = image.getGraphics();
                     g.drawImage(image2, 0, 0, LoggerImageObserver.getInstance());
                 }
-
                 break;
+            */
             default:
-                LOGGER.warn("ImageOpener|openImage: " + file + ", unknown fileType = " + fileType);
+                LOGGER.warn("ImageOpener|openImage: {} -> unknown fileType = {}", file, fileType);
                 return null;
         }
         return new ImagePlusInfo(image, fileInfo);

@@ -6,14 +6,14 @@ package com.giraone.imaging;
  */
 public class FileInfo {
 
-    public static int COMPRESSION_FORMAT_UNKNOWN = -1;
-    public static int COMPRESSION_FORMAT_NONE = 0;
-    public static int COMPRESSION_FORMAT_RLE = 1;
-    public static int COMPRESSION_FORMAT_JPEG = 2;
-    public static int COMPRESSION_FORMAT_LZW = 3;
-    public static int COMPRESSION_FORMAT_LZ77 = 4;
-    public static int COMPRESSION_FORMAT_G3 = 5;
-    public static int COMPRESSION_FORMAT_G4 = 6;
+    public static final int COMPRESSION_FORMAT_UNKNOWN = -1;
+    public static final int COMPRESSION_FORMAT_NONE = 0;
+    public static final int COMPRESSION_FORMAT_RLE = 1;
+    public static final int COMPRESSION_FORMAT_JPEG = 2;
+    public static final int COMPRESSION_FORMAT_LZW = 3;
+    public static final int COMPRESSION_FORMAT_LZ77 = 4;
+    public static final int COMPRESSION_FORMAT_G3 = 5;
+    public static final int COMPRESSION_FORMAT_G4 = 6;
 
     // ----------------------------------------------------------------------------
 

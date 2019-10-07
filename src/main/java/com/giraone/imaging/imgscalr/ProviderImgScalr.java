@@ -21,10 +21,8 @@ import java.io.*;
  * Imaging provider based on IMGSCALR implementation (https://github.com/rkalla/imgscalr).
  */
 public class ProviderImgScalr implements ImagingProvider {
-    private final static Logger LOGGER = LogManager.getLogger(ProviderImgScalr.class);
-
-    public ProviderImgScalr() {
-    }
+    
+    private static final Logger LOGGER = LogManager.getLogger(ProviderImgScalr.class);
 
     /**
      * TODO: This is the Java2 solution!

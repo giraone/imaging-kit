@@ -13,8 +13,8 @@ import java.awt.image.BufferedImage;
  */
 public class ImagePlusInfo {
 
-    BufferedImage image;
-    FileInfo fileInfo;
+    private BufferedImage image;
+    private FileInfo fileInfo;
 
     public ImagePlusInfo(BufferedImage image, FileInfo fileInfo) {
         this.image = image;

@@ -10,10 +10,9 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for the Provider bitmap image implementation.
@@ -36,6 +35,9 @@ class ProviderBitmapImageTest {
     private static final String TEST_FILE_JPEG_WIDE = "wide.jpg";
     private static final String TEST_FILE_PNG_WIDE = "wide.png";
 
+    private static final String UNSUPPORTED_TEST_FILE_TEXT = "text.txt";
+    private static final String UNSUPPORTED_TEST_FILE_TIFF_01 = "image-01.tif";
+
     private static final String[] ALL_TEST_FILES = {
             TEST_FILE_JPEG_01, TEST_FILE_JPEG_02,
             TEST_FILE_JPEG_EXIF_01, TEST_FILE_JPEG_EXIF_02, TEST_FILE_JPEG_EXIF_03,
@@ -44,8 +46,14 @@ class ProviderBitmapImageTest {
             TEST_FILE_JPEG_WIDE, TEST_FILE_PNG_WIDE
     };
 
+    private static final String[] ALL_UNSUPPORTED_FILES = {
+            UNSUPPORTED_TEST_FILE_TEXT,
+            UNSUPPORTED_TEST_FILE_TIFF_01
+    };
+
     private static ImagingProvider providerUnderTest;
-    private static Map<String, File> testFiles;
+    private static Map<String, File> supportedTestFiles;
+    private static Map<String, File> unsupportedTestFiles;
 
     // -----------------------------------------------------------------------
 
@@ -55,13 +63,14 @@ class ProviderBitmapImageTest {
         @SuppressWarnings("unchecked")
         Class<ImagingProvider> cls = (Class<ImagingProvider>) Class.forName("com.giraone.imaging.java2.ProviderJava2D");
         providerUnderTest = cls.newInstance();
-        testFiles = TestFileHelper.cloneTestFiles(Arrays.stream(ALL_TEST_FILES));
+        supportedTestFiles = TestFileHelper.cloneTestFiles(Arrays.stream(ALL_TEST_FILES));
+        unsupportedTestFiles = TestFileHelper.cloneTestFiles(Arrays.stream(ALL_UNSUPPORTED_FILES));
     }
 
     @AfterAll
     static void clearTestFiles() {
         if (CLEAR_OUTPUT_FILES) {
-            testFiles.values().forEach(File::delete);
+            supportedTestFiles.values().forEach(File::delete);
         }
     }
 
@@ -69,7 +78,7 @@ class ProviderBitmapImageTest {
     void testThat_fetchFileInfo_works_with_jpeg() throws Exception {
 
         // arrange
-        File testFile = testFiles.get(TEST_FILE_JPEG_01);
+        File testFile = supportedTestFiles.get(TEST_FILE_JPEG_01);
 
         // act
         FileInfo fileInfo = providerUnderTest.fetchFileInfo(testFile);
@@ -86,7 +95,7 @@ class ProviderBitmapImageTest {
     void testThat_fetchFileInfo_works_with_exif_jpeg() throws Exception {
 
         // arrange
-        File testFile = testFiles.get(TEST_FILE_JPEG_EXIF_01);
+        File testFile = supportedTestFiles.get(TEST_FILE_JPEG_EXIF_01);
 
         // act
         FileInfo fileInfo = providerUnderTest.fetchFileInfo(testFile);
@@ -103,7 +112,7 @@ class ProviderBitmapImageTest {
     void testThat_fetchFileInfo_works_with_png() throws Exception {
 
         // arrange
-        File testFile = testFiles.get(TEST_FILE_PNG_01);
+        File testFile = supportedTestFiles.get(TEST_FILE_PNG_01);
 
         // act
         FileInfo fileInfo = providerUnderTest.fetchFileInfo(testFile);
@@ -120,7 +129,7 @@ class ProviderBitmapImageTest {
     void testThat_createThumbNail_works_for_all_test_files_using_output_stream() {
 
         int thumbPixelMaxSize = 180;
-        for (File file : testFiles.values()) {
+        for (File file : supportedTestFiles.values()) {
             try {
                 createThumbNailUsingOutputStream(thumbPixelMaxSize, file);
             } catch (Exception e) {
@@ -133,7 +142,7 @@ class ProviderBitmapImageTest {
     void testThat_createThumbNail_works_for_all_test_files_using_file() {
 
         int thumbPixelMaxSize = 180;
-        for (File file : testFiles.values()) {
+        for (File file : supportedTestFiles.values()) {
             try {
                 createThumbNailUsingFile(thumbPixelMaxSize, file);
             } catch (Exception e) {
@@ -143,13 +152,63 @@ class ProviderBitmapImageTest {
     }
 
     @Test
+    void testThat_convertImage_fails_for_wrong_input_format() {
+        ConversionCommand command = new ConversionCommand();
+        command.setOutputFormat("image/jpeg");
+        command.setDimension(new Dimension(320, 320));
+        command.setQuality(10);
+
+        File testFile = unsupportedTestFiles.get(UNSUPPORTED_TEST_FILE_TEXT);
+        Exception detectedException = null;
+        try {
+            File outFile = File.createTempFile("providerUnderTest-image-", ".jpg");
+            if (CLEAR_OUTPUT_FILES) {
+                outFile.deleteOnExit();
+            }
+            try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
+                providerUnderTest.convertImage(testFile, outputStream, command);
+            }
+        } catch (Exception e) {
+            detectedException = e;
+        }
+
+        assertThat(detectedException).isNotNull();
+        assertThat(detectedException.getMessage()).contains("Unsupported input file type");
+    }
+
+    @Test
+    void testThat_convertImage_fails_for_wrong_output_format() {
+        ConversionCommand command = new ConversionCommand();
+        command.setOutputFormat("image/tiff");
+        command.setDimension(new Dimension(320, 320));
+        command.setQuality(10);
+
+        File testFile = supportedTestFiles.get(TEST_FILE_JPEG_01);
+        Exception detectedException = null;
+        try {
+            File outFile = File.createTempFile("providerUnderTest-image-", ".jpg");
+            if (CLEAR_OUTPUT_FILES) {
+                outFile.deleteOnExit();
+            }
+            try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
+                providerUnderTest.convertImage(testFile, outputStream, command);
+            }
+        } catch (Exception e) {
+            detectedException = e;
+        }
+
+        assertThat(detectedException).isNotNull();
+        assertThat(detectedException.getMessage()).contains("Unsupported target format");
+    }
+
+    @Test
     void testThat_convertImage_works_for_all_test_files() {
         ConversionCommand command = new ConversionCommand();
         command.setOutputFormat("image/jpeg");
         command.setDimension(new Dimension(320, 320));
         command.setQuality(10);
 
-        testFiles.values().forEach((file) -> {
+        supportedTestFiles.values().forEach((file) -> {
             try {
                 File outFile = File.createTempFile("providerUnderTest-image-", ".jpg");
                 if (CLEAR_OUTPUT_FILES) {

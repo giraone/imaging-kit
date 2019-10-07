@@ -14,7 +14,7 @@ import java.util.Map;
 
 import static com.giraone.imaging.TestFileHelper.cloneTestFile;
 import static com.giraone.imaging.TestFileHelper.readTestFile;
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for the Provider PDF implementation.

@@ -72,7 +72,7 @@
         <maven.compiler.testTarget>${maven.compiler.target}</maven.compiler.testTarget>
         <java.version>${maven.compiler.source}</java.version>
         <pdfbox.version>2.0.17</pdfbox.version>
-        <log4j.version>2.12.1</log4j.version>
+        <log4j.version>2.13.3</log4j.version>
         <junit.jupiter.version>5.5.2</junit.jupiter.version>
         <assertj.version>3.13.2</assertj.version>
 

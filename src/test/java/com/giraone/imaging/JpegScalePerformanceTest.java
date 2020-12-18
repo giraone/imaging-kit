@@ -2,7 +2,8 @@ package com.giraone.imaging;
 
 import com.giraone.imaging.imgscalr.ProviderImgScalr;
 import com.giraone.imaging.java2.ProviderJava2D;
-import com.giraone.imaging.pdf.PdfProviderFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +19,8 @@ import java.util.Map;
  * A performance test to test different imaging providers.
  */
 public class JpegScalePerformanceTest {
+
+    private static final Logger LOG = LogManager.getLogger(JpegScalePerformanceTest.class);
 
     private static final String TEST_FILE_JPEG_01 = "image-01.jpg";
     private static final String TEST_FILE_JPEG_02 = "image-02.jpg";
@@ -44,9 +47,18 @@ public class JpegScalePerformanceTest {
     }
 
     @Test
-    void testAlFiles() throws Exception {
+    void testAllFiles() throws Exception {
 
         run(testFiles.values());
+
+        /*
+        Typical results:
+        java2d ==> 1720 msecs, 1288 msecs
+        imgscalr-SPEED ==> 2773 msecs, 1893 msecs
+        imgscalr-BALANCED ==> 2600 msecs, 1791 msecs
+        imgscalr-QUALITY ==> 2563 msecs, 1768 msecs
+        imgscalr-ULTRA_QUALITY ==> 2540 msecs, 1687 msecs
+        */
     }
 
     private static void run(Iterable<File> files) throws Exception {
@@ -61,7 +73,7 @@ public class JpegScalePerformanceTest {
                 scale(provider, name, inFile, thumbWidthAndHeight, scaledWidthAndHeight);
             }
             long totalEnd = System.currentTimeMillis();
-            System.err.println(name + " ==> " + (totalEnd - totalStart) + " msecs");
+            System.out.println(name + " ==> " + (totalEnd - totalStart) + " msecs");
         }
 
         for (ConversionCommand.SpeedHint speedHint : new ConversionCommand.SpeedHint[]
@@ -74,37 +86,39 @@ public class JpegScalePerformanceTest {
                 scale(provider, name, inFile, thumbWidthAndHeight, scaledWidthAndHeight);
             }
             long totalEnd = System.currentTimeMillis();
-            System.err.println(name + " ==> " + (totalEnd - totalStart) + " msecs");
+            System.out.println(name + " ==> " + (totalEnd - totalStart) + " msecs");
         }
     }
 
     private static void scale(ImagingProvider provider, String dirName, File inFile, int thumbWidthAndHeight, int scaledWidthAndHeight) throws Exception {
 
         File outDir = new File(inFile.getParentFile(), dirName);
-        outDir.mkdirs();
+        boolean ret = outDir.mkdirs();
+        LOG.debug(ret ? "Test directory {} was created" : "Test directory {} already existed", outDir);
 
         String newName1 = inFile.getName().substring(0, inFile.getName().indexOf('.') - 1) + "-thumb.jpg";
         String newName2 = inFile.getName().substring(0, inFile.getName().indexOf('.') - 1) + "-small.jpg";
         String outFile1 = outDir + "/" + newName1;
         String outFile2 = outDir + "/" + newName2;
 
-        //long start1 = System.currentTimeMillis();
+        long start1 = System.currentTimeMillis();
         try (FileOutputStream outputStream = new FileOutputStream(outFile1)) {
             provider.createThumbNail(inFile, outputStream, "image/jpeg", thumbWidthAndHeight, thumbWidthAndHeight,
                     ConversionCommand.CompressionQuality.LOSSY_MEDIUM, ConversionCommand.SpeedHint.SPEED);
         }
-        //long end1 = System.currentTimeMillis();
-        //System.err.println(inFile + " ==> " + outfile1 + " : " + (end1-start1) + " msecs");
+        long end1 = System.currentTimeMillis();
+        LOG.debug(inFile + ": " + (end1-start1) + " msecs");
 
-        //long start2 = System.currentTimeMillis();
+        long start2 = System.currentTimeMillis();
         try (FileOutputStream outputStream = new FileOutputStream(outFile2)) {
             provider.createThumbNail(inFile, outputStream, "image/jpeg", scaledWidthAndHeight, scaledWidthAndHeight,
                     ConversionCommand.CompressionQuality.LOSSY_BEST, ConversionCommand.SpeedHint.ULTRA_QUALITY);
         }
-        //long end2 = System.currentTimeMillis();
-        //System.err.println(inFile + " ==> " + outfile2 + " : " + (end2-start2) + " msecs");
+        long end2 = System.currentTimeMillis();
+        LOG.debug(inFile + ": " + (end2-start2) + " msecs");
     }
 
+    @SuppressWarnings("unused")
     public static BufferedImage loadImageUsingToolkit(String imagePath, ImageObserver imageObserver) {
         Image image = getImageUsingToolkit(imagePath);
         MediaTracker mediaTracker = new MediaTracker(new Container());
@@ -130,17 +144,3 @@ public class JpegScalePerformanceTest {
         return Toolkit.getDefaultToolkit().getImage(imagePath);
     }
 }
-
-/*
-java2d ==> 1720 msecs
-imgscalr-SPEED ==> 2773 msecs
-imgscalr-BALANCED ==> 2600 msecs
-imgscalr-QUALITY ==> 2563 msecs
-imgscalr-ULTRA_QUALITY ==> 2540 msecs
-
-// Mit ThreadLocal
-java2d ==> 1723 msecs
-imgscalr-SPEED ==> 2797 msecs
-imgscalr-BALANCED ==> 2634 msecs
-imgscalr-QUALITY ==> 2590 msecs
-*/

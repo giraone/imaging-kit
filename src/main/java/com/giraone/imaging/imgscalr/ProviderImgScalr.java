@@ -15,7 +15,11 @@ import org.imgscalr.Scalr;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Imaging provider based on IMGSCALR implementation (https://github.com/rkalla/imgscalr).
@@ -24,11 +28,7 @@ public class ProviderImgScalr implements ImagingProvider {
     
     private static final Logger LOGGER = LogManager.getLogger(ProviderImgScalr.class);
 
-    /**
-     * TODO: This is the Java2 solution!
-     *
-     * @throws IOException, FormatNotSupportedException
-     */
+    // TODO: This is the Java2 solution!
     public FileInfo fetchFileInfo(File inputFile) throws IOException, FormatNotSupportedException {
         return new ProviderJava2D().fetchFileInfo(inputFile);
     }
@@ -47,19 +47,19 @@ public class ProviderImgScalr implements ImagingProvider {
 
         if (LOGGER.isDebugEnabled()) {
             final long end = System.currentTimeMillis();
-            LOGGER.debug("Provider.openImage: Time = " + (end - start) + " ms");
+            LOGGER.debug("Provider.openImage: Time = {} ms", end - start);
             start = end;
         }
 
         BufferedImage bufferedImage = imagePlusInfo.getImage();
         if (LOGGER.isDebugEnabled()) {
             final long end = System.currentTimeMillis();
-            LOGGER.debug("Provider.bufferedImage: Time = " + (end - start) + " ms, pixels = " + bufferedImage.getWidth()
-                    + "x" + bufferedImage.getHeight());
+            LOGGER.debug("Provider.bufferedImage: Time = {} ms, pixels = {}x{}",
+                end - start, bufferedImage.getWidth(), bufferedImage.getHeight());
             start = end;
         }
 
-        Dimension dimension = command.getDimensionFromLimits(bufferedImage.getWidth(), bufferedImage.getHeight());
+        final Dimension dimension = command.getDimensionFromLimits(bufferedImage.getWidth(), bufferedImage.getHeight());
 
         final BufferedImage sourceImage;
         try (InputStream sourceStream = new FileInputStream(inputFile)) {
@@ -76,7 +76,7 @@ public class ProviderImgScalr implements ImagingProvider {
         ImageToFileWriter.saveJpeg(targetImage, outputStream, internalQuality);
         if (LOGGER.isDebugEnabled()) {
             final long end = System.currentTimeMillis();
-            LOGGER.debug("Provider.save_jpeg: Time = " + (end - start) + " ms");
+            LOGGER.debug("Provider.save_jpeg: Time = {} ms", end - start);
         }
     }
 

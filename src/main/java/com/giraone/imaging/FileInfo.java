@@ -33,9 +33,6 @@ public class FileInfo {
         this.compressionFormat = COMPRESSION_FORMAT_NONE;
     }
 
-    /**
-     * Return MIME type.
-     */
     public String getMimeType() {
         return this.mimeType;
     }
@@ -44,9 +41,6 @@ public class FileInfo {
         this.mimeType = value;
     }
 
-    /**
-     * Return compression format.
-     */
     public int getCompressionFormat() {
         return this.compressionFormat;
     }
@@ -55,9 +49,6 @@ public class FileInfo {
         this.compressionFormat = value;
     }
 
-    /**
-     * Return number of bits per pixel.
-     */
     public int getBitsPerPixel() {
         return this.bitsPerPixel;
     }
@@ -67,7 +58,8 @@ public class FileInfo {
     }
 
     /**
-     * Return width in pixels.
+     * Return width of file, if it is an image.
+     * @return width in pixels.
      */
     public int getWidth() {
         return this.width;
@@ -78,7 +70,8 @@ public class FileInfo {
     }
 
     /**
-     * Return height in pixels.
+     * Return height of file, if it is an image.
+     * @return height in pixels.
      */
     public int getHeight() {
         return this.height;
@@ -90,6 +83,7 @@ public class FileInfo {
 
     /**
      * Return image format as defined by the provider.
+     * @return image format depending on used provider.
      */
     public Object getProviderFormat() {
         return this.providerFormat;
@@ -100,7 +94,8 @@ public class FileInfo {
     }
 
     /**
-     * Return a summary of the file info
+     * Return a summary of the file info.
+     * @return Debug information on information gathered.
      */
     public String dumpInfo() {
         return "MimeType=" +

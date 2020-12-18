@@ -11,14 +11,15 @@ public class ImagingFactory {
 
     private static ImagingFactory factory;
 
-    private ServiceLoader<ImagingProvider> provider;
+    private final ServiceLoader<ImagingProvider> provider;
 
     private ImagingFactory() {
         this.provider = ServiceLoader.load(ImagingProvider.class);
     }
 
     /**
-     * Return singleton instance.
+     * Provide one thread safe singleton instance of a factory, that returns the imaging provider.
+     * @return the singleton instance of the factory
      */
     public static synchronized ImagingFactory getInstance() {
         if (factory == null) {
@@ -29,6 +30,7 @@ public class ImagingFactory {
 
     /**
      * Return the configured imaging provider instance.
+     * @return the configured provided instance if found
      */
     public ImagingProvider getProvider() {
         try {

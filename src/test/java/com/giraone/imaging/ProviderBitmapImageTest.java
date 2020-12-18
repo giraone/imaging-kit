@@ -62,15 +62,18 @@ class ProviderBitmapImageTest {
 
         @SuppressWarnings("unchecked")
         Class<ImagingProvider> cls = (Class<ImagingProvider>) Class.forName("com.giraone.imaging.java2.ProviderJava2D");
-        providerUnderTest = cls.newInstance();
+        providerUnderTest = cls.getDeclaredConstructor().newInstance();
         supportedTestFiles = TestFileHelper.cloneTestFiles(Arrays.stream(ALL_TEST_FILES));
         unsupportedTestFiles = TestFileHelper.cloneTestFiles(Arrays.stream(ALL_UNSUPPORTED_FILES));
     }
 
     @AfterAll
+    @SuppressWarnings("All")
     static void clearTestFiles() {
         if (CLEAR_OUTPUT_FILES) {
-            supportedTestFiles.values().forEach(File::delete);
+            supportedTestFiles.values().forEach(
+                File::delete
+            );
         }
     }
 

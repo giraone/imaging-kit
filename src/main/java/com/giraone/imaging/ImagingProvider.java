@@ -13,6 +13,9 @@ public interface ImagingProvider {
      * Extract information about a given file including image information.
      *
      * @param inputFile Input file.
+     * @return The file information value object.
+     * @throws IOException on any error opening the file
+     * @throws FormatNotSupportedException if the file is opened, but the file type is not supported
      */
     FileInfo fetchFileInfo(File inputFile) throws IOException, FormatNotSupportedException;
 
@@ -22,6 +25,7 @@ public interface ImagingProvider {
      * @param inputFile    Input file.
      * @param outputStream OutputStream, to which the new image is written. Important: Stream is not closed!
      * @param command      An image conversion command.
+     * @throws Exception on any error opening the file, converting the file or writing to the output.
      */
     void convertImage(File inputFile, OutputStream outputStream, ConversionCommand command)
             throws Exception;
@@ -36,6 +40,7 @@ public interface ImagingProvider {
      * @param height       Height in pixel.
      * @param quality      Quality factor for output compression.
      * @param speedHint    Speed factor for conversion.
+     * @throws Exception on any error opening the file, converting the file or writing to the output.
      */
     void createThumbNail(File inputFile, OutputStream outputStream, String format, int width, int height,
                          ConversionCommand.CompressionQuality quality, ConversionCommand.SpeedHint speedHint) throws Exception;
@@ -46,7 +51,9 @@ public interface ImagingProvider {
      * @param inputFile  Input file.
      * @param outputFile Output file, to which the new image is written.
      * @param command    An image conversion command.
+     * @throws Exception on any error opening the file, converting the file or writing to the output.
      */
+    @SuppressWarnings("unused")
     default void convertImage(File inputFile, File outputFile, ConversionCommand command)
             throws Exception {
 
@@ -65,6 +72,7 @@ public interface ImagingProvider {
      * @param height     Height in pixel.
      * @param quality    Quality factor for output compression.
      * @param speedHint  Speed factor for conversion.
+     * @throws Exception on any error opening the file, converting the file or writing to the output.
      */
     default void createThumbNail(File inputFile, File outputFile,
                                  String format, int width, int height,

@@ -37,7 +37,7 @@ public class MakeThumb {
             @SuppressWarnings("unchecked")
             Class<ImagingProvider> cls = (Class<ImagingProvider>) Class.forName(
                     packageName + "." + providerName);
-            ImagingProvider provider = cls.newInstance();
+            ImagingProvider provider = cls.getDeclaredConstructor().newInstance();
             ConversionCommand command = new ConversionCommand();
             command.setOutputFormat("image/jpeg");
             command.setDimension(new Dimension(width, height));

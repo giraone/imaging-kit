@@ -10,14 +10,15 @@ import java.util.ServiceLoader;
 public class PdfProviderFactory {
 
     private static PdfProviderFactory FACTORY;
-    private ServiceLoader<PdfProvider> provider;
+    private final ServiceLoader<PdfProvider> provider;
 
     private PdfProviderFactory() {
         this.provider = ServiceLoader.load(PdfProvider.class);
     }
 
     /**
-     * Return singleton instance.
+     * Provide one thread safe singleton instance of a factory, that returns the PDF provider.
+     * @return the singleton instance of the factory
      */
     public static synchronized PdfProviderFactory getInstance() {
         if (FACTORY == null) {
@@ -27,7 +28,8 @@ public class PdfProviderFactory {
     }
 
     /**
-     * Return the configured imaging provider instance.
+     * Return the configured PDF provider instance.
+     * @return the configured provided instance if found
      */
     public PdfProvider getProvider() {
         try {

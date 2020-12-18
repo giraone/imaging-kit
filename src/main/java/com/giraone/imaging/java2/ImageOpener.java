@@ -4,16 +4,13 @@ package com.giraone.imaging.java2;
 
 import com.giraone.imaging.FileInfo;
 import com.giraone.imaging.FileTypeDetector;
-import com.giraone.imaging.FormatNotSupportedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.awt.image.MemoryImageSource;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 //--------------------------------------------------------------------------------
@@ -29,18 +26,22 @@ public class ImageOpener {
 
     // --------------------------------------------------------------------------------
 
-    public static ImagePlusInfo openImage(File file)
-            throws IOException, FormatNotSupportedException {
+    /**
+     * Open an image file an return the buffered image plus some image information.
+     * @param file the image file to open
+     * @return the image and information tupel
+     * @throws IOException on any error opening the image file
+     */
+    public static ImagePlusInfo openImage(File file) throws IOException {
         FileTypeDetector.FileType fileType = FileTypeDetector.getInstance().getFileType(file);
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("openImage: fileType = " + fileType);
+            LOGGER.debug("openImage: fileType = {}", fileType);
         }
 
         return openImage(file, fileType);
     }
 
-    static ImagePlusInfo openImage(File file, FileTypeDetector.FileType fileType)
-            throws IOException, FormatNotSupportedException {
+    static ImagePlusInfo openImage(File file, FileTypeDetector.FileType fileType) {
         BufferedImage image;
         FileInfo fileInfo;
 
@@ -82,6 +83,7 @@ public class ImageOpener {
      * Get Image (PNG, GIF or JPEG) using default toolkit.
      *
      * @param imageFile the input image file
+     * @return the AWT image object
      */
     private static Image getImageUsingToolkit(File imageFile) {
         return Toolkit.getDefaultToolkit().getImage(imageFile.getAbsolutePath());
@@ -91,6 +93,7 @@ public class ImageOpener {
      * Load PNG, GIF or JPEG using default toolkit.
      *
      * @param imageFile the input image file
+     * @return the loaded buffered image object
      */
     private static BufferedImage loadImageUsingToolkit(File imageFile) {
         Image image = getImageUsingToolkit(imageFile);

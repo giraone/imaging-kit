@@ -26,9 +26,10 @@ public class FileTypeDetector {
     }
 
     /**
-     * Determine the file type. Return UNKNOWN. if detection fails.
+     * Determine the file type.
      *
      * @param file a File object
+     * @return The detected file type or UNKNOWN, if detection fails
      * @throws IOException on errors opening the file
      */
     public FileType getFileType(File file) throws IOException {
@@ -38,11 +39,13 @@ public class FileTypeDetector {
     }
 
     /**
-     * Determine the file type. Return UNKNOWN, if detection fails.
+     * Determine the file type.
      *
      * @param filePath a file path string
+     * @return The detected file type or UNKNOWN, if detection fails
      * @throws IOException on errors opening the file
      */
+    @SuppressWarnings("unused")
     public FileType getFileType(String filePath) throws IOException {
         try (InputStream is = new FileInputStream(filePath)) {
             return this.getFileType(is);
@@ -50,9 +53,10 @@ public class FileTypeDetector {
     }
 
     /**
-     * Determine the file type. Return UNKNOWN, if detection fails.
+     * Determine the file type.
      *
      * @param is an input stream providing the file. The input stream will NOT be closed after processing is done.
+     * @return The detected file type or UNKNOWN, if detection fails
      */
     public FileType getFileType(InputStream is) {
         byte[] buf = new byte[132];
@@ -124,6 +128,9 @@ public class FileTypeDetector {
         }
     }
 
+    /**
+     * Enumeration for the supported (detectable) file types.
+     */
     public enum FileType {
         UNKNOWN, JPEG, PNG, TIFF, GIF, BMP, PGM, DICOM, PDF
     }

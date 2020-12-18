@@ -19,6 +19,7 @@ public interface PdfProvider {
      * @param height        Height in pixel.
      * @param quality       Quality factor for output compression.
      * @param speedHint     Speed factor for conversion.
+     * @throws Exception on any error opening the file, converting the file or writing to the output.
      */
 
     void createThumbNail(File inputFile, OutputStream outputStream,

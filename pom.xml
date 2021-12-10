@@ -73,7 +73,7 @@
         <java.version>${maven.compiler.source}</java.version>
         <pdfbox.version>2.0.21</pdfbox.version>
         <imgscalr.version>4.2</imgscalr.version>
-        <log4j.version>2.13.3</log4j.version>
+        <log4j.version>2.15.0</log4j.version>
         <junit.jupiter.version>5.6.3</junit.jupiter.version>
         <assertj.version>3.18.1</assertj.version>
 

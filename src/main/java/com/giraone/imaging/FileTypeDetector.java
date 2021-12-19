@@ -1,7 +1,7 @@
 package com.giraone.imaging;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +15,7 @@ import java.io.InputStream;
  */
 public class FileTypeDetector {
 
-    private static final Logger LOGGER = LogManager.getLogger(FileTypeDetector.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileTypeDetector.class);
     private static final FileTypeDetector _THIS = new FileTypeDetector();
 
     public static FileTypeDetector getInstance() {
@@ -111,7 +111,7 @@ public class FileTypeDetector {
         if (b0 == 80 && (b1 == 50 || b1 == 53) && (b2 == 10 || b2 == 13 || b2 == 32 || b2 == 9))
             return FileType.PGM;
 
-        // BMP ("BM") - TODO: Not really correct!!! We need && name.endsWith(".bmp")
+        // BMP ("BM") - TODO: Not really correct!!! We also need name.endsWith(".bmp")
         if (b0 == 66 && b1 == 77)
             return FileType.BMP;
 

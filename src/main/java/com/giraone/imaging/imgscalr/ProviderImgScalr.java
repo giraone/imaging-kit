@@ -8,9 +8,9 @@ import com.giraone.imaging.java2.ImageOpener;
 import com.giraone.imaging.java2.ImagePlusInfo;
 import com.giraone.imaging.java2.ImageToFileWriter;
 import com.giraone.imaging.java2.ProviderJava2D;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.imgscalr.Scalr;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -26,7 +26,7 @@ import java.io.OutputStream;
  */
 public class ProviderImgScalr implements ImagingProvider {
     
-    private static final Logger LOGGER = LogManager.getLogger(ProviderImgScalr.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProviderImgScalr.class);
 
     // TODO: This is the Java2 solution!
     public FileInfo fetchFileInfo(File inputFile) throws IOException, FormatNotSupportedException {

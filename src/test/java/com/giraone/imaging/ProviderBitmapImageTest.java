@@ -1,10 +1,10 @@
 package com.giraone.imaging;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.File;
@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ProviderBitmapImageTest {
 
-    private static final Logger LOG = LogManager.getLogger(ProviderBitmapImageTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProviderBitmapImageTest.class);
     private static final boolean CLEAR_OUTPUT_FILES = true;
 
     private static final String TEST_FILE_JPEG_01 = "image-01.jpg";

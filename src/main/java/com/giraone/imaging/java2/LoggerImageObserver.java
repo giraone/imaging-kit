@@ -1,8 +1,8 @@
 package com.giraone.imaging.java2;
 
 import com.giraone.imaging.ImagingProvider;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -13,7 +13,7 @@ import java.awt.image.ImageObserver;
  */
 public class LoggerImageObserver implements ImageObserver {
 
-    private static final Logger LOGGER = LogManager.getLogger(ImagingProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImagingProvider.class);
 
     private LoggerImageObserver() {
     }

@@ -5,8 +5,8 @@ import com.giraone.imaging.FileInfo;
 import com.giraone.imaging.FileTypeDetector;
 import com.giraone.imaging.FormatNotSupportedException;
 import com.giraone.imaging.ImagingProvider;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ProviderJava2D implements ImagingProvider {
 
-    private static final Logger LOGGER = LogManager.getLogger(ProviderJava2D.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProviderJava2D.class);
 
     public FileInfo fetchFileInfo(File file) throws IOException, FormatNotSupportedException {
 

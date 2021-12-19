@@ -28,6 +28,9 @@ The concrete solutions is wrapped behind an interface. For bitmap images there a
 
 ## Release Notes
 
+- V1.1.0 (2021-12-19)
+  - Dependencies on log4j2 removed and replaced by slf4j
+  - Upgrade to latest dependencies
 - V1.0.3 (2020-12-18)
   - Upgrade to latest dependencies
   - Sonar and JavaDoc issues fixed
@@ -38,7 +41,3 @@ The concrete solutions is wrapped behind an interface. For bitmap images there a
   - More tests added
 - V1.0.1 (2019-08-28)
   - Refactoring / Sonar-Issue fixed
-
-## TODO
-
-- Use slf4j with default configuration file

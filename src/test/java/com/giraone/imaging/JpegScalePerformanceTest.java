@@ -2,10 +2,10 @@ package com.giraone.imaging;
 
 import com.giraone.imaging.imgscalr.ProviderImgScalr;
 import com.giraone.imaging.java2.ProviderJava2D;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class JpegScalePerformanceTest {
 
-    private static final Logger LOG = LogManager.getLogger(JpegScalePerformanceTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JpegScalePerformanceTest.class);
 
     private static final String TEST_FILE_JPEG_01 = "image-01.jpg";
     private static final String TEST_FILE_JPEG_02 = "image-02.jpg";

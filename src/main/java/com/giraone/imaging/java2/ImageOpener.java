@@ -4,8 +4,8 @@ package com.giraone.imaging.java2;
 
 import com.giraone.imaging.FileInfo;
 import com.giraone.imaging.FileTypeDetector;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class ImageOpener {
 
-    private static final Logger LOGGER = LogManager.getLogger(ImageOpener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageOpener.class);
     private static final ImageObserver imageObserver = LoggerImageObserver.getInstance();
 
     // Hide constructor
@@ -27,7 +27,7 @@ public class ImageOpener {
     // --------------------------------------------------------------------------------
 
     /**
-     * Open an image file an return the buffered image plus some image information.
+     * Open an image file and return the buffered image plus some image information.
      * @param file the image file to open
      * @return the image and information tupel
      * @throws IOException on any error opening the image file

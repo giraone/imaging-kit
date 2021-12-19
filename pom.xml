@@ -3,7 +3,7 @@
 
     <groupId>com.giraone.imaging</groupId>
     <artifactId>imaging-kit</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
 
     <packaging>jar</packaging>
 
@@ -71,11 +71,11 @@
         <maven.compiler.testSource>${maven.compiler.source}</maven.compiler.testSource>
         <maven.compiler.testTarget>${maven.compiler.target}</maven.compiler.testTarget>
         <java.version>${maven.compiler.source}</java.version>
-        <pdfbox.version>2.0.21</pdfbox.version>
+        <pdfbox.version>2.0.24</pdfbox.version>
         <imgscalr.version>4.2</imgscalr.version>
-        <log4j.version>2.17.0</log4j.version>
-        <junit.jupiter.version>5.6.3</junit.jupiter.version>
-        <assertj.version>3.18.1</assertj.version>
+        <slf4j.version>1.7.32</slf4j.version>
+        <junit.jupiter.version>5.8.2</junit.jupiter.version>
+        <assertj.version>3.21.0</assertj.version>
 
         <jacoco.reportFolder>${project.build.directory}/jacoco</jacoco.reportFolder>
         <jacoco.utReportFile>${jacoco.reportFolder}/jacoco.exec</jacoco.utReportFile>
@@ -115,7 +115,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.1</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <encoding>UTF-8</encoding>
@@ -180,7 +180,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.6</version>
+                <version>0.8.7</version>
                 <executions>
                     <execution>
                         <id>pre-unit-tests</id>
@@ -225,14 +225,21 @@
             <version>${pdfbox.version}</version>
         </dependency>
 
-        <!-- Log4J2 as logging framework -->
+        <!-- SLF4J as logging framework -->
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j.version}</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
 
         <!-- TEST -->
+        <!-- SLFJ simple for testing -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -275,7 +282,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>3.0.1</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>

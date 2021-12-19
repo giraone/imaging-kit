@@ -1,8 +1,8 @@
 package com.giraone.imaging;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class FileTypeDetectorTest {
 
-    private static final Logger LOG = LogManager.getLogger(FileTypeDetectorTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FileTypeDetectorTest.class);
 
     private static final String TEST_FILE_JPEG_01 = "image-01.jpg";
     private static final String TEST_FILE_JPEG_02 = "image-02.jpg";

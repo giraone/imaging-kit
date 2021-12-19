@@ -24,10 +24,9 @@ import java.io.OutputStream;
  */
 public class PdfProviderPdfBox implements PdfProvider {
 
-    private static final float POINTS_PER_INCH = 72;
-
     private final static PdfProviderPdfBox _THIS = new PdfProviderPdfBox();
 
+    @SuppressWarnings("unused")
     public static PdfProviderPdfBox getInstance() {
         return _THIS;
     }

@@ -12,6 +12,16 @@ The concrete solutions is wrapped behind an interface. For bitmap images there a
 - One based on IMGSCALR [https://github.com/rkalla/imgscalr](https://github.com/rkalla/imgscalr)
 - One based on plain Java2D. See [java2/ProviderJava2D.java](src/main/java/com/giraone/imaging/java2/ProviderJava2D.java).
 
+## Integrating
+
+```xml
+<dependency>
+    <groupId>com.giraone.imaging</groupId>
+    <artifactId>imaging-kit</artifactId>
+    <version>1.2.0</version>
+</dependency>
+```
+
 ## Testing
 
 ### Test Images

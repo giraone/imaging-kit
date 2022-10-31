@@ -1,10 +1,8 @@
 [![GitHub license](https://img.shields.io/github/license/giraone/imaging-kit)](https://github.com/giraone/imaging-kit/blob/master/LICENSE)
-[![Maven Central](https://img.shields.io/badge/Maven%20Central-1.1.0-blue)](https://mvnrepository.com/artifact/com.giraone.imaging/imaging-kit)
+[![Maven Central](https://img.shields.io/badge/Maven%20Central-1.2.0-blue)](https://mvnrepository.com/artifact/com.giraone.imaging/imaging-kit)
 [![GitHub issues](https://img.shields.io/github/issues/giraone/imaging-kit)](https://github.com/giraone/imaging-kit/issues)
 [![GitHub stars](https://img.shields.io/github/stars/giraone/imaging-kit)](https://github.com/giraone/imaging-kit/stargazers)
 [![Platform](https://img.shields.io/badge/platform-jre8%2B-blue)](https://github.com/giraone/imaging-kit/pom.xml)
-
-
 
 # Imaging Kit
 
@@ -28,6 +26,8 @@ The concrete solutions is wrapped behind an interface. For bitmap images there a
 
 ## Release Notes
 
+- V1.2.0 (2022-10-31)
+  - Upgrade to latest dependencies
 - V1.1.0 (2021-12-19)
   - Dependencies on log4j2 removed and replaced by slf4j
   - Upgrade to latest dependencies

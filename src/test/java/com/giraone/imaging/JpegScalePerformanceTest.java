@@ -1,6 +1,5 @@
 package com.giraone.imaging;
 
-import com.giraone.imaging.imgscalr.ProviderImgScalr;
 import com.giraone.imaging.java2.ProviderJava2D;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -52,7 +51,7 @@ public class JpegScalePerformanceTest {
         run(testFiles.values());
 
         /*
-        Typical results:
+        Typical results (Version 1.2.0 with JRE 8):
         java2d ==> 1720 msecs, 1288 msecs
         imgscalr-SPEED ==> 2773 msecs, 1893 msecs
         imgscalr-BALANCED ==> 2600 msecs, 1791 msecs
@@ -64,30 +63,16 @@ public class JpegScalePerformanceTest {
     private static void run(Iterable<File> files) throws Exception {
         int thumbWidthAndHeight = 180;
         int scaledWidthAndHeight = 900;
-        {
-            ImagingProvider provider = new ProviderJava2D();
-            String name = "java2d";
 
-            long totalStart = System.currentTimeMillis();
-            for (File inFile : files) {
-                scale(provider, name, inFile, thumbWidthAndHeight, scaledWidthAndHeight);
-            }
-            long totalEnd = System.currentTimeMillis();
-            System.out.println(name + " ==> " + (totalEnd - totalStart) + " msecs");
+        ImagingProvider provider = new ProviderJava2D();
+        String name = "java2d";
+
+        long totalStart = System.currentTimeMillis();
+        for (File inFile : files) {
+            scale(provider, name, inFile, thumbWidthAndHeight, scaledWidthAndHeight);
         }
-
-        for (ConversionCommand.SpeedHint speedHint : new ConversionCommand.SpeedHint[]
-                {ConversionCommand.SpeedHint.SPEED, ConversionCommand.SpeedHint.BALANCED, ConversionCommand.SpeedHint.QUALITY, ConversionCommand.SpeedHint.ULTRA_QUALITY}) {
-            ImagingProvider provider = new ProviderImgScalr();
-            String name = "imgscalr-" + speedHint;
-
-            long totalStart = System.currentTimeMillis();
-            for (File inFile : files) {
-                scale(provider, name, inFile, thumbWidthAndHeight, scaledWidthAndHeight);
-            }
-            long totalEnd = System.currentTimeMillis();
-            System.out.println(name + " ==> " + (totalEnd - totalStart) + " msecs");
-        }
+        long totalEnd = System.currentTimeMillis();
+        System.out.println(name + " ==> " + (totalEnd - totalStart) + " msecs");
     }
 
     private static void scale(ImagingProvider provider, String dirName, File inFile, int thumbWidthAndHeight, int scaledWidthAndHeight) throws Exception {
@@ -104,18 +89,18 @@ public class JpegScalePerformanceTest {
         long start1 = System.currentTimeMillis();
         try (FileOutputStream outputStream = new FileOutputStream(outFile1)) {
             provider.createThumbNail(inFile, outputStream, "image/jpeg", thumbWidthAndHeight, thumbWidthAndHeight,
-                    ConversionCommand.CompressionQuality.LOSSY_MEDIUM, ConversionCommand.SpeedHint.SPEED);
+                    ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
         }
         long end1 = System.currentTimeMillis();
-        LOG.debug(inFile + ": " + (end1-start1) + " msecs");
+        LOG.debug("{}: {} milliseconds", inFile, (end1-start1));
 
         long start2 = System.currentTimeMillis();
         try (FileOutputStream outputStream = new FileOutputStream(outFile2)) {
             provider.createThumbNail(inFile, outputStream, "image/jpeg", scaledWidthAndHeight, scaledWidthAndHeight,
-                    ConversionCommand.CompressionQuality.LOSSY_BEST, ConversionCommand.SpeedHint.ULTRA_QUALITY);
+                    ConversionCommand.CompressionQuality.LOSSY_BEST);
         }
         long end2 = System.currentTimeMillis();
-        LOG.debug(inFile + ": " + (end2-start2) + " msecs");
+        LOG.debug("{}: {} milliseconds", inFile, (end2-start2));
     }
 
     @SuppressWarnings("unused")

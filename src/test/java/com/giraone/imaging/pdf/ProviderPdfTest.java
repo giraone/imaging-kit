@@ -4,6 +4,8 @@ import com.giraone.imaging.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,6 +22,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Tests for the Provider PDF implementation.
  */
 class ProviderPdfTest {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ProviderPdfTest.class);
 
     private static final boolean CLEAR_OUTPUT_FILES = true;
 
@@ -87,7 +91,7 @@ class ProviderPdfTest {
             try {
                 createThumbNailUsingOutputStream(thumbPixelMaxSize, file);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error("Test testThat_createThumbNail_works_for_all_test_files_using_output_stream failed!", e);
             }
         }
     }
@@ -168,7 +172,7 @@ class ProviderPdfTest {
         try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
             providerUnderTest.createThumbNail(file, outputStream,
                     "image/jpeg", thumbPixelMaxSize, thumbPixelMaxSize,
-                    ConversionCommand.CompressionQuality.LOSSY_MEDIUM, ConversionCommand.SpeedHint.SPEED);
+                    ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
         }
 
         // assert

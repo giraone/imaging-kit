@@ -40,7 +40,7 @@ public class ProviderJava2D implements ImagingProvider {
     }
 
     public void createThumbNail(File inputFile, OutputStream out, String format, int width, int height,
-                                ConversionCommand.CompressionQuality quality, ConversionCommand.SpeedHint speedHint) throws Exception {
+                                ConversionCommand.CompressionQuality quality) throws Exception {
 
         final ConversionCommand command = new ConversionCommand();
         command.setOutputFormat(format);
@@ -52,9 +52,6 @@ public class ProviderJava2D implements ImagingProvider {
                 break;
             case LOSSY_BEST:
                 iQuality = 1;
-                break;
-            case LOSSY_MEDIUM:
-                iQuality = 50;
                 break;
             case LOSSY_SPEED:
                 iQuality = 100;

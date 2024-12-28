@@ -4,6 +4,7 @@ import com.giraone.imaging.ConversionCommand;
 import com.giraone.imaging.FileInfo;
 import com.giraone.imaging.FormatNotSupportedException;
 import com.giraone.imaging.java2.ProviderJava2D;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -46,18 +47,16 @@ public class PdfProviderPdfBox implements PdfProvider {
      * @param width         Width in pixel.
      * @param height        Height in pixel.
      * @param quality       Quality factor for output compression.
-     * @param speedHint     Speed factor for conversion.
      */
     @Override
     public void createThumbNail(File inputFile, OutputStream outputStream, String format, int width, int height,
-                                ConversionCommand.CompressionQuality quality, ConversionCommand.SpeedHint speedHint) throws Exception {
+                                ConversionCommand.CompressionQuality quality) throws Exception {
         ConversionCommand command = new ConversionCommand();
         command.setOutputFormat(format);
         command.setDimension(new Dimension(width, height));
         command.setQuality(quality);
-        command.setSpeedHint(speedHint);
 
-        try (PDDocument document = PDDocument.load(inputFile)) {
+        try (PDDocument document = Loader.loadPDF(inputFile)) {
             PDFRenderer renderer = new PDFRenderer(document);
 
             // Page 1, do not scale DPIs and use RGB
@@ -70,7 +69,7 @@ public class PdfProviderPdfBox implements PdfProvider {
     @Override
     public int countPages(File pdfFile) throws Exception {
 
-        try (PDDocument document = PDDocument.load(pdfFile)) {
+        try (PDDocument document = Loader.loadPDF(pdfFile)) {
             return document.getPages().getCount();
         }
     }
@@ -78,7 +77,7 @@ public class PdfProviderPdfBox implements PdfProvider {
     @Override
     public PdfDocumentInformation getDocumentInformation(File pdfFile) throws Exception {
 
-        try (PDDocument document = PDDocument.load(pdfFile)) {
+        try (PDDocument document = Loader.loadPDF(pdfFile)) {
             return PdfDocumentInformation.build(document.getDocumentInformation());
         }
     }

@@ -136,7 +136,7 @@ class ProviderBitmapImageTest {
             try {
                 createThumbNailUsingOutputStream(thumbPixelMaxSize, file);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error("Test testThat_createThumbNail_works_for_all_test_files_using_output_stream failed!", e);
             }
         }
     }
@@ -149,7 +149,7 @@ class ProviderBitmapImageTest {
             try {
                 createThumbNailUsingFile(thumbPixelMaxSize, file);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error("Test testThat_createThumbNail_works_for_all_test_files_using_file failed!", e);
             }
         }
     }
@@ -222,7 +222,7 @@ class ProviderBitmapImageTest {
                     providerUnderTest.convertImage(file, outputStream, command);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error("Test testThat_convertImage_works_for_all_test_files failed!", e);
             }
         });
     }
@@ -241,7 +241,7 @@ class ProviderBitmapImageTest {
         try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
             providerUnderTest.createThumbNail(file, outputStream,
                     "image/jpeg", thumbPixelMaxSize, thumbPixelMaxSize,
-                    ConversionCommand.CompressionQuality.LOSSY_MEDIUM, ConversionCommand.SpeedHint.SPEED);
+                    ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
         }
 
         // assert
@@ -264,7 +264,7 @@ class ProviderBitmapImageTest {
         // act
         providerUnderTest.createThumbNail(file, outFile,
                 "image/jpeg", thumbPixelMaxSize, thumbPixelMaxSize,
-                ConversionCommand.CompressionQuality.LOSSY_MEDIUM, ConversionCommand.SpeedHint.SPEED);
+                ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
 
         // assert
         assertThat(outFile.exists()).isTrue();

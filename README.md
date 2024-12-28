@@ -7,10 +7,8 @@
 # Imaging Kit
 
 A Java JAR for creating thumbnails and/or scaled versions of bitmap images (PNG, JPEG) and PDF documents.
-The concrete solutions is wrapped behind an interface. For bitmap images there are currently two versions:
-
-- One based on IMGSCALR [https://github.com/rkalla/imgscalr](https://github.com/rkalla/imgscalr)
-- One based on plain Java2D. See [java2/ProviderJava2D.java](src/main/java/com/giraone/imaging/java2/ProviderJava2D.java).
+The concrete solutions is wrapped behind an interface. For bitmap images the implementation is based on plain Java2D.
+See [java2/ProviderJava2D.java](src/main/java/com/giraone/imaging/java2/ProviderJava2D.java).
 
 ## Integrating
 
@@ -18,7 +16,7 @@ The concrete solutions is wrapped behind an interface. For bitmap images there a
 <dependency>
     <groupId>com.giraone.imaging</groupId>
     <artifactId>imaging-kit</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
 </dependency>
 ```
 
@@ -35,6 +33,12 @@ The concrete solutions is wrapped behind an interface. For bitmap images there a
 - JpegScalePerformanceTest.java - A basic performance comparison on the two implementations for bitmap images
 
 ## Release Notes
+
+- V1.3.0 (2024-12-28)
+  - Upgrade to JDK 17 build
+  - Upgrade to latest dependencies (e.g. PDFBox 3.0.3)
+  - The seconds implementation based on [IMGSCALR](https://github.com/rkalla/imgscalr](https://github.com/rkalla/imgscalr) was removed.
+  - The parameter `ConversionCommand.SpeedHint speedHint` was removed
 
 - V1.2.0 (2022-10-31)
   - Upgrade to latest dependencies

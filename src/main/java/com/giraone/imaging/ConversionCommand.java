@@ -11,12 +11,10 @@ public class ConversionCommand {
     private int quality;
     private Dimension dimension;
     private Float scale;
-    private SpeedHint speedHint;
 
     public ConversionCommand() {
         this.compression = false;
         this.quality = 0;
-        this.speedHint = SpeedHint.BALANCED;
     }
 
     /**
@@ -47,23 +45,12 @@ public class ConversionCommand {
     }
 
     public void setQuality(ConversionCommand.CompressionQuality compressionQuality) {
-        int iQuality;
-        switch (compressionQuality) {
-            case LOSSLESS:
-                iQuality = 0;
-                break;
-            case LOSSY_BEST:
-                iQuality = 1;
-                break;
-            case LOSSY_MEDIUM:
-                iQuality = 50;
-                break;
-            case LOSSY_SPEED:
-                iQuality = 100;
-                break;
-            default:
-                iQuality = 50;
-        }
+        final int iQuality = switch (compressionQuality) {
+            case LOSSLESS -> 0;
+            case LOSSY_BEST -> 1;
+            case LOSSY_SPEED -> 100;
+            default -> 50;
+        };
         this.setQuality(iQuality);
     }
 
@@ -121,18 +108,6 @@ public class ConversionCommand {
         return scale;
     }
 
-    public SpeedHint getSpeedHint() {
-        return speedHint;
-    }
-
-    /**
-     * Set speed hint. This setting is needed only for the {@link com.giraone.imaging.imgscalr.ProviderImgScalr} provider.
-     * @param speedHint hint for compression performance
-     */
-    public void setSpeedHint(SpeedHint speedHint) {
-        this.speedHint = speedHint;
-    }
-
     /**
      * Return a new dimension that is calculated by the given original width and height and scaled
      * using the scale factor defined by {@link #setScale(float)}.
@@ -179,15 +154,6 @@ public class ConversionCommand {
         final int newHeight = (int) (originalHeight * scaleF);
 
         return new Dimension(newWidth, newHeight);
-    }
-
-    // ----------------------------------------------------------------------------
-
-    /**
-     * Enumeration for the speed hint. Higher quality levels are slower!
-     */
-    public enum SpeedHint {
-        SPEED, BALANCED, QUALITY, ULTRA_QUALITY
     }
 
     // ----------------------------------------------------------------------------

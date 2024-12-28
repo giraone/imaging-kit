@@ -39,11 +39,10 @@ public interface ImagingProvider {
      * @param width        Width in pixel.
      * @param height       Height in pixel.
      * @param quality      Quality factor for output compression.
-     * @param speedHint    Speed factor for conversion.
      * @throws Exception on any error opening the file, converting the file or writing to the output.
      */
     void createThumbNail(File inputFile, OutputStream outputStream, String format, int width, int height,
-                         ConversionCommand.CompressionQuality quality, ConversionCommand.SpeedHint speedHint) throws Exception;
+                         ConversionCommand.CompressionQuality quality) throws Exception;
 
     /**
      * Convert an image to another image using image conversion functions.
@@ -71,16 +70,14 @@ public interface ImagingProvider {
      * @param width      Width in pixel.
      * @param height     Height in pixel.
      * @param quality    Quality factor for output compression.
-     * @param speedHint  Speed factor for conversion.
      * @throws Exception on any error opening the file, converting the file or writing to the output.
      */
     default void createThumbNail(File inputFile, File outputFile,
                                  String format, int width, int height,
-                                 ConversionCommand.CompressionQuality quality,
-                                 ConversionCommand.SpeedHint speedHint) throws Exception {
+                                 ConversionCommand.CompressionQuality quality) throws Exception {
 
         try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-            this.createThumbNail(inputFile, outputStream, format, width, height, quality, speedHint);
+            this.createThumbNail(inputFile, outputStream, format, width, height, quality);
         }
     }
 }

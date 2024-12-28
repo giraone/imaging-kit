@@ -1,6 +1,10 @@
 package com.giraone.imaging.pdf;
 
-import com.giraone.imaging.*;
+import com.giraone.imaging.ConversionCommand;
+import com.giraone.imaging.FileInfo;
+import com.giraone.imaging.ImagingFactory;
+import com.giraone.imaging.ImagingProvider;
+import com.giraone.imaging.TestFileHelper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -104,7 +108,7 @@ class ProviderPdfTest {
         File image2 = cloneTestFile(TEST_FILE_JPEG_02);
         File image3 = cloneTestFile(TEST_FILE_PNG_01);
         File image4 = cloneTestFile(TEST_FILE_PNG_02);
-        File[] imageFiles = new File[] { image1, image2, image3, image4 };
+        File[] imageFiles = new File[]{image1, image2, image3, image4};
         File pdfFile = File.createTempFile("pdf-from-image", ".pdf");
         pdfFile.deleteOnExit();
         PdfDocumentInformation documentInformation = new PdfDocumentInformation();
@@ -141,7 +145,7 @@ class ProviderPdfTest {
         byte[] image2 = readTestFile(TEST_FILE_JPEG_02);
         byte[] image3 = readTestFile(TEST_FILE_PNG_01);
         byte[] image4 = readTestFile(TEST_FILE_PNG_02);
-        byte[][] imageFiles = new byte[][] { image1, image2, image3, image4 };
+        byte[][] imageFiles = new byte[][]{image1, image2, image3, image4};
         File pdfFile = File.createTempFile("pdf-from-bytes", ".pdf");
         pdfFile.deleteOnExit();
         PdfDocumentInformation documentInformation = new PdfDocumentInformation();
@@ -171,8 +175,8 @@ class ProviderPdfTest {
         // act
         try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
             providerUnderTest.createThumbNail(file, outputStream,
-                    "image/jpeg", thumbPixelMaxSize, thumbPixelMaxSize,
-                    ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
+                "image/jpeg", thumbPixelMaxSize, thumbPixelMaxSize,
+                ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
         }
 
         // assert

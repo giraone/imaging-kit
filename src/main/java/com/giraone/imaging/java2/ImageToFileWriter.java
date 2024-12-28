@@ -35,14 +35,13 @@ public class ImageToFileWriter {
      * 0.5  medium quality
      * 0.25 low quality
      * </pre>
-     *
      * @param bufferedImage the image bitmap to be saved
-     * @param outputStream  Stream to write the image to. Stream is flushed, but not closed.
-     * @param quality       0.0-1.0 setting of desired quality level.
+     * @param outputStream Stream to write the image to. Stream is flushed, but not closed.
+     * @param quality 0.0-1.0 setting of desired quality level.
      * @throws IOException On any IO exception (
      */
     public static void saveJpeg(BufferedImage bufferedImage, OutputStream outputStream, float quality)
-            throws IOException {
+        throws IOException {
 
         // See also: http://www.java2s.com/Code/Java/2D-Graphics-GUI/WritesanimagetoanoutputstreamasaJPEGfileTheJPEGqualitycanbespecifiedinpercent.htm
         final ImageOutputStream ios = ImageIO.createImageOutputStream(outputStream);
@@ -64,7 +63,7 @@ public class ImageToFileWriter {
         final ImageWriter writer = ImageWriterThreadLocal.get();
         writer.setOutput(ios);
         writer.write(/* IIOMetadata */ null,
-                new IIOImage(bufferedImage, /* thumbnails */ null, /* IIOMetadata */ null), jpegParams);
+            new IIOImage(bufferedImage, /* thumbnails */ null, /* IIOMetadata */ null), jpegParams);
         //writer.dispose(); // We do not dispose, because of the re-use!!!
         outputStream.flush();
     }

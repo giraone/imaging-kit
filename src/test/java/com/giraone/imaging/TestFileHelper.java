@@ -1,11 +1,21 @@
 package com.giraone.imaging;
 
-import java.io.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
 public class TestFileHelper {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TestFileHelper.class);
 
     public static Map<String, File> cloneTestFiles(Stream<String> resourceFiles) {
 
@@ -34,13 +44,13 @@ public class TestFileHelper {
                         System.err.println("Cannot read test file \"" + fileName + "\"");
                     }
                 } catch (IOException ioe) {
-                    ioe.printStackTrace();
+                    LOG.error("cloneTestFile failed", ioe);
                     return null;
                 }
             }
             return testFile;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("cloneTestFile failed", e);
             return null;
         }
     }
@@ -59,14 +69,14 @@ public class TestFileHelper {
                         System.err.println("Cannot read test file \"" + fileName + "\"");
                     }
                 } catch (IOException ioe) {
-                    ioe.printStackTrace();
+                    LOG.error("readTestFile failed", ioe);
                     return null;
                 }
                 return out.toByteArray();
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("readTestFile failed", e);
             return null;
         }
     }
@@ -77,7 +87,7 @@ public class TestFileHelper {
         int bytesRead;
         while ((bytesRead = in.read(buf)) > 0) {
             out.write(buf, 0, bytesRead);
-            size += (long) bytesRead;
+            size += bytesRead;
         }
         return size;
     }

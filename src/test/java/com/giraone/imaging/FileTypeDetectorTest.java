@@ -4,8 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 
 import static com.giraone.imaging.FileTypeDetector.FileType.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,27 +56,49 @@ class FileTypeDetectorTest {
     }
 
     @Test
-    void tiffIsDetected()  {
+    void tiffIsDetected() {
         this.checkExpectedType(TEST_FILE_TIFF_01, TIFF);
         this.checkExpectedType(TEST_FILE_TIFF_02, TIFF);
         this.checkExpectedType(TEST_FILE_TIFF_03, TIFF);
     }
 
     @Test
-    void bmpIsDetected()  {
+    void bmpIsDetected() {
         this.checkExpectedType(TEST_FILE_BMP_01, BMP);
     }
 
     @Test
-    void dicomIsDetected()  {
+    void dicomIsDetected() {
         this.checkExpectedType(TEST_FILE_DICOM_01, DICOM);
     }
 
     @Test
-    void pdfIsDetected()  {
+    void pdfIsDetected() {
         this.checkExpectedType(TEST_FILE_PDF_01, PDF);
         this.checkExpectedType(TEST_FILE_PDF_02, PDF);
     }
+
+    @Test
+    void jpegIsDetectedUsingFile() throws IOException {
+        File parent = new File("src/test/resources");
+        FileTypeDetector.FileType detectedFileType = FileTypeDetector.getInstance().getFileType(new File(parent, TEST_FILE_JPEG_01));
+        assertEquals(JPEG, detectedFileType);
+    }
+
+    @Test
+    void jpegIsDetectedUsingPath() throws IOException {
+        Path parent = Path.of("src/test/resources");
+        FileTypeDetector.FileType detectedFileType = FileTypeDetector.getInstance().getFileType(parent.resolve(TEST_FILE_JPEG_01));
+        assertEquals(JPEG, detectedFileType);
+    }
+
+    @Test
+    void jpegIsDetectedUsingString() throws IOException {
+        FileTypeDetector.FileType detectedFileType = FileTypeDetector.getInstance().getFileType("src/test/resources/" + TEST_FILE_JPEG_01);
+        assertEquals(JPEG, detectedFileType);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     private void checkExpectedType(String fileName, FileTypeDetector.FileType expectedFileType) {
 
@@ -87,9 +111,8 @@ class FileTypeDetectorTest {
                 System.err.println("Cannot read test file \"" + fileName + "\"");
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            LOG.error("FileTypeDetector::getFileType failed", ioe);
         }
-
         assertEquals(expectedFileType, detectedFileType);
     }
 }

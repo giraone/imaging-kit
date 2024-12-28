@@ -5,21 +5,18 @@ import com.giraone.imaging.FileInfo;
 import com.giraone.imaging.FileTypeDetector;
 import com.giraone.imaging.FormatNotSupportedException;
 import com.giraone.imaging.ImagingProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
 
 /**
  * Imaging provider based on Java 2 classes
  */
 public class ProviderJava2D implements ImagingProvider {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProviderJava2D.class);
 
     public FileInfo fetchFileInfo(File file) throws IOException, FormatNotSupportedException {
 
@@ -39,59 +36,63 @@ public class ProviderJava2D implements ImagingProvider {
         }
     }
 
+    @Override
+    public FileInfo fetchFileInfo(Path path) throws IOException, FormatNotSupportedException {
+        final FileTypeDetector.FileType fileType = FileTypeDetector.getInstance().getFileType(path);
+        if (FileTypeDetector.getInstance().isSupportedImage(fileType)) {
+            final ImagePlusInfo imagePlusInfo = ImageOpener.openImage(path, fileType);
+            if (imagePlusInfo != null)
+                return imagePlusInfo.getFileInfo();
+            else
+                throw new FormatNotSupportedException("Unknown image format: " + fileType + "!");
+        } else if (FileTypeDetector.FileType.PDF == fileType) {
+            final FileInfo fileInfo = new FileInfo();
+            fileInfo.setMimeType("application/pdf");
+            return fileInfo;
+        } else {
+            throw new FormatNotSupportedException("Unknown file format: " + fileType + "!");
+        }
+    }
+
     public void createThumbNail(File inputFile, OutputStream out, String format, int width, int height,
                                 ConversionCommand.CompressionQuality quality) throws Exception {
 
-        final ConversionCommand command = new ConversionCommand();
-        command.setOutputFormat(format);
-        command.setDimension(new Dimension(width, height));
-        int iQuality;
-        switch (quality) {
-            case LOSSLESS:
-                iQuality = 0;
-                break;
-            case LOSSY_BEST:
-                iQuality = 1;
-                break;
-            case LOSSY_SPEED:
-                iQuality = 100;
-                break;
-            default:
-                iQuality = 50;
-        }
-        command.setQuality(iQuality);
+        final ConversionCommand command = ConversionCommand.buildConversionCommand(format, width, height, quality);
         this.convertImage(inputFile, out, command);
     }
 
-    public void convertImage(File inputFile, OutputStream out, ConversionCommand command)
-            throws Exception {
+    @Override
+    public void createThumbNail(Path inputPath, OutputStream out, String format, int width, int height,
+                                ConversionCommand.CompressionQuality quality) throws Exception {
+        final ConversionCommand command = ConversionCommand.buildConversionCommand(format, width, height, quality);
+        this.convertImage(inputPath, out, command);
+    }
+
+    public void convertImage(File inputFile, OutputStream out, ConversionCommand command) throws Exception {
 
         // We support only JPEG as the target format
-        if (!command.getOutputFormat().equals("image/jpeg"))
+        if (!command.getOutputFormat().equals("image/jpeg")) {
             throw new FormatNotSupportedException("Unsupported target format " + command.getOutputFormat());
-
-        long start = System.currentTimeMillis();
-
+        }
         final ImagePlusInfo imagePlusInfo = ImageOpener.openImage(inputFile);
         if (imagePlusInfo == null) {
             throw new FormatNotSupportedException("Unsupported input file type for file " + inputFile);
         }
-
-        if (LOGGER.isDebugEnabled()) {
-            final long end = System.currentTimeMillis();
-            LOGGER.debug("Provider.openImage: Time = {} ms",end - start);
-        }
-
-        start = System.currentTimeMillis();
-
         final BufferedImage bufferedImage = imagePlusInfo.getImage();
+        convertAndWriteImageAsJpeg(bufferedImage, out, command);
+    }
 
-        if (LOGGER.isDebugEnabled()) {
-            final long end = System.currentTimeMillis();
-            LOGGER.debug("Provider.bufferedImage: Time = {} ms, pixels = {}x{}",
-                end - start, bufferedImage.getWidth(), bufferedImage.getHeight());
+    @Override
+    public void convertImage(Path inputPath, OutputStream out, ConversionCommand command) throws Exception {
+        // We support only JPEG as the target format
+        if (!command.getOutputFormat().equals("image/jpeg")) {
+            throw new FormatNotSupportedException("Unsupported target format " + command.getOutputFormat());
         }
-
+        final ImagePlusInfo imagePlusInfo = ImageOpener.openImage(inputPath);
+        if (imagePlusInfo == null) {
+            throw new FormatNotSupportedException("Unsupported input file type for file " + inputPath);
+        }
+        final BufferedImage bufferedImage = imagePlusInfo.getImage();
         convertAndWriteImageAsJpeg(bufferedImage, out, command);
     }
 
@@ -103,12 +104,9 @@ public class ProviderJava2D implements ImagingProvider {
      * @throws IOException on any error opening the file, converting the file or writing to the output.
      */
     public void convertAndWriteImageAsJpeg(BufferedImage bufferedImage, OutputStream out, ConversionCommand command)
-            throws IOException {
-
-        long start = System.currentTimeMillis();
+        throws IOException {
 
         final Dimension dimension = command.getDimensionFromLimits(bufferedImage.getWidth(), bufferedImage.getHeight());
-
         Image targetImage = bufferedImage;
         if (dimension != null) {
             targetImage = targetImage.getScaledInstance(dimension.width, dimension.height, Image.SCALE_DEFAULT);
@@ -116,14 +114,9 @@ public class ProviderJava2D implements ImagingProvider {
             Graphics g = bufferedImage.getGraphics();
             g.drawImage(targetImage, 0, 0, LoggerImageObserver.getInstance());
         }
-
         final int normedQuality = command.getQuality();
         final float internalQuality = this.getInternalQuality(normedQuality);
         ImageToFileWriter.saveJpeg(bufferedImage, out, internalQuality);
-        if (LOGGER.isDebugEnabled()) {
-            final long end = System.currentTimeMillis();
-            LOGGER.debug("Provider.save_jpeg: Time = {}",end - start);
-        }
     }
 
     //---------------------------------------------------------------------------------
@@ -132,8 +125,8 @@ public class ProviderJava2D implements ImagingProvider {
      * Return internal quality value, when normed value is given
      * <ul>
      * <li><code>0</code>: Lossless compression (NOT SUPPORTED)
-     * <li><code>1</code>: Lossy compression with best quality.
-     * <li><code>100</code>: Lossy compression with worst quality.
+     * <li><code>1</code>: Lossy compression with the best quality.
+     * <li><code>100</code>: Lossy compression with the worst quality.
      * <li><code>2-99</code>: Other lossy compression values (50 == medium)
      * </ul>
      */

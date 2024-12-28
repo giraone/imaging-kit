@@ -7,8 +7,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-// TODO: Check, if Apache Tika or implementations of java.nio.FileTypeDetector has more features.
+import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousFileChannel;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.concurrent.Future;
 
 /**
  * A basic file type detection class based on looking for 'magic numbers' or text strings in the file header.
@@ -27,7 +30,6 @@ public class FileTypeDetector {
 
     /**
      * Determine the file type.
-     *
      * @param file a File object
      * @return The detected file type or UNKNOWN, if detection fails
      * @throws IOException on errors opening the file
@@ -40,7 +42,27 @@ public class FileTypeDetector {
 
     /**
      * Determine the file type.
-     *
+     * @param path a Path object
+     * @return The detected file type or UNKNOWN, if detection fails
+     * @throws IOException on errors opening the file
+     */
+    public FileType getFileType(Path path) throws IOException {
+        try (AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(path, StandardOpenOption.READ)) {
+            final ByteBuffer buffer = ByteBuffer.allocate(256);
+            final Future<Integer> operation = fileChannel.read(buffer, 0);
+            try {
+                operation.get();
+            } catch (Exception e) {
+                throw new IOException(e);
+            }
+            final FileType ret = getFileType(buffer.array());
+            buffer.clear();
+            return ret;
+        }
+    }
+
+    /**
+     * Determine the file type.
      * @param filePath a file path string
      * @return The detected file type or UNKNOWN, if detection fails
      * @throws IOException on errors opening the file
@@ -54,25 +76,33 @@ public class FileTypeDetector {
 
     /**
      * Determine the file type.
-     *
      * @param is an input stream providing the file. The input stream will NOT be closed after processing is done.
      * @return The detected file type or UNKNOWN, if detection fails
      */
     public FileType getFileType(InputStream is) {
-        byte[] buf = new byte[132];
+        byte[] firstBytes = new byte[132];
         try {
-            int r = is.read(buf, 0, 132);
+            int r = is.read(firstBytes, 0, 132);
             if (r < 4) return FileType.UNKNOWN;
             is.close();
         } catch (IOException e) {
             LOGGER.error("Error reading input stream", e);
             return FileType.UNKNOWN;
         }
+        return getFileType(firstBytes);
+    }
 
-        int b0 = buf[0] & 255;
-        int b1 = buf[1] & 255;
-        int b2 = buf[2] & 255;
-        int b3 = buf[3] & 255;
+    /**
+     * Determine the file type.
+     * @param firstBytes First 132 bytes of the file to be detected.
+     * @return The detected file type or UNKNOWN, if detection fails
+     */
+    public FileType getFileType(byte[] firstBytes) {
+
+        int b0 = firstBytes[0] & 255;
+        int b1 = firstBytes[1] & 255;
+        int b2 = firstBytes[2] & 255;
+        int b3 = firstBytes[3] & 255;
 
         // PDF (%PDF-1.X)
         if (b0 == '%' && b1 == 'P' && b2 == 'D' && b3 == 'F')
@@ -99,7 +129,7 @@ public class FileTypeDetector {
             return FileType.GIF;
 
         // DICOM ("DICM" at offset 128)
-        if (buf[128] == 68 && buf[129] == 73 && buf[130] == 67 && buf[131] == 77) {
+        if (firstBytes[128] == 68 && firstBytes[129] == 73 && firstBytes[130] == 67 && firstBytes[131] == 77) {
             return FileType.DICOM;
         }
 
@@ -119,13 +149,10 @@ public class FileTypeDetector {
     }
 
     public boolean isSupportedImage(FileType fileType) {
-        switch (fileType) {
-            case JPEG:
-            case PNG:
-                return true;
-            default:
-                return false;
-        }
+        return switch (fileType) {
+            case JPEG, PNG -> true;
+            default -> false;
+        };
     }
 
     /**

@@ -19,7 +19,6 @@ public class ConversionCommand {
 
     /**
      * Set output format.
-     *
      * @param value Format given as MIME type.
      */
     public void setOutputFormat(String value) {
@@ -32,7 +31,6 @@ public class ConversionCommand {
 
     /**
      * Set output quality, if compression is used.
-     *
      * @param value Output quality (compression).
      *  <ul>
      *   <li><code>0</code>: Lossless compression.
@@ -74,7 +72,6 @@ public class ConversionCommand {
 
     /**
      * Set output dimension
-     *
      * @param value Output dimension.
      */
     public void setDimension(Dimension value) {
@@ -87,7 +84,6 @@ public class ConversionCommand {
 
     /**
      * Set scale factor.
-     *
      * @param scale Scale factor. 1.0 = keep.
      */
     @SuppressWarnings("unused")
@@ -139,21 +135,45 @@ public class ConversionCommand {
      * @return The new dimension that is scaled from the original dimension.
      */
     public Dimension getDimensionFromLimits(int originalWidth, int originalHeight) {
-        if (this.dimension == null)
+
+        if (this.dimension == null) {
             return new Dimension(originalWidth, originalHeight);
+        }
 
-        int maxWidth = this.dimension.width;
-        int maxHeight = this.dimension.height;
+        final int maxWidth = this.dimension.width;
+        final int maxHeight = this.dimension.height;
 
-        float dW = (float) maxWidth / (float) originalWidth;
-        float dH = (float) maxHeight / (float) originalHeight;
+        final float dW = (float) maxWidth / (float) originalWidth;
+        final float dH = (float) maxHeight / (float) originalHeight;
 
-        float scaleF = Math.min(dW, dH);
+        final float scaleF = Math.min(dW, dH);
 
         final int newWidth = (int) (originalWidth * scaleF);
         final int newHeight = (int) (originalHeight * scaleF);
 
         return new Dimension(newWidth, newHeight);
+    }
+
+    /**
+     * Helper method to build ConversionCommand
+     * @param format image format
+     * @param width image width
+     * @param height image height
+     * @param quality image quality
+     * @return newly created ConversionCommand
+     */
+    public static ConversionCommand buildConversionCommand(String format, int width, int height, ConversionCommand.CompressionQuality quality) {
+        final ConversionCommand command = new ConversionCommand();
+        command.setOutputFormat(format);
+        command.setDimension(new Dimension(width, height));
+        final int iQuality = switch (quality) {
+            case LOSSLESS -> 0;
+            case LOSSY_BEST -> 1;
+            case LOSSY_SPEED -> 100;
+            default -> 50;
+        };
+        command.setQuality(iQuality);
+        return command;
     }
 
     // ----------------------------------------------------------------------------

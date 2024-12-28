@@ -11,13 +11,12 @@ import java.io.OutputStream;
 public interface PdfProvider {
     /**
      * Create a thumbnail image for a given PDF file.
-     *
-     * @param inputFile     Input file.
-     * @param outputStream  OutputStream, to which the thumbnail is written. Important: Stream is not closed!
-     * @param format        Output file format given as a MIME type.
-     * @param width         Width in pixel.
-     * @param height        Height in pixel.
-     * @param quality       Quality factor for output compression.
+     * @param inputFile Input file.
+     * @param outputStream OutputStream, to which the thumbnail is written. Important: Stream is not closed!
+     * @param format Output file format given as a MIME type.
+     * @param width Width in pixel.
+     * @param height Height in pixel.
+     * @param quality Quality factor for output compression.
      * @throws Exception on any error opening the file, converting the file or writing to the output.
      */
 

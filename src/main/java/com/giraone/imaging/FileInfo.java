@@ -99,18 +99,18 @@ public class FileInfo {
      */
     public String dumpInfo() {
         return "MimeType=" +
-                this.getMimeType() +
-                ";CompressionFormat=" +
-                this.getCompressionFormat() +
-                ";Width=" +
-                this.getWidth() +
-                ";Height=" +
-                this.getHeight() +
-                ";CompressionFormat=" +
-                this.getCompressionFormat() +
-                ";BitsPerPixel=" +
-                this.getBitsPerPixel() +
-                ";ProviderFormat=" +
-                this.getProviderFormat();
+            this.getMimeType() +
+            ";CompressionFormat=" +
+            this.getCompressionFormat() +
+            ";Width=" +
+            this.getWidth() +
+            ";Height=" +
+            this.getHeight() +
+            ";CompressionFormat=" +
+            this.getCompressionFormat() +
+            ";BitsPerPixel=" +
+            this.getBitsPerPixel() +
+            ";ProviderFormat=" +
+            this.getProviderFormat();
     }
 }

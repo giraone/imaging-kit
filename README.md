@@ -35,11 +35,11 @@ See [java2/ProviderJava2D.java](src/main/java/com/giraone/imaging/java2/Provider
 ## Release Notes
 
 - V1.3.0 (2024-12-28)
-  - Upgrade to JDK 17 build
+  - Upgrade to a JDK 17 build source and target
   - Upgrade to latest dependencies (e.g. PDFBox 3.0.3)
   - The seconds implementation based on [IMGSCALR](https://github.com/rkalla/imgscalr](https://github.com/rkalla/imgscalr) was removed.
   - The parameter `ConversionCommand.SpeedHint speedHint` was removed
-
+  - The interface supports now `java.nio.file.Path` besides `java.io.File`
 - V1.2.0 (2022-10-31)
   - Upgrade to latest dependencies
 - V1.1.0 (2021-12-19)

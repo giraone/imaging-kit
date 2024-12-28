@@ -40,13 +40,12 @@ public class PdfProviderPdfBox implements PdfProvider {
 
     /**
      * Create a thumbnail image for a given PDF file.
-     *
-     * @param inputFile     Input file.
-     * @param outputStream  OutputStream, to which the thumbnail is written. Important: Stream is not closed!
-     * @param format        Output file format given as a MIME type.
-     * @param width         Width in pixel.
-     * @param height        Height in pixel.
-     * @param quality       Quality factor for output compression.
+     * @param inputFile Input file.
+     * @param outputStream OutputStream, to which the thumbnail is written. Important: Stream is not closed!
+     * @param format Output file format given as a MIME type.
+     * @param width Width in pixel.
+     * @param height Height in pixel.
+     * @param quality Quality factor for output compression.
      */
     @Override
     public void createThumbNail(File inputFile, OutputStream outputStream, String format, int width, int height,

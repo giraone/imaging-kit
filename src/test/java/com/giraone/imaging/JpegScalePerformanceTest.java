@@ -30,9 +30,9 @@ public class JpegScalePerformanceTest {
     private static final String TEST_FILE_PNG_02 = "image-02.png";
 
     private static final String[] ALL_TEST_FILES = {
-            TEST_FILE_JPEG_01, TEST_FILE_JPEG_02,
-            TEST_FILE_JPEG_EXIF_01, TEST_FILE_JPEG_EXIF_02, TEST_FILE_JPEG_EXIF_03,
-            TEST_FILE_PNG_01, TEST_FILE_PNG_02
+        TEST_FILE_JPEG_01, TEST_FILE_JPEG_02,
+        TEST_FILE_JPEG_EXIF_01, TEST_FILE_JPEG_EXIF_02, TEST_FILE_JPEG_EXIF_03,
+        TEST_FILE_PNG_01, TEST_FILE_PNG_02
     };
 
     private static Map<String, File> testFiles;
@@ -89,18 +89,18 @@ public class JpegScalePerformanceTest {
         long start1 = System.currentTimeMillis();
         try (FileOutputStream outputStream = new FileOutputStream(outFile1)) {
             provider.createThumbNail(inFile, outputStream, "image/jpeg", thumbWidthAndHeight, thumbWidthAndHeight,
-                    ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
+                ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
         }
         long end1 = System.currentTimeMillis();
-        LOG.debug("{}: {} milliseconds", inFile, (end1-start1));
+        LOG.debug("{}: {} milliseconds", inFile, (end1 - start1));
 
         long start2 = System.currentTimeMillis();
         try (FileOutputStream outputStream = new FileOutputStream(outFile2)) {
             provider.createThumbNail(inFile, outputStream, "image/jpeg", scaledWidthAndHeight, scaledWidthAndHeight,
-                    ConversionCommand.CompressionQuality.LOSSY_BEST);
+                ConversionCommand.CompressionQuality.LOSSY_BEST);
         }
         long end2 = System.currentTimeMillis();
-        LOG.debug("{}: {} milliseconds", inFile, (end2-start2));
+        LOG.debug("{}: {} milliseconds", inFile, (end2 - start2));
     }
 
     @SuppressWarnings("unused")

@@ -89,22 +89,22 @@ public class PdfDocumentInformation {
     public PDDocumentInformation build() {
 
         PDDocumentInformation pdDocumentInformation = new PDDocumentInformation();
-        if (this.title != null && this.title.trim().length() > 0) {
+        if (this.title != null && !this.title.trim().isEmpty()) {
             pdDocumentInformation.setTitle(this.title.trim());
         }
-        if (this.subject != null && this.subject.trim().length() > 0) {
+        if (this.subject != null && !this.subject.trim().isEmpty()) {
             pdDocumentInformation.setSubject(this.subject.trim());
         }
-        if (this.author != null && this.author.trim().length() > 0) {
+        if (this.author != null && !this.author.trim().isEmpty()) {
             pdDocumentInformation.setAuthor(this.author.trim());
         }
-        if (this.keywords != null && this.keywords.trim().length() > 0) {
+        if (this.keywords != null && !this.keywords.trim().isEmpty()) {
             pdDocumentInformation.setKeywords(this.keywords.trim());
         }
-        if (this.creator != null && this.creator.trim().length() > 0) {
+        if (this.creator != null && !this.creator.trim().isEmpty()) {
             pdDocumentInformation.setCreator(this.creator.trim());
         }
-        if (this.producer != null && this.producer.trim().length() > 0) {
+        if (this.producer != null && !this.producer.trim().isEmpty()) {
             pdDocumentInformation.setProducer(this.producer.trim());
         }
         if (this.creationDate != null) {
@@ -118,22 +118,22 @@ public class PdfDocumentInformation {
 
     public static PdfDocumentInformation build(PDDocumentInformation pdDocumentInformation) {
         PdfDocumentInformation pdfDocumentInformation = new PdfDocumentInformation();
-        if (pdDocumentInformation.getTitle() != null && pdDocumentInformation.getTitle().trim().length() > 0) {
+        if (pdDocumentInformation.getTitle() != null && !pdDocumentInformation.getTitle().trim().isEmpty()) {
             pdfDocumentInformation.setTitle(pdDocumentInformation.getTitle().trim());
         }
-        if (pdDocumentInformation.getSubject() != null && pdDocumentInformation.getSubject().trim().length() > 0) {
+        if (pdDocumentInformation.getSubject() != null && !pdDocumentInformation.getSubject().trim().isEmpty()) {
             pdfDocumentInformation.setSubject(pdDocumentInformation.getSubject().trim());
         }
-        if (pdDocumentInformation.getAuthor() != null && pdDocumentInformation.getAuthor().trim().length() > 0) {
+        if (pdDocumentInformation.getAuthor() != null && !pdDocumentInformation.getAuthor().trim().isEmpty()) {
             pdfDocumentInformation.setAuthor(pdDocumentInformation.getAuthor().trim());
         }
-        if (pdDocumentInformation.getKeywords() != null && pdDocumentInformation.getKeywords().trim().length() > 0) {
+        if (pdDocumentInformation.getKeywords() != null && !pdDocumentInformation.getKeywords().trim().isEmpty()) {
             pdfDocumentInformation.setKeywords(pdDocumentInformation.getKeywords().trim());
         }
-        if (pdDocumentInformation.getCreator() != null && pdDocumentInformation.getCreator().trim().length() > 0) {
+        if (pdDocumentInformation.getCreator() != null && !pdDocumentInformation.getCreator().trim().isEmpty()) {
             pdfDocumentInformation.setCreator(pdDocumentInformation.getCreator().trim());
         }
-        if (pdDocumentInformation.getProducer() != null && pdDocumentInformation.getProducer().trim().length() > 0) {
+        if (pdDocumentInformation.getProducer() != null && !pdDocumentInformation.getProducer().trim().isEmpty()) {
             pdfDocumentInformation.setProducer(pdDocumentInformation.getProducer().trim());
         }
         if (pdDocumentInformation.getCreationDate() != null) {
@@ -148,12 +148,12 @@ public class PdfDocumentInformation {
     @Override
     public String toString() {
         return "PdfDocumentInformation{" +
-                "title='" + title + '\'' +
-                ", subject='" + subject + '\'' +
-                ", author='" + author + '\'' +
-                ", keywords='" + keywords + '\'' +
-                ", creator='" + creator + '\'' +
-                ", producer='" + producer + '\'' +
-                '}';
+            "title='" + title + '\'' +
+            ", subject='" + subject + '\'' +
+            ", author='" + author + '\'' +
+            ", keywords='" + keywords + '\'' +
+            ", creator='" + creator + '\'' +
+            ", producer='" + producer + '\'' +
+            '}';
     }
 }

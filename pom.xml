@@ -249,7 +249,7 @@
         </dependency>
 
         <!-- TEST -->
-        <!-- SLFJ simple for testing -->
+        <!-- SLF4J simple implementation for testing -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>

@@ -1,4 +1,4 @@
-### Maven stuff  ###
+### Maven ###
 target/
 !.mvn/wrapper/maven-wrapper.jar
 pom.xml.tag
@@ -8,6 +8,9 @@ pom.xml.next
 release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
+
+### Claude ###
+.claude/
 
 ### STS ###
 .apt_generated

@@ -10,11 +10,13 @@ public class ConversionCommand {
     private boolean compression;
     private int quality;
     private Dimension dimension;
+    private boolean keepAspectRatio;
     private Float scale;
 
     public ConversionCommand() {
         this.compression = false;
         this.quality = 0;
+        this.keepAspectRatio = true;
     }
 
     /**
@@ -84,7 +86,8 @@ public class ConversionCommand {
     }
 
     /**
-     * Set output dimension
+     * Set output dimension.
+     * If keepAspectRatio is true, the dimension defines the maximum width and height.
      * @param value Output dimension.
      */
     public void setDimension(Dimension value) {
@@ -97,6 +100,23 @@ public class ConversionCommand {
      */
     public Dimension getDimension() {
         return this.dimension;
+    }
+
+    /**
+     * Check, whether to keep the aspect ratio.
+     * @return true = keep aspect ratio, false = do not keep aspect ratio
+     */
+    @SuppressWarnings("unused")
+    public boolean isKeepAspectRatio() {
+        return keepAspectRatio;
+    }
+
+    /**
+     * Define, whether to keep the aspect ratio.
+     * @param keepAspectRatio true = keep aspect ratio, false = do not keep aspect ratio
+     */
+    public void setKeepAspectRatio(boolean keepAspectRatio) {
+        this.keepAspectRatio = keepAspectRatio;
     }
 
     /**
@@ -141,6 +161,26 @@ public class ConversionCommand {
             }
         } else {
             return this.getDimension();
+        }
+    }
+
+    /**
+     * Return a new dimension that is calculated by the given original width and height.
+     * Depends on the settings of {@link #setKeepAspectRatio(boolean)} and {@link #setDimension(Dimension)}.
+     * If keepAspectRatio is true, the returned dimension keeps the original
+     * aspect ratio and is with the limits defined by {@link #setDimension(Dimension)}.
+     * @param originalWidth The width of the original image used for the calculation.
+     * @param originalHeight The height of the original image used for the calculation.
+     * @return The new dimension that is scaled from the original dimension.
+     */
+    public Dimension getTargetDimension(int originalWidth, int originalHeight) {
+
+        if (this.dimension == null) {
+            return new Dimension(originalWidth, originalHeight);
+        } else if (!this.keepAspectRatio) {
+            return new Dimension(this.dimension.width, this.dimension.height);
+        } else {
+            return getDimensionFromLimits(originalWidth, originalHeight);
         }
     }
 

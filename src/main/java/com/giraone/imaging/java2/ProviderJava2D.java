@@ -103,7 +103,7 @@ public class ProviderJava2D implements ImagingProvider {
     public void convertAndWriteImage(BufferedImage bufferedImage, OutputStream out, ConversionCommand command)
         throws IOException, FormatNotSupportedException {
 
-        final Dimension dimension = command.getDimensionFromLimits(bufferedImage.getWidth(), bufferedImage.getHeight());
+        final Dimension dimension = command.getTargetDimension(bufferedImage.getWidth(), bufferedImage.getHeight());
         Image targetImage = bufferedImage;
         if (dimension != null) {
             targetImage = targetImage.getScaledInstance(dimension.width, dimension.height, Image.SCALE_DEFAULT);

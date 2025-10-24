@@ -247,14 +247,39 @@ class ProviderBitmapImageTest {
 
     @ParameterizedTest
     @MethodSource("provideTestFiles")
-    void convertImage_to_png_works_for_all_test_files(File file) throws IOException, FormatNotSupportedException {
+    void convertImage_to_png_no_keep_aspect_works_for_all_test_files(File file) throws IOException, FormatNotSupportedException {
         /// arrange
-        FileInfo fileInfoSource = providerUnderTest.fetchFileInfo(file);
-        int maxPixelOfLargestDimension = 320;
-        Dimension expectedDimension = calculateExpectedDimension(fileInfoSource, maxPixelOfLargestDimension);
         ConversionCommand command = new ConversionCommand();
         command.setOutputFormat("image/png");
-        command.setDimension(new Dimension(maxPixelOfLargestDimension, maxPixelOfLargestDimension));
+        command.setDimension(new Dimension(320, 320));
+        command.setKeepAspectRatio(false);
+        File outFile = File.createTempFile("providerUnderTest-png-", ".png");
+        if (CLEAR_OUTPUT_FILES) {
+            outFile.deleteOnExit();
+        }
+        /// act
+        try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
+            providerUnderTest.convertImage(file, outputStream, command);
+        }
+        /// assert
+        assertThat(outFile.exists()).isTrue();
+        assertThat(outFile.length()).isGreaterThan(0);
+        FileInfo fileInfoResult = providerUnderTest.fetchFileInfo(outFile);
+        assertThat(fileInfoResult.getMimeType()).isEqualTo("image/png");
+        assertThat(fileInfoResult.getWidth()).isEqualTo(320);
+        assertThat(fileInfoResult.getHeight()).isEqualTo(320);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTestFiles")
+    void convertImage_to_png_keep_aspect_works_for_all_test_files(File file) throws IOException, FormatNotSupportedException {
+        /// arrange
+        FileInfo fileInfoSource = providerUnderTest.fetchFileInfo(file);
+        int maxPixelSizeOfLargestDimension = 320;
+        Dimension expectedDimension = calculateExpectedDimension(fileInfoSource, maxPixelSizeOfLargestDimension);
+        ConversionCommand command = new ConversionCommand();
+        command.setOutputFormat("image/png");
+        command.setDimension(new Dimension(maxPixelSizeOfLargestDimension, maxPixelSizeOfLargestDimension));
         File outFile = File.createTempFile("providerUnderTest-png-", ".png");
         if (CLEAR_OUTPUT_FILES) {
             outFile.deleteOnExit();
@@ -277,11 +302,11 @@ class ProviderBitmapImageTest {
     void convertImage_to_gif_works_for_all_test_files(File file) throws IOException, FormatNotSupportedException {
         /// arrange
         FileInfo fileInfoSource = providerUnderTest.fetchFileInfo(file);
-        int maxPixelOfLargestDimension = 100;
-        Dimension expectedDimension = calculateExpectedDimension(fileInfoSource, maxPixelOfLargestDimension);
+        int maxPixelSizeOfLargestDimension = 100;
+        Dimension expectedDimension = calculateExpectedDimension(fileInfoSource, maxPixelSizeOfLargestDimension);
         ConversionCommand command = new ConversionCommand();
         command.setOutputFormat("image/gif");
-        command.setDimension(new Dimension(maxPixelOfLargestDimension, maxPixelOfLargestDimension));
+        command.setDimension(new Dimension(maxPixelSizeOfLargestDimension, maxPixelSizeOfLargestDimension));
         File outFile = File.createTempFile("providerUnderTest-gif-", ".gif");
         if (CLEAR_OUTPUT_FILES) {
             outFile.deleteOnExit();
@@ -304,8 +329,8 @@ class ProviderBitmapImageTest {
         /// arrange
         File file = supportedTestFiles.get(TEST_FILE_JPEG_01);
         FileInfo fileInfoSource = providerUnderTest.fetchFileInfo(file);
-        int maxPixelOfLargestDimension = 600;
-        Dimension expectedDimension = calculateExpectedDimension(fileInfoSource, maxPixelOfLargestDimension);
+        int maxPixelSizeOfLargestDimension = 600;
+        Dimension expectedDimension = calculateExpectedDimension(fileInfoSource, maxPixelSizeOfLargestDimension);
         File outFile = File.createTempFile("providerUnderTest-thumb-png-", ".png");
         if (CLEAR_OUTPUT_FILES) {
             outFile.deleteOnExit();
@@ -314,7 +339,7 @@ class ProviderBitmapImageTest {
         /// act
         try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
             providerUnderTest.createThumbnail(file, outputStream,
-                "image/png", maxPixelOfLargestDimension, maxPixelOfLargestDimension,
+                "image/png", maxPixelSizeOfLargestDimension, maxPixelSizeOfLargestDimension,
                 ConversionCommand.CompressionQuality.LOSSLESS);
         }
 
@@ -332,8 +357,8 @@ class ProviderBitmapImageTest {
         /// arrange
         File file = supportedTestFiles.get(TEST_FILE_JPEG_02);
         FileInfo fileInfoSource = providerUnderTest.fetchFileInfo(file);
-        int maxPixelOfLargestDimension = 160;
-        Dimension expectedDimension = calculateExpectedDimension(fileInfoSource, maxPixelOfLargestDimension);
+        int maxPixelSizeOfLargestDimension = 160;
+        Dimension expectedDimension = calculateExpectedDimension(fileInfoSource, maxPixelSizeOfLargestDimension);
         File outFile = File.createTempFile("providerUnderTest-thumb-gif-", ".gif");
         if (CLEAR_OUTPUT_FILES) {
             outFile.deleteOnExit();
@@ -342,7 +367,7 @@ class ProviderBitmapImageTest {
         /// act
         try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
             providerUnderTest.createThumbnail(file, outputStream,
-                "image/gif", maxPixelOfLargestDimension, maxPixelOfLargestDimension,
+                "image/gif", maxPixelSizeOfLargestDimension, maxPixelSizeOfLargestDimension,
                 ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
         }
 
@@ -505,26 +530,26 @@ class ProviderBitmapImageTest {
     /**
      * Calculate the expected dimension for a thumbnail image preserving the aspect ratio.
      * @param fileInfoSource Source file info.
-     * @param maxPixelOfLargestDimension Maximum pixel size of the largest dimension (width or height).
+     * @param maxPixelSizeOfLargestDimension Maximum pixel size of the largest dimension (width or height).
      * @return The expected dimension.
      */
-    private Dimension calculateExpectedDimension(FileInfo fileInfoSource, int maxPixelOfLargestDimension) {
+    private Dimension calculateExpectedDimension(FileInfo fileInfoSource, int maxPixelSizeOfLargestDimension) {
         int sourceWidth = fileInfoSource.getWidth();
         int sourceHeight = fileInfoSource.getHeight();
         int expectedWidth;
         int expectedHeight;
         if (sourceWidth > sourceHeight) {
-            if (sourceWidth > maxPixelOfLargestDimension) {
-                expectedWidth = maxPixelOfLargestDimension;
-                expectedHeight = (int) ((double) sourceHeight / (double) sourceWidth * (double) maxPixelOfLargestDimension);
+            if (sourceWidth > maxPixelSizeOfLargestDimension) {
+                expectedWidth = maxPixelSizeOfLargestDimension;
+                expectedHeight = (int) ((double) sourceHeight / (double) sourceWidth * (double) maxPixelSizeOfLargestDimension);
             } else {
                 expectedWidth = sourceWidth;
                 expectedHeight = sourceHeight;
             }
         } else {
-            if (sourceHeight > maxPixelOfLargestDimension) {
-                expectedHeight = maxPixelOfLargestDimension;
-                expectedWidth = (int) ((double) sourceWidth / (double) sourceHeight * (double) maxPixelOfLargestDimension);
+            if (sourceHeight > maxPixelSizeOfLargestDimension) {
+                expectedHeight = maxPixelSizeOfLargestDimension;
+                expectedWidth = (int) ((double) sourceWidth / (double) sourceHeight * (double) maxPixelSizeOfLargestDimension);
             } else {
                 expectedWidth = sourceWidth;
                 expectedHeight = sourceHeight;

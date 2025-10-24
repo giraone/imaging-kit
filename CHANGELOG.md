@@ -8,6 +8,7 @@
 -  Updated `FileTypeDetector.isSupportedImage()` to include GIF format
 
 ### API Improvements
+- Explicit `keepAspectRatio` parameter added to `ConversionCommand` class.
 - Renamed `createThumbNail` to `createThumbnail` for correct spelling
 -  **Replaced generic `Exception` with specific exception types** in `ImagingProvider` interface methods
    - Methods now throw `IOException`, `FormatNotSupportedException`, and `ImageConversionException` instead of generic `Exception`

@@ -50,6 +50,13 @@
 - Do not use mocking frameworks in tests, use test doubles, if needed.
 
 
-## Convention for Writing Unit and Integration Tests
+## Convention for Writing Unit Tests
 
-- Normal unit test for a class "Clazz.java" are located in the named "ClazzTest.java".
+- Unit test framework is *JUnit5*.
+- Used assertion language in tests is *AssertJ*.
+- Normal unit tests for a class "Clazz.java" are located in a file named "ClazzTest.java".
+- Use AAA pattern for tests (Arrange, Act, Assert) and separate the sections of the test code
+  by a three dash comment line containing arrange, act, assert.
+- When testing with multiple test data sets, use JUnit5 parameterized tests (*@ParameterizedTest*).
+- When testing for exceptions, use AssertJ's *assertThatThrownBy*.
+- When using temporary files in tests, ensure they are properly deleted after the test execution.

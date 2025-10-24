@@ -1,6 +1,5 @@
 package com.giraone.imaging.java2;
 
-import com.giraone.imaging.ImagingProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +12,7 @@ import java.awt.image.ImageObserver;
  */
 public class LoggerImageObserver implements ImageObserver {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImagingProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggerImageObserver.class);
 
     private LoggerImageObserver() {
     }
@@ -24,7 +23,7 @@ public class LoggerImageObserver implements ImageObserver {
 
     public boolean imageUpdate(Image img, int infoFlags, int x, int y, int width, int height) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("LoggerImageObserver.imageUpdate|infoFlags=" + infoFlags);
+            LOGGER.debug("LoggerImageObserver.imageUpdate|infoFlags={}", infoFlags);
         }
         return true;
     }

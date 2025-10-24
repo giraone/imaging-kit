@@ -1,6 +1,9 @@
 # Release Notes and List of Changes
 
-## V1.3.1 (2025-10-24)
+## V1.3.1 (unreleased)
+-  Fixed stream closing bug in FileTypeDetector.getFileType(InputStream) - now correctly honors the documented contract that the stream will not be closed
+-  Fixed AGENTS.md to contain correct imaging-kit project information instead of wrong secrets project references
+-  Updated README.md platform badge to reflect correct Java 17 requirement (was incorrectly showing Java 8)
 -  Upgrade to latest dependencies (e.g. PDFBox 3.0.6)
 ## V1.3.0 (2024-12-28)
 -  Upgrade to a JDK 17 build source and target

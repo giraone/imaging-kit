@@ -20,6 +20,9 @@
 - Dependencies for test code
   - Unit test framework is *JUnit5*.
   - Used assertion language in tests is *AssertJ*.
+- Testing
+  - Include unit tests and integration tests.
+  - Ensure high code coverage.
 - Code Changes
   - Document summary of code changes in `CHANGELOG.md`. Add latest change on top.
   

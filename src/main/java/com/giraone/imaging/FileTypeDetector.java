@@ -84,7 +84,6 @@ public class FileTypeDetector {
         try {
             int r = is.read(firstBytes, 0, 132);
             if (r < 4) return FileType.UNKNOWN;
-            is.close();
         } catch (IOException e) {
             LOGGER.error("Error reading input stream", e);
             return FileType.UNKNOWN;

@@ -205,14 +205,13 @@ class ProviderBitmapImageTest {
 
     @ParameterizedTest
     @MethodSource("provideTestFiles")
-    void convertImage_fails_for_wrong_output_format() throws IOException {
+    void convertImage_fails_for_wrong_output_format(File file) throws IOException {
         /// arrange
         ConversionCommand command = new ConversionCommand();
         command.setOutputFormat("image/tiff");
         command.setDimension(new Dimension(320, 320));
         command.setQuality(10);
 
-        File testFile = supportedTestFiles.get(TEST_FILE_JPEG_01);
         File outFile = File.createTempFile("providerUnderTest-image-", ".jpg");
         if (CLEAR_OUTPUT_FILES) {
             outFile.deleteOnExit();
@@ -220,10 +219,10 @@ class ProviderBitmapImageTest {
         /// act/assert
         assertThatThrownBy(() -> {
             try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
-                providerUnderTest.convertImage(testFile, outputStream, command);
+                providerUnderTest.convertImage(file, outputStream, command);
             }
         })
-            .isInstanceOf(IOException.class)
+            .isInstanceOf(FormatNotSupportedException.class)
             .hasMessageContaining("Unsupported output format");
     }
 
@@ -244,6 +243,175 @@ class ProviderBitmapImageTest {
         try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
             providerUnderTest.convertImage(file, outputStream, command);
         }
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTestFiles")
+    void convertImage_to_png_works_for_all_test_files(File file) throws IOException, FormatNotSupportedException {
+        /// arrange
+        ConversionCommand command = new ConversionCommand();
+        command.setOutputFormat("image/png");
+        command.setDimension(new Dimension(320, 320));
+        File outFile = File.createTempFile("providerUnderTest-png-", ".png");
+        if (CLEAR_OUTPUT_FILES) {
+            outFile.deleteOnExit();
+        }
+
+        /// act
+        try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
+            providerUnderTest.convertImage(file, outputStream, command);
+        }
+
+        /// assert
+        assertThat(outFile.exists()).isTrue();
+        assertThat(outFile.length()).isGreaterThan(0);
+        FileInfo fileInfo = providerUnderTest.fetchFileInfo(outFile);
+        assertThat(fileInfo.getMimeType()).isEqualTo("image/png");
+        assertThat(fileInfo.getWidth()).isLessThanOrEqualTo(320);
+        assertThat(fileInfo.getHeight()).isLessThanOrEqualTo(320);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTestFiles")
+    void convertImage_to_gif_works_for_all_test_files(File file) throws IOException, FormatNotSupportedException {
+        /// arrange
+        ConversionCommand command = new ConversionCommand();
+        command.setOutputFormat("image/gif");
+        command.setDimension(new Dimension(320, 320));
+        File outFile = File.createTempFile("providerUnderTest-gif-", ".gif");
+        if (CLEAR_OUTPUT_FILES) {
+            outFile.deleteOnExit();
+        }
+
+        /// act
+        try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
+            providerUnderTest.convertImage(file, outputStream, command);
+        }
+
+        /// assert
+        assertThat(outFile.exists()).isTrue();
+        assertThat(outFile.length()).isGreaterThan(0);
+        // Note: GIF format detection is supported but FileTypeDetector may not detect it correctly
+        // so we just verify the file was created and has content
+    }
+
+    @Test
+    void createThumbNail_to_png_works() throws Exception {
+        /// arrange
+        File testFile = supportedTestFiles.get(TEST_FILE_JPEG_01);
+        int thumbPixelMaxSize = 180;
+        File outFile = File.createTempFile("providerUnderTest-thumb-png-", ".png");
+        if (CLEAR_OUTPUT_FILES) {
+            outFile.deleteOnExit();
+        }
+
+        /// act
+        try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
+            providerUnderTest.createThumbNail(testFile, outputStream,
+                "image/png", thumbPixelMaxSize, thumbPixelMaxSize,
+                ConversionCommand.CompressionQuality.LOSSLESS);
+        }
+
+        /// assert
+        assertThat(outFile.exists()).isTrue();
+        assertThat(outFile.length()).isGreaterThan(0);
+        FileInfo fileInfo = providerUnderTest.fetchFileInfo(outFile);
+        assertThat(fileInfo.getMimeType()).isEqualTo("image/png");
+        assertThat(fileInfo.getWidth()).isLessThanOrEqualTo(thumbPixelMaxSize);
+        assertThat(fileInfo.getHeight()).isLessThanOrEqualTo(thumbPixelMaxSize);
+    }
+
+    @Test
+    void createThumbNail_to_gif_works() throws Exception {
+        /// arrange
+        File testFile = supportedTestFiles.get(TEST_FILE_PNG_01);
+        int thumbPixelMaxSize = 180;
+        File outFile = File.createTempFile("providerUnderTest-thumb-gif-", ".gif");
+        if (CLEAR_OUTPUT_FILES) {
+            outFile.deleteOnExit();
+        }
+
+        /// act
+        try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
+            providerUnderTest.createThumbNail(testFile, outputStream,
+                "image/gif", thumbPixelMaxSize, thumbPixelMaxSize,
+                ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
+        }
+
+        /// assert
+        assertThat(outFile.exists()).isTrue();
+        assertThat(outFile.length()).isGreaterThan(0);
+    }
+
+    @Test
+    void convertImage_to_png_using_path_works() throws Exception {
+        /// arrange
+        Path testPath = supportedTestFiles.get(TEST_FILE_JPEG_01).toPath();
+        ConversionCommand command = new ConversionCommand();
+        command.setOutputFormat("image/png");
+        command.setDimension(new Dimension(400, 400));
+        Path outPath = Files.createTempFile("providerUnderTest-png-path-", ".png");
+        if (CLEAR_OUTPUT_FILES) {
+            outPath.toFile().deleteOnExit();
+        }
+
+        /// act
+        providerUnderTest.convertImage(testPath, outPath, command);
+
+        /// assert
+        assertThat(Files.exists(outPath)).isTrue();
+        assertThat(Files.size(outPath)).isGreaterThan(0);
+        FileInfo fileInfo = providerUnderTest.fetchFileInfo(outPath);
+        assertThat(fileInfo.getMimeType()).isEqualTo("image/png");
+    }
+
+    @Test
+    void convertImage_png_to_jpeg_preserves_dimensions() throws Exception {
+        /// arrange
+        File pngTestFile = supportedTestFiles.get(TEST_FILE_PNG_01);
+        FileInfo inputInfo = providerUnderTest.fetchFileInfo(pngTestFile);
+        ConversionCommand command = new ConversionCommand();
+        command.setOutputFormat("image/jpeg");
+        command.setQuality(ConversionCommand.CompressionQuality.LOSSY_BEST);
+        File outFile = File.createTempFile("providerUnderTest-png-to-jpeg-", ".jpg");
+        if (CLEAR_OUTPUT_FILES) {
+            outFile.deleteOnExit();
+        }
+
+        /// act
+        try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
+            providerUnderTest.convertImage(pngTestFile, outputStream, command);
+        }
+
+        /// assert
+        FileInfo outputInfo = providerUnderTest.fetchFileInfo(outFile);
+        assertThat(outputInfo.getMimeType()).isEqualTo("image/jpeg");
+        assertThat(outputInfo.getWidth()).isEqualTo(inputInfo.getWidth());
+        assertThat(outputInfo.getHeight()).isEqualTo(inputInfo.getHeight());
+    }
+
+    @Test
+    void convertImage_jpeg_to_png_preserves_dimensions() throws Exception {
+        /// arrange
+        File jpegTestFile = supportedTestFiles.get(TEST_FILE_JPEG_01);
+        FileInfo inputInfo = providerUnderTest.fetchFileInfo(jpegTestFile);
+        ConversionCommand command = new ConversionCommand();
+        command.setOutputFormat("image/png");
+        File outFile = File.createTempFile("providerUnderTest-jpeg-to-png-", ".png");
+        if (CLEAR_OUTPUT_FILES) {
+            outFile.deleteOnExit();
+        }
+
+        /// act
+        try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
+            providerUnderTest.convertImage(jpegTestFile, outputStream, command);
+        }
+
+        /// assert
+        FileInfo outputInfo = providerUnderTest.fetchFileInfo(outFile);
+        assertThat(outputInfo.getMimeType()).isEqualTo("image/png");
+        assertThat(outputInfo.getWidth()).isEqualTo(inputInfo.getWidth());
+        assertThat(outputInfo.getHeight()).isEqualTo(inputInfo.getHeight());
     }
 
     // -----------------------------------------------------------------------------------------------------------------

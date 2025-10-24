@@ -54,7 +54,8 @@
 
 - Unit test framework is *JUnit5*.
 - Used assertion language in tests is *AssertJ*.
-- Normal unit tests for a class "Clazz.java" are located in a file named "ClazzTest.java".
+- Normal unit tests for a class "Clazz.java" are located in the same package as the class under test and named "ClazzTest.java".
+  They are perform in the mvn test phase.
 - Use AAA pattern for tests (Arrange, Act, Assert) and separate the sections of the test code
   by a three dash comment line containing arrange, act, assert.
 - When testing with multiple test data sets, use JUnit5 parameterized tests (*@ParameterizedTest*).

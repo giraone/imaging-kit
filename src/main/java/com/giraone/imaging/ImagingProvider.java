@@ -33,20 +33,24 @@ public interface ImagingProvider {
      * @param inputFile Input file.
      * @param outputStream OutputStream, to which the new image is written. Important: Stream is not closed!
      * @param command An image conversion command.
-     * @throws Exception on any error opening the file, converting the file or writing to the output.
+     * @throws IOException on any error opening the file or writing to the output
+     * @throws FormatNotSupportedException if the input or output format is not supported
+     * @throws ImageConversionException if an error occurs during image conversion or scaling
      */
     void convertImage(File inputFile, OutputStream outputStream, ConversionCommand command)
-        throws Exception;
+        throws IOException, FormatNotSupportedException, ImageConversionException;
 
     /**
      * Convert an image to another image using image conversion functions.
      * @param inputPath Input file path.
      * @param outputStream OutputStream, to which the new image is written. Important: Stream is not closed!
      * @param command An image conversion command.
-     * @throws Exception on any error opening the file, converting the file or writing to the output.
+     * @throws IOException on any error opening the file or writing to the output
+     * @throws FormatNotSupportedException if the input or output format is not supported
+     * @throws ImageConversionException if an error occurs during image conversion or scaling
      */
     void convertImage(Path inputPath, OutputStream outputStream, ConversionCommand command)
-        throws Exception;
+        throws IOException, FormatNotSupportedException, ImageConversionException;
 
     /**
      * Create a thumbnail image for a given file.
@@ -56,10 +60,12 @@ public interface ImagingProvider {
      * @param width Width in pixel.
      * @param height Height in pixel.
      * @param quality Quality factor for output compression.
-     * @throws Exception on any error opening the file, converting the file or writing to the output.
+     * @throws IOException on any error opening the file or writing to the output
+     * @throws FormatNotSupportedException if the input or output format is not supported
+     * @throws ImageConversionException if an error occurs during thumbnail generation
      */
     void createThumbNail(File inputFile, OutputStream outputStream, String format, int width, int height,
-                         ConversionCommand.CompressionQuality quality) throws Exception;
+                         ConversionCommand.CompressionQuality quality) throws IOException, FormatNotSupportedException, ImageConversionException;
 
     /**
      * Create a thumbnail image for a given file.
@@ -69,21 +75,25 @@ public interface ImagingProvider {
      * @param width Width in pixel.
      * @param height Height in pixel.
      * @param quality Quality factor for output compression.
-     * @throws Exception on any error opening the file, converting the file or writing to the output.
+     * @throws IOException on any error opening the file or writing to the output
+     * @throws FormatNotSupportedException if the input or output format is not supported
+     * @throws ImageConversionException if an error occurs during thumbnail generation
      */
     void createThumbNail(Path inputPath, OutputStream outputStream, String format, int width, int height,
-                         ConversionCommand.CompressionQuality quality) throws Exception;
+                         ConversionCommand.CompressionQuality quality) throws IOException, FormatNotSupportedException, ImageConversionException;
 
     /**
      * Convert an image to another image using image conversion functions.
      * @param inputFile Input file.
      * @param outputFile Output file, to which the new image is written.
      * @param command An image conversion command.
-     * @throws Exception on any error opening the file, converting the file or writing to the output.
+     * @throws IOException on any error opening the file or writing to the output
+     * @throws FormatNotSupportedException if the input or output format is not supported
+     * @throws ImageConversionException if an error occurs during image conversion or scaling
      */
     @SuppressWarnings("unused")
     default void convertImage(File inputFile, File outputFile, ConversionCommand command)
-        throws Exception {
+        throws IOException, FormatNotSupportedException, ImageConversionException {
 
         try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
             convertImage(inputFile, outputStream, command);
@@ -95,11 +105,13 @@ public interface ImagingProvider {
      * @param inputPath Input file path.
      * @param outputPath Output file path, to which the new image is written.
      * @param command An image conversion command.
-     * @throws Exception on any error opening the file, converting the file or writing to the output.
+     * @throws IOException on any error opening the file or writing to the output
+     * @throws FormatNotSupportedException if the input or output format is not supported
+     * @throws ImageConversionException if an error occurs during image conversion or scaling
      */
     @SuppressWarnings("unused")
     default void convertImage(Path inputPath, Path outputPath, ConversionCommand command)
-        throws Exception {
+        throws IOException, FormatNotSupportedException, ImageConversionException {
 
         try (FileOutputStream outputStream = new FileOutputStream(outputPath.toFile())) {
             convertImage(inputPath, outputStream, command);
@@ -114,11 +126,13 @@ public interface ImagingProvider {
      * @param width Width in pixel.
      * @param height Height in pixel.
      * @param quality Quality factor for output compression.
-     * @throws Exception on any error opening the file, converting the file or writing to the output.
+     * @throws IOException on any error opening the file or writing to the output
+     * @throws FormatNotSupportedException if the input or output format is not supported
+     * @throws ImageConversionException if an error occurs during thumbnail generation
      */
     default void createThumbNail(File inputFile, File outputFile,
                                  String format, int width, int height,
-                                 ConversionCommand.CompressionQuality quality) throws Exception {
+                                 ConversionCommand.CompressionQuality quality) throws IOException, FormatNotSupportedException, ImageConversionException {
 
         try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
             createThumbNail(inputFile, outputStream, format, width, height, quality);
@@ -133,11 +147,13 @@ public interface ImagingProvider {
      * @param width Width in pixel.
      * @param height Height in pixel.
      * @param quality Quality factor for output compression.
-     * @throws Exception on any error opening the file, converting the file or writing to the output.
+     * @throws IOException on any error opening the file or writing to the output
+     * @throws FormatNotSupportedException if the input or output format is not supported
+     * @throws ImageConversionException if an error occurs during thumbnail generation
      */
     default void createThumbNail(Path inputPath, Path outputPath,
                                  String format, int width, int height,
-                                 ConversionCommand.CompressionQuality quality) throws Exception {
+                                 ConversionCommand.CompressionQuality quality) throws IOException, FormatNotSupportedException, ImageConversionException {
 
         try (FileOutputStream outputStream = new FileOutputStream(outputPath.toFile())) {
             createThumbNail(inputPath, outputStream, format, width, height, quality);

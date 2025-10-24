@@ -38,7 +38,7 @@ public class ImageToFileWriter {
      * @param bufferedImage the image bitmap to be saved
      * @param outputStream Stream to write the image to. Stream is flushed, but not closed.
      * @param quality 0.0-1.0 setting of desired quality level.
-     * @throws IOException On any IO exception (
+     * @throws IOException On any IO exception
      */
     public static void saveJpeg(BufferedImage bufferedImage, OutputStream outputStream, float quality)
         throws IOException {
@@ -49,7 +49,7 @@ public class ImageToFileWriter {
         final JPEGImageWriteParam jpegParams = new JPEGImageWriteParam(null);
         jpegParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
         jpegParams.setCompressionQuality(quality);
-		
+
         /*
         / Alternative!
         ImageWriter writer = null;
@@ -65,6 +65,34 @@ public class ImageToFileWriter {
         writer.write(/* IIOMetadata */ null,
             new IIOImage(bufferedImage, /* thumbnails */ null, /* IIOMetadata */ null), jpegParams);
         //writer.dispose(); // We do not dispose, because of the re-use!!!
+        outputStream.flush();
+    }
+
+    /**
+     * Save a bitmap as a PNG image (lossless compression).
+     * PNG format supports transparency and provides lossless compression.
+     *
+     * @param bufferedImage the image bitmap to be saved
+     * @param outputStream Stream to write the image to. Stream is flushed, but not closed.
+     * @throws IOException On any IO exception
+     */
+    public static void savePng(BufferedImage bufferedImage, OutputStream outputStream)
+        throws IOException {
+        ImageIO.write(bufferedImage, "png", outputStream);
+        outputStream.flush();
+    }
+
+    /**
+     * Save a bitmap as a GIF image.
+     * Note: GIF format is limited to 256 colors, so images may be color-reduced.
+     *
+     * @param bufferedImage the image bitmap to be saved
+     * @param outputStream Stream to write the image to. Stream is flushed, but not closed.
+     * @throws IOException On any IO exception
+     */
+    public static void saveGif(BufferedImage bufferedImage, OutputStream outputStream)
+        throws IOException {
+        ImageIO.write(bufferedImage, "gif", outputStream);
         outputStream.flush();
     }
 }

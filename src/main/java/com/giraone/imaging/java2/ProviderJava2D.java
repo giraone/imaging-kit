@@ -4,6 +4,7 @@ import com.giraone.imaging.ConversionCommand;
 import com.giraone.imaging.FileInfo;
 import com.giraone.imaging.FileTypeDetector;
 import com.giraone.imaging.FormatNotSupportedException;
+import com.giraone.imaging.ImageConversionException;
 import com.giraone.imaging.ImagingProvider;
 
 import java.awt.*;
@@ -55,7 +56,7 @@ public class ProviderJava2D implements ImagingProvider {
     }
 
     public void createThumbNail(File inputFile, OutputStream out, String format, int width, int height,
-                                ConversionCommand.CompressionQuality quality) throws Exception {
+                                ConversionCommand.CompressionQuality quality) throws IOException, FormatNotSupportedException {
 
         final ConversionCommand command = ConversionCommand.buildConversionCommand(format, width, height, quality);
         this.convertImage(inputFile, out, command);
@@ -63,48 +64,44 @@ public class ProviderJava2D implements ImagingProvider {
 
     @Override
     public void createThumbNail(Path inputPath, OutputStream out, String format, int width, int height,
-                                ConversionCommand.CompressionQuality quality) throws Exception {
+                                ConversionCommand.CompressionQuality quality) throws IOException, FormatNotSupportedException {
         final ConversionCommand command = ConversionCommand.buildConversionCommand(format, width, height, quality);
         this.convertImage(inputPath, out, command);
     }
 
-    public void convertImage(File inputFile, OutputStream out, ConversionCommand command) throws Exception {
+    public void convertImage(File inputFile, OutputStream out, ConversionCommand command) throws IOException, FormatNotSupportedException {
 
-        // We support only JPEG as the target format
-        if (!command.getOutputFormat().equals("image/jpeg")) {
-            throw new FormatNotSupportedException("Unsupported target format " + command.getOutputFormat());
-        }
         final ImagePlusInfo imagePlusInfo = ImageOpener.openImage(inputFile);
         if (imagePlusInfo == null) {
             throw new FormatNotSupportedException("Unsupported input file type for file " + inputFile);
         }
         final BufferedImage bufferedImage = imagePlusInfo.getImage();
-        convertAndWriteImageAsJpeg(bufferedImage, out, command);
+        convertAndWriteImage(bufferedImage, out, command);
     }
 
     @Override
-    public void convertImage(Path inputPath, OutputStream out, ConversionCommand command) throws Exception {
-        // We support only JPEG as the target format
-        if (!command.getOutputFormat().equals("image/jpeg")) {
-            throw new FormatNotSupportedException("Unsupported target format " + command.getOutputFormat());
-        }
+    public void convertImage(Path inputPath, OutputStream out, ConversionCommand command) throws IOException, FormatNotSupportedException {
         final ImagePlusInfo imagePlusInfo = ImageOpener.openImage(inputPath);
         if (imagePlusInfo == null) {
             throw new FormatNotSupportedException("Unsupported input file type for file " + inputPath);
         }
         final BufferedImage bufferedImage = imagePlusInfo.getImage();
-        convertAndWriteImageAsJpeg(bufferedImage, out, command);
+        convertAndWriteImage(bufferedImage, out, command);
     }
 
     /**
-     * Convert a buffered image to a JPEG output stream.
+     * Convert a buffered image to the specified output format.
+     * Supports JPEG, PNG, and GIF output formats.
+     *
      * @param bufferedImage the image to convert and save
      * @param out OutputStream, to which the new image is written. Important: Stream is not closed!
      * @param command the image conversion command
-     * @throws IOException on any error opening the file, converting the file or writing to the output.
+     * @throws IOException on any error opening the file, converting the file or writing to the output
+     * @throws FormatNotSupportedException if the output format is not supported
+     * @throws ImageConversionException if an error occurs during image conversion or scaling
      */
-    public void convertAndWriteImageAsJpeg(BufferedImage bufferedImage, OutputStream out, ConversionCommand command)
-        throws IOException {
+    public void convertAndWriteImage(BufferedImage bufferedImage, OutputStream out, ConversionCommand command)
+        throws IOException, FormatNotSupportedException {
 
         final Dimension dimension = command.getDimensionFromLimits(bufferedImage.getWidth(), bufferedImage.getHeight());
         Image targetImage = bufferedImage;
@@ -114,9 +111,41 @@ public class ProviderJava2D implements ImagingProvider {
             Graphics g = bufferedImage.getGraphics();
             g.drawImage(targetImage, 0, 0, LoggerImageObserver.getInstance());
         }
-        final int normedQuality = command.getQuality();
-        final float internalQuality = this.getInternalQuality(normedQuality);
-        ImageToFileWriter.saveJpeg(bufferedImage, out, internalQuality);
+
+        final String outputFormat = command.getOutputFormat();
+        switch (outputFormat) {
+            case "image/jpeg":
+                final int normedQuality = command.getQuality();
+                final float internalQuality = this.getInternalQuality(normedQuality);
+                ImageToFileWriter.saveJpeg(bufferedImage, out, internalQuality);
+                break;
+            case "image/png":
+                ImageToFileWriter.savePng(bufferedImage, out);
+                break;
+            case "image/gif":
+                ImageToFileWriter.saveGif(bufferedImage, out);
+                break;
+            default:
+                throw new FormatNotSupportedException("Unsupported output format: " + outputFormat +
+                    ". Supported formats are: image/jpeg, image/png, image/gif");
+        }
+    }
+
+    /**
+     * Convert a buffered image to a JPEG output stream.
+     * @param bufferedImage the image to convert and save
+     * @param out OutputStream, to which the new image is written. Important: Stream is not closed!
+     * @param command the image conversion command
+     * @throws IOException on any error opening the file, converting the file or writing to the output
+     * @throws ImageConversionException if an error occurs during image conversion or scaling
+     * @deprecated Use {@link #convertAndWriteImage(BufferedImage, OutputStream, ConversionCommand)} instead.
+     *             This method is kept for backward compatibility.
+     */
+    @Deprecated
+    public void convertAndWriteImageAsJpeg(BufferedImage bufferedImage, OutputStream out, ConversionCommand command)
+        throws IOException, FormatNotSupportedException {
+
+       convertAndWriteImage(bufferedImage, out, command);
     }
 
     //---------------------------------------------------------------------------------

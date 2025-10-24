@@ -3,17 +3,24 @@ package com.giraone.imaging;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Tests for the Provider bitmap image implementation.
@@ -81,14 +88,14 @@ class ProviderBitmapImageTest {
     @Test
     void fetchFileInfo_works_with_jpeg_usingFile() throws Exception {
 
-        // arrange
+        /// arrange
         File testFile = supportedTestFiles.get(TEST_FILE_JPEG_01);
 
-        // act
+        /// act
         FileInfo fileInfo = providerUnderTest.fetchFileInfo(testFile);
         LOG.debug("fetchFileInfo: {} -> {}", testFile, fileInfo.dumpInfo());
 
-        // assert
+        /// assert
         assertThat(fileInfo.getMimeType()).isEqualTo("image/jpeg");
         assertThat(fileInfo.getBitsPerPixel()).isEqualTo(24);
         assertThat(fileInfo.getWidth()).isEqualTo(1024);
@@ -98,14 +105,14 @@ class ProviderBitmapImageTest {
     @Test
     void fetchFileInfo_works_with_jpeg_usingPath() throws Exception {
 
-        // arrange
+        /// arrange
         Path testPath = supportedTestFiles.get(TEST_FILE_JPEG_01).toPath();
 
-        // act
+        /// act
         FileInfo fileInfo = providerUnderTest.fetchFileInfo(testPath);
         LOG.debug("fetchFileInfo: {} -> {}", testPath, fileInfo.dumpInfo());
 
-        // assert
+        /// assert
         assertThat(fileInfo.getMimeType()).isEqualTo("image/jpeg");
         assertThat(fileInfo.getBitsPerPixel()).isEqualTo(24);
         assertThat(fileInfo.getWidth()).isEqualTo(1024);
@@ -115,14 +122,14 @@ class ProviderBitmapImageTest {
     @Test
     void fetchFileInfo_works_with_exif_jpeg() throws Exception {
 
-        // arrange
+        /// arrange
         File testFile = supportedTestFiles.get(TEST_FILE_JPEG_EXIF_01);
 
-        // act
+        /// act
         FileInfo fileInfo = providerUnderTest.fetchFileInfo(testFile);
         LOG.debug("fetchFileInfo: {} -> {}", testFile, fileInfo.dumpInfo());
 
-        // assert
+        /// assert
         assertThat(fileInfo.getMimeType()).isEqualTo("image/jpeg");
         assertThat(fileInfo.getBitsPerPixel()).isEqualTo(24);
         assertThat(fileInfo.getWidth()).isEqualTo(6000);
@@ -132,45 +139,44 @@ class ProviderBitmapImageTest {
     @Test
     void fetchFileInfo_works_with_png() throws Exception {
 
-        // arrange
+        /// arrange
         File testFile = supportedTestFiles.get(TEST_FILE_PNG_01);
 
-        // act
+        /// act
         FileInfo fileInfo = providerUnderTest.fetchFileInfo(testFile);
         LOG.debug("fetchFileInfo: {} -> {}", testFile, fileInfo.dumpInfo());
 
-        // assert
+        /// assert
         assertThat(fileInfo.getMimeType()).isEqualTo("image/png");
         assertThat(fileInfo.getBitsPerPixel()).isEqualTo(24);
         assertThat(fileInfo.getWidth()).isEqualTo(800);
         assertThat(fileInfo.getHeight()).isEqualTo(600);
     }
 
-    @Test
-    void createThumbNail_works_for_all_test_files_using_output_stream() {
+    @ParameterizedTest
+    @MethodSource("provideTestFiles")
+    void createThumbNail_works_for_all_test_files_using_output_stream(File file) throws Exception {
 
         int thumbPixelMaxSize = 180;
-        for (File file : supportedTestFiles.values()) {
-            try {
-                createThumbNailUsingOutputStream(thumbPixelMaxSize, file);
-            } catch (Exception e) {
-                LOG.error("Test createThumbNail_works_for_all_test_files_using_output_stream failed!", e);
-            }
-        }
+        createThumbNailUsingOutputStream(thumbPixelMaxSize, file);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTestFiles")
+    void createThumbNail_works_for_all_test_files_using_file(File file) throws Exception {
+
+        int thumbPixelMaxSize = 180;
+        createThumbNailUsingFile(thumbPixelMaxSize, file);
     }
 
     @Test
-    void createThumbNail_works_for_all_test_files_using_file() {
+    void createThumbNail_works_for_first_test_file_using_path() throws Exception {
 
         int thumbPixelMaxSize = 180;
-        for (File file : supportedTestFiles.values()) {
-            try {
-                createThumbNailUsingFile(thumbPixelMaxSize, file);
-            } catch (Exception e) {
-                LOG.error("Test createThumbNail_works_for_all_test_files_using_file failed!", e);
-            }
-        }
+        File file = supportedTestFiles.get(TEST_FILE_JPEG_01);
+        createThumbNailUsingPath(thumbPixelMaxSize, file.toPath());
     }
+
 
     @Test
     void convertImage_fails_for_wrong_input_format() {
@@ -197,72 +203,74 @@ class ProviderBitmapImageTest {
         assertThat(detectedException.getMessage()).contains("Unsupported input file type");
     }
 
-    @Test
-    void convertImage_fails_for_wrong_output_format() {
+    @ParameterizedTest
+    @MethodSource("provideTestFiles")
+    void convertImage_fails_for_wrong_output_format() throws IOException {
+        /// arrange
         ConversionCommand command = new ConversionCommand();
         command.setOutputFormat("image/tiff");
         command.setDimension(new Dimension(320, 320));
         command.setQuality(10);
 
         File testFile = supportedTestFiles.get(TEST_FILE_JPEG_01);
-        Exception detectedException = null;
-        try {
-            File outFile = File.createTempFile("providerUnderTest-image-", ".jpg");
-            if (CLEAR_OUTPUT_FILES) {
-                outFile.deleteOnExit();
-            }
+        File outFile = File.createTempFile("providerUnderTest-image-", ".jpg");
+        if (CLEAR_OUTPUT_FILES) {
+            outFile.deleteOnExit();
+        }
+        /// act/assert
+        assertThatThrownBy(() -> {
             try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
                 providerUnderTest.convertImage(testFile, outputStream, command);
             }
-        } catch (Exception e) {
-            detectedException = e;
-        }
-
-        assertThat(detectedException).isNotNull();
-        assertThat(detectedException.getMessage()).contains("Unsupported target format");
+        })
+            .isInstanceOf(IOException.class)
+            .hasMessageContaining("Unsupported output format");
     }
 
-    @Test
-    void convertImage_works_for_all_test_files() {
+    @ParameterizedTest
+    @MethodSource("provideTestFiles")
+    void convertImage_works_for_all_test_files(File file) throws IOException, FormatNotSupportedException {
+        /// arrange
         ConversionCommand command = new ConversionCommand();
         command.setOutputFormat("image/jpeg");
         command.setDimension(new Dimension(320, 320));
         command.setQuality(10);
+        File outFile = File.createTempFile("providerUnderTest-image-", ".jpg");
+        if (CLEAR_OUTPUT_FILES) {
+            outFile.deleteOnExit();
+        }
 
-        supportedTestFiles.values().forEach((file) -> {
-            try {
-                File outFile = File.createTempFile("providerUnderTest-image-", ".jpg");
-                if (CLEAR_OUTPUT_FILES) {
-                    outFile.deleteOnExit();
-                }
-
-                try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
-                    providerUnderTest.convertImage(file, outputStream, command);
-                }
-            } catch (Exception e) {
-                LOG.error("Test convertImage_works_for_all_test_files failed!", e);
-            }
-        });
+        /// act
+        try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
+            providerUnderTest.convertImage(file, outputStream, command);
+        }
     }
 
-    // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
+    private static Stream<Arguments> provideTestFiles() {
+        return supportedTestFiles.values().stream().map(Arguments::of);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
 
     private void createThumbNailUsingOutputStream(int thumbPixelMaxSize, File file) throws Exception {
 
-        // arrange
+        /// arrange
         File outFile = File.createTempFile("providerUnderTest-thumb-", ".jpg");
         if (CLEAR_OUTPUT_FILES) {
             outFile.deleteOnExit();
         }
 
-        // act
+        /// act
         try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
             providerUnderTest.createThumbNail(file, outputStream,
                 "image/jpeg", thumbPixelMaxSize, thumbPixelMaxSize,
                 ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
         }
 
-        // assert
+        /// assert
         assertThat(outFile.exists()).isTrue();
         FileInfo fileInfo = providerUnderTest.fetchFileInfo(outFile);
         assertThat(fileInfo.getMimeType()).isEqualTo("image/jpeg");
@@ -273,20 +281,42 @@ class ProviderBitmapImageTest {
 
     private void createThumbNailUsingFile(int thumbPixelMaxSize, File file) throws Exception {
 
-        // arrange
+        /// arrange
         File outFile = File.createTempFile("providerUnderTest-thumb-", ".jpg");
         if (CLEAR_OUTPUT_FILES) {
             outFile.deleteOnExit();
         }
 
-        // act
+        /// act
         providerUnderTest.createThumbNail(file, outFile,
             "image/jpeg", thumbPixelMaxSize, thumbPixelMaxSize,
             ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
 
-        // assert
+        /// assert
         assertThat(outFile.exists()).isTrue();
         FileInfo fileInfo = providerUnderTest.fetchFileInfo(outFile);
+        assertThat(fileInfo.getMimeType()).isEqualTo("image/jpeg");
+        assertThat(fileInfo.getBitsPerPixel()).isEqualTo(24);
+        assertThat(fileInfo.getWidth()).isLessThanOrEqualTo(thumbPixelMaxSize);
+        assertThat(fileInfo.getHeight()).isLessThanOrEqualTo(thumbPixelMaxSize);
+    }
+
+    private void createThumbNailUsingPath(int thumbPixelMaxSize, Path path) throws Exception {
+
+        /// arrange
+        Path outPath = Files.createTempFile("providerUnderTest-thumb-", ".jpg");
+        if (CLEAR_OUTPUT_FILES) {
+            outPath.toFile().deleteOnExit();
+        }
+
+        /// act
+        providerUnderTest.createThumbNail(path, outPath,
+            "image/jpeg", thumbPixelMaxSize, thumbPixelMaxSize,
+            ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
+
+        /// assert
+        assertThat(Files.exists(path)).isTrue();
+        FileInfo fileInfo = providerUnderTest.fetchFileInfo(outPath);
         assertThat(fileInfo.getMimeType()).isEqualTo("image/jpeg");
         assertThat(fileInfo.getBitsPerPixel()).isEqualTo(24);
         assertThat(fileInfo.getWidth()).isLessThanOrEqualTo(thumbPixelMaxSize);

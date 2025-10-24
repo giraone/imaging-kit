@@ -61,7 +61,7 @@ public class PdfProviderPdfBox implements PdfProvider {
             // Page 1, do not scale DPIs and use RGB
             BufferedImage image = renderer.renderImage(0, 1.0f, ImageType.RGB);
 
-            imagingProvider.convertAndWriteImageAsJpeg(image, outputStream, command);
+            imagingProvider.convertAndWriteImage(image, outputStream, command);
         }
     }
 

@@ -25,6 +25,10 @@ public class ConversionCommand {
         this.outputFormat = value;
     }
 
+    /**
+     * Get the output format.
+     * @return the output format as MIME type (e.g., "image/jpeg", "image/png")
+     */
     public String getOutputFormat() {
         return this.outputFormat;
     }
@@ -42,6 +46,11 @@ public class ConversionCommand {
         this.quality = value;
     }
 
+    /**
+     * Set output quality using a predefined compression quality level.
+     * @param compressionQuality the compression quality level
+     * @see CompressionQuality
+     */
     public void setQuality(ConversionCommand.CompressionQuality compressionQuality) {
         final int iQuality = switch (compressionQuality) {
             case LOSSLESS -> 0;
@@ -52,6 +61,10 @@ public class ConversionCommand {
         this.setQuality(iQuality);
     }
 
+    /**
+     * Get the output quality value.
+     * @return quality value (0 = highest quality, 100 = lowest quality/fastest)
+     */
     public int getQuality() {
         return this.quality;
     }
@@ -78,6 +91,10 @@ public class ConversionCommand {
         this.dimension = value;
     }
 
+    /**
+     * Get the output dimension (width and height limits).
+     * @return the dimension or null if no dimension constraint is set
+     */
     public Dimension getDimension() {
         return this.dimension;
     }
@@ -180,8 +197,38 @@ public class ConversionCommand {
 
     /**
      * Enumeration for the compression quality defined in 4 steps.
+     * <p>
+     * <strong>Important Note:</strong> For inherently lossy formats like JPEG, even the LOSSLESS
+     * option will produce lossy compression (maximum quality lossy). True lossless compression
+     * requires formats like PNG.
+     * </p>
+     * <ul>
+     *   <li>{@link #LOSSLESS} - Maximum quality (note: for JPEG this is still lossy compression)</li>
+     *   <li>{@link #LOSSY_BEST} - High quality lossy compression</li>
+     *   <li>{@link #LOSSY_MEDIUM} - Medium quality lossy compression (balanced)</li>
+     *   <li>{@link #LOSSY_SPEED} - Low quality lossy compression (optimized for speed/size)</li>
+     * </ul>
      */
     public enum CompressionQuality {
-        LOSSLESS, LOSSY_BEST, LOSSY_MEDIUM, LOSSY_SPEED
+        /**
+         * Maximum quality compression. For JPEG output, this produces the highest quality
+         * lossy compression (not truly lossless).
+         */
+        LOSSLESS,
+
+        /**
+         * High quality lossy compression with minimal visible artifacts.
+         */
+        LOSSY_BEST,
+
+        /**
+         * Medium quality lossy compression, balanced between quality and file size.
+         */
+        LOSSY_MEDIUM,
+
+        /**
+         * Low quality lossy compression, optimized for smallest file size and fastest encoding.
+         */
+        LOSSY_SPEED
     }
 }

@@ -33,26 +33,53 @@ public class FileInfo {
         this.compressionFormat = COMPRESSION_FORMAT_NONE;
     }
 
+    /**
+     * Get the MIME type of the file (e.g., "image/jpeg", "image/png", "application/pdf").
+     * @return the MIME type string
+     */
     public String getMimeType() {
         return this.mimeType;
     }
 
+    /**
+     * Set the MIME type of the file.
+     * @param value the MIME type string (e.g., "image/jpeg", "image/png")
+     */
     public void setMimeType(String value) {
         this.mimeType = value;
     }
 
+    /**
+     * Get the compression format used by the file.
+     * @return one of the COMPRESSION_FORMAT_* constants
+     * @see #COMPRESSION_FORMAT_NONE
+     * @see #COMPRESSION_FORMAT_JPEG
+     * @see #COMPRESSION_FORMAT_LZW
+     */
     public int getCompressionFormat() {
         return this.compressionFormat;
     }
 
+    /**
+     * Set the compression format used by the file.
+     * @param value one of the COMPRESSION_FORMAT_* constants
+     */
     public void setCompressionFormat(int value) {
         this.compressionFormat = value;
     }
 
+    /**
+     * Get the number of bits per pixel (color depth).
+     * @return bits per pixel (e.g., 24 for RGB, 32 for RGBA)
+     */
     public int getBitsPerPixel() {
         return this.bitsPerPixel;
     }
 
+    /**
+     * Set the number of bits per pixel (color depth).
+     * @param value bits per pixel
+     */
     public void setBitsPerPixel(int value) {
         this.bitsPerPixel = value;
     }

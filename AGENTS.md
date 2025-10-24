@@ -25,11 +25,12 @@
   
 ## Naming Conventions for the Project
 
-- The root Java package is `com.giraone.secrets`.
-- The main library is named `secrets-lib`. Its root package is `com.giraone.secrets.main`.
-- The cryptography library is named `secrets-crypto-lib`. Its root package is `com.giraone.secrets.crypto`.
-- The storage library is named `secrets-storage-lib`. Its root package is `com.giraone.secrets.storage`.
-- Follow consistent naming conventions across all libraries.
+- The root Java package is `com.giraone.imaging`.
+- The main library is named `imaging-kit`.
+- Core imaging interfaces and utilities are in the root package `com.giraone.imaging`.
+- Java2D bitmap image implementation is in package `com.giraone.imaging.java2`.
+- PDF operations implementation is in package `com.giraone.imaging.pdf`.
+- Follow consistent naming conventions across all packages.
 
 ## General Code Formatting and Coding Conventions
 

@@ -140,7 +140,7 @@ public class FileTypeDetector {
         if (b0 == 80 && (b1 == 50 || b1 == 53) && (b2 == 10 || b2 == 13 || b2 == 32 || b2 == 9))
             return FileType.PGM;
 
-        // BMP ("BM") - TODO: Not really correct!!! We also need name.endsWith(".bmp")
+        // BMP ("BM")
         if (b0 == 66 && b1 == 77)
             return FileType.BMP;
 

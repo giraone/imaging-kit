@@ -72,24 +72,24 @@
         <maven.compiler.testTarget>${maven.compiler.target}</maven.compiler.testTarget>
         <java.version>${maven.compiler.source}</java.version>
         <!-- Production dependency versions -->
-        <pdfbox.version>3.0.3</pdfbox.version>
-        <slf4j.version>2.0.16</slf4j.version>
+        <pdfbox.version>3.0.6</pdfbox.version>
+        <slf4j.version>2.0.17</slf4j.version>
         <!-- Test dependency versions -->
-        <junit.jupiter.version>5.11.3</junit.jupiter.version>
-        <assertj.version>3.26.3</assertj.version>
+        <junit.jupiter.version>6.0.0</junit.jupiter.version>
+        <assertj.version>3.27.6</assertj.version>
         <!-- Plugin versions -->
-        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-        <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
-        <maven-javadoc-plugin.version>3.11.1</maven-javadoc-plugin.version>
-        <maven-deploy-plugin.version>3.1.3</maven-deploy-plugin.version>
+        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+        <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
         <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
-        <maven-scm-provider-gitexe.version>2.1.0</maven-scm-provider-gitexe.version>
-        <maven-scm-api.version>2.1.0</maven-scm-api.version>
+        <maven-scm-provider-gitexe.version>2.2.1</maven-scm-provider-gitexe.version>
+        <maven-scm-api.version>2.2.1</maven-scm-api.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
-        <versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>
-        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+        <versions-maven-plugin.version>2.19.1</versions-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <!-- Plugin properties -->
         <jacoco.reportFolder>${project.build.directory}/jacoco</jacoco.reportFolder>
         <jacoco.utReportFile>${jacoco.reportFolder}/jacoco.exec</jacoco.utReportFile>

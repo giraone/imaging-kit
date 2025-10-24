@@ -34,6 +34,8 @@ See [java2/ProviderJava2D.java](src/main/java/com/giraone/imaging/java2/Provider
 
 ## Release Notes
 
+- V1.3.1 (2025-10-24)
+  - Upgrade to latest dependencies (e.g. PDFBox 3.0.6)
 - V1.3.0 (2024-12-28)
   - Upgrade to a JDK 17 build source and target
   - Upgrade to latest dependencies (e.g. PDFBox 3.0.3)

@@ -11,6 +11,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Future;
 
 /**
@@ -163,6 +165,10 @@ public class FileTypeDetector {
      * Enumeration for the supported (detectable) file types.
      */
     public enum FileType {
-        UNKNOWN, JPEG, PNG, TIFF, GIF, BMP, PGM, DICOM, PDF
+        UNKNOWN, JPEG, PNG, TIFF, GIF, BMP, PGM, DICOM, PDF;
+
+        public static List<String> allTypesAsStrings() {
+            return Arrays.stream(FileType.values()).map(Enum::name).toList();
+        }
     }
 }

@@ -4,12 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.List;
 
 import static com.giraone.imaging.FileTypeDetector.FileType.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -86,22 +87,38 @@ class FileTypeDetectorTest {
 
     @Test
     void jpegIsDetectedUsingFile() throws IOException {
-        File parent = new File("src/test/resources");
-        FileTypeDetector.FileType detectedFileType = FileTypeDetector.getInstance().getFileType(new File(parent, TEST_FILE_JPEG_01));
-        assertEquals(JPEG, detectedFileType);
+        // arrange
+        Path parent = Path.of("src/test/resources");
+        /// act
+        FileTypeDetector.FileType detectedFileType = FileTypeDetector.getInstance().getFileType((parent.resolve(TEST_FILE_JPEG_01)));
+        /// assert
+        assertThat(detectedFileType).isEqualTo(JPEG);
     }
 
     @Test
     void jpegIsDetectedUsingPath() throws IOException {
+        // arrange
         Path parent = Path.of("src/test/resources");
+        /// act
         FileTypeDetector.FileType detectedFileType = FileTypeDetector.getInstance().getFileType(parent.resolve(TEST_FILE_JPEG_01));
-        assertEquals(JPEG, detectedFileType);
+        /// assert
+        assertThat(detectedFileType).isEqualTo(JPEG);
     }
 
     @Test
     void jpegIsDetectedUsingString() throws IOException {
+        /// act
         FileTypeDetector.FileType detectedFileType = FileTypeDetector.getInstance().getFileType("src/test/resources/" + TEST_FILE_JPEG_01);
-        assertEquals(JPEG, detectedFileType);
+        /// assert
+        assertThat(detectedFileType).isEqualTo(JPEG);
+    }
+
+    @Test
+    void allTypesAsStrings() {
+        /// act
+        List<String> types = FileTypeDetector.FileType.allTypesAsStrings();
+        /// assert
+        assertThat(types).hasSize(9);
     }
 
     //------------------------------------------------------------------------------------------------------------------

@@ -20,7 +20,7 @@ public interface PdfProvider {
      * @throws Exception on any error opening the file, converting the file or writing to the output.
      */
 
-    void createThumbNail(File inputFile, OutputStream outputStream,
+    void createThumbnail(File inputFile, OutputStream outputStream,
                          String format, int width, int height,
                          ConversionCommand.CompressionQuality quality) throws Exception;
 

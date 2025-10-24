@@ -155,26 +155,26 @@ class ProviderBitmapImageTest {
 
     @ParameterizedTest
     @MethodSource("provideTestFiles")
-    void createThumbNail_works_for_all_test_files_using_output_stream(File file) throws Exception {
+    void createThumbnail_works_for_all_test_files_using_output_stream(File file) throws Exception {
 
         int thumbPixelMaxSize = 180;
-        createThumbNailUsingOutputStream(thumbPixelMaxSize, file);
+        createThumbnailUsingOutputStream(thumbPixelMaxSize, file);
     }
 
     @ParameterizedTest
     @MethodSource("provideTestFiles")
-    void createThumbNail_works_for_all_test_files_using_file(File file) throws Exception {
+    void createThumbnail_works_for_all_test_files_using_file(File file) throws Exception {
 
         int thumbPixelMaxSize = 180;
-        createThumbNailUsingFile(thumbPixelMaxSize, file);
+        createThumbnailUsingFile(thumbPixelMaxSize, file);
     }
 
     @Test
-    void createThumbNail_works_for_first_test_file_using_path() throws Exception {
+    void createThumbnail_works_for_first_test_file_using_path() throws Exception {
 
         int thumbPixelMaxSize = 180;
         File file = supportedTestFiles.get(TEST_FILE_JPEG_01);
-        createThumbNailUsingPath(thumbPixelMaxSize, file.toPath());
+        createThumbnailUsingPath(thumbPixelMaxSize, file.toPath());
     }
 
 
@@ -296,7 +296,7 @@ class ProviderBitmapImageTest {
     }
 
     @Test
-    void createThumbNail_to_png_works() throws Exception {
+    void createThumbnail_to_png_works() throws Exception {
         /// arrange
         File testFile = supportedTestFiles.get(TEST_FILE_JPEG_01);
         int thumbPixelMaxSize = 180;
@@ -307,7 +307,7 @@ class ProviderBitmapImageTest {
 
         /// act
         try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
-            providerUnderTest.createThumbNail(testFile, outputStream,
+            providerUnderTest.createThumbnail(testFile, outputStream,
                 "image/png", thumbPixelMaxSize, thumbPixelMaxSize,
                 ConversionCommand.CompressionQuality.LOSSLESS);
         }
@@ -322,7 +322,7 @@ class ProviderBitmapImageTest {
     }
 
     @Test
-    void createThumbNail_to_gif_works() throws Exception {
+    void createThumbnail_to_gif_works() throws Exception {
         /// arrange
         File testFile = supportedTestFiles.get(TEST_FILE_PNG_01);
         int thumbPixelMaxSize = 180;
@@ -333,7 +333,7 @@ class ProviderBitmapImageTest {
 
         /// act
         try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
-            providerUnderTest.createThumbNail(testFile, outputStream,
+            providerUnderTest.createThumbnail(testFile, outputStream,
                 "image/gif", thumbPixelMaxSize, thumbPixelMaxSize,
                 ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
         }
@@ -423,7 +423,7 @@ class ProviderBitmapImageTest {
     // -----------------------------------------------------------------------------------------------------------------
 
 
-    private void createThumbNailUsingOutputStream(int thumbPixelMaxSize, File file) throws Exception {
+    private void createThumbnailUsingOutputStream(int thumbPixelMaxSize, File file) throws Exception {
 
         /// arrange
         File outFile = File.createTempFile("providerUnderTest-thumb-", ".jpg");
@@ -433,7 +433,7 @@ class ProviderBitmapImageTest {
 
         /// act
         try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
-            providerUnderTest.createThumbNail(file, outputStream,
+            providerUnderTest.createThumbnail(file, outputStream,
                 "image/jpeg", thumbPixelMaxSize, thumbPixelMaxSize,
                 ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
         }
@@ -447,7 +447,7 @@ class ProviderBitmapImageTest {
         assertThat(fileInfo.getHeight()).isLessThanOrEqualTo(thumbPixelMaxSize);
     }
 
-    private void createThumbNailUsingFile(int thumbPixelMaxSize, File file) throws Exception {
+    private void createThumbnailUsingFile(int thumbPixelMaxSize, File file) throws Exception {
 
         /// arrange
         File outFile = File.createTempFile("providerUnderTest-thumb-", ".jpg");
@@ -456,7 +456,7 @@ class ProviderBitmapImageTest {
         }
 
         /// act
-        providerUnderTest.createThumbNail(file, outFile,
+        providerUnderTest.createThumbnail(file, outFile,
             "image/jpeg", thumbPixelMaxSize, thumbPixelMaxSize,
             ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
 
@@ -469,7 +469,7 @@ class ProviderBitmapImageTest {
         assertThat(fileInfo.getHeight()).isLessThanOrEqualTo(thumbPixelMaxSize);
     }
 
-    private void createThumbNailUsingPath(int thumbPixelMaxSize, Path path) throws Exception {
+    private void createThumbnailUsingPath(int thumbPixelMaxSize, Path path) throws Exception {
 
         /// arrange
         Path outPath = Files.createTempFile("providerUnderTest-thumb-", ".jpg");
@@ -478,7 +478,7 @@ class ProviderBitmapImageTest {
         }
 
         /// act
-        providerUnderTest.createThumbNail(path, outPath,
+        providerUnderTest.createThumbnail(path, outPath,
             "image/jpeg", thumbPixelMaxSize, thumbPixelMaxSize,
             ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
 

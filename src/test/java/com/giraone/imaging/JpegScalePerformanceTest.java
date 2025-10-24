@@ -88,7 +88,7 @@ public class JpegScalePerformanceTest {
 
         long start1 = System.currentTimeMillis();
         try (FileOutputStream outputStream = new FileOutputStream(outFile1)) {
-            provider.createThumbNail(inFile, outputStream, "image/jpeg", thumbWidthAndHeight, thumbWidthAndHeight,
+            provider.createThumbnail(inFile, outputStream, "image/jpeg", thumbWidthAndHeight, thumbWidthAndHeight,
                 ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
         }
         long end1 = System.currentTimeMillis();
@@ -96,7 +96,7 @@ public class JpegScalePerformanceTest {
 
         long start2 = System.currentTimeMillis();
         try (FileOutputStream outputStream = new FileOutputStream(outFile2)) {
-            provider.createThumbNail(inFile, outputStream, "image/jpeg", scaledWidthAndHeight, scaledWidthAndHeight,
+            provider.createThumbnail(inFile, outputStream, "image/jpeg", scaledWidthAndHeight, scaledWidthAndHeight,
                 ConversionCommand.CompressionQuality.LOSSY_BEST);
         }
         long end2 = System.currentTimeMillis();

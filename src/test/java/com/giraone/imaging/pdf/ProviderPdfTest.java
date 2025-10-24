@@ -88,14 +88,14 @@ class ProviderPdfTest {
     }
 
     @Test
-    void testThat_createThumbNail_works_for_all_test_files_using_output_stream() {
+    void testThat_createThumbnail_works_for_all_test_files_using_output_stream() {
 
         int thumbPixelMaxSize = 180;
         for (File file : testFiles.values()) {
             try {
-                createThumbNailUsingOutputStream(thumbPixelMaxSize, file);
+                createThumbnailUsingOutputStream(thumbPixelMaxSize, file);
             } catch (Exception e) {
-                LOG.error("Test testThat_createThumbNail_works_for_all_test_files_using_output_stream failed!", e);
+                LOG.error("Test testThat_createThumbnail_works_for_all_test_files_using_output_stream failed!", e);
             }
         }
     }
@@ -164,7 +164,7 @@ class ProviderPdfTest {
 
     // -----------------------------------------------------------------------
 
-    private void createThumbNailUsingOutputStream(int thumbPixelMaxSize, File file) throws Exception {
+    private void createThumbnailUsingOutputStream(int thumbPixelMaxSize, File file) throws Exception {
 
         // arrange
         File outFile = File.createTempFile("provider-thumb-", ".jpg");
@@ -174,7 +174,7 @@ class ProviderPdfTest {
 
         // act
         try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
-            providerUnderTest.createThumbNail(file, outputStream,
+            providerUnderTest.createThumbnail(file, outputStream,
                 "image/jpeg", thumbPixelMaxSize, thumbPixelMaxSize,
                 ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
         }

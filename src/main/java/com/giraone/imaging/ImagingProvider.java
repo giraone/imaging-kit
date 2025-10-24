@@ -64,7 +64,7 @@ public interface ImagingProvider {
      * @throws FormatNotSupportedException if the input or output format is not supported
      * @throws ImageConversionException if an error occurs during thumbnail generation
      */
-    void createThumbNail(File inputFile, OutputStream outputStream, String format, int width, int height,
+    void createThumbnail(File inputFile, OutputStream outputStream, String format, int width, int height,
                          ConversionCommand.CompressionQuality quality) throws IOException, FormatNotSupportedException, ImageConversionException;
 
     /**
@@ -79,7 +79,7 @@ public interface ImagingProvider {
      * @throws FormatNotSupportedException if the input or output format is not supported
      * @throws ImageConversionException if an error occurs during thumbnail generation
      */
-    void createThumbNail(Path inputPath, OutputStream outputStream, String format, int width, int height,
+    void createThumbnail(Path inputPath, OutputStream outputStream, String format, int width, int height,
                          ConversionCommand.CompressionQuality quality) throws IOException, FormatNotSupportedException, ImageConversionException;
 
     /**
@@ -130,12 +130,12 @@ public interface ImagingProvider {
      * @throws FormatNotSupportedException if the input or output format is not supported
      * @throws ImageConversionException if an error occurs during thumbnail generation
      */
-    default void createThumbNail(File inputFile, File outputFile,
+    default void createThumbnail(File inputFile, File outputFile,
                                  String format, int width, int height,
                                  ConversionCommand.CompressionQuality quality) throws IOException, FormatNotSupportedException, ImageConversionException {
 
         try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-            createThumbNail(inputFile, outputStream, format, width, height, quality);
+            createThumbnail(inputFile, outputStream, format, width, height, quality);
         }
     }
 
@@ -151,12 +151,12 @@ public interface ImagingProvider {
      * @throws FormatNotSupportedException if the input or output format is not supported
      * @throws ImageConversionException if an error occurs during thumbnail generation
      */
-    default void createThumbNail(Path inputPath, Path outputPath,
+    default void createThumbnail(Path inputPath, Path outputPath,
                                  String format, int width, int height,
                                  ConversionCommand.CompressionQuality quality) throws IOException, FormatNotSupportedException, ImageConversionException {
 
         try (FileOutputStream outputStream = new FileOutputStream(outputPath.toFile())) {
-            createThumbNail(inputPath, outputStream, format, width, height, quality);
+            createThumbnail(inputPath, outputStream, format, width, height, quality);
         }
     }
 }

@@ -55,7 +55,7 @@ public class ProviderJava2D implements ImagingProvider {
         }
     }
 
-    public void createThumbNail(File inputFile, OutputStream out, String format, int width, int height,
+    public void createThumbnail(File inputFile, OutputStream out, String format, int width, int height,
                                 ConversionCommand.CompressionQuality quality) throws IOException, FormatNotSupportedException {
 
         final ConversionCommand command = ConversionCommand.buildConversionCommand(format, width, height, quality);
@@ -63,7 +63,7 @@ public class ProviderJava2D implements ImagingProvider {
     }
 
     @Override
-    public void createThumbNail(Path inputPath, OutputStream out, String format, int width, int height,
+    public void createThumbnail(Path inputPath, OutputStream out, String format, int width, int height,
                                 ConversionCommand.CompressionQuality quality) throws IOException, FormatNotSupportedException {
         final ConversionCommand command = ConversionCommand.buildConversionCommand(format, width, height, quality);
         this.convertImage(inputPath, out, command);

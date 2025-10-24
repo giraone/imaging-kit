@@ -48,7 +48,7 @@ public class PdfProviderPdfBox implements PdfProvider {
      * @param quality Quality factor for output compression.
      */
     @Override
-    public void createThumbNail(File inputFile, OutputStream outputStream, String format, int width, int height,
+    public void createThumbnail(File inputFile, OutputStream outputStream, String format, int width, int height,
                                 ConversionCommand.CompressionQuality quality) throws Exception {
         ConversionCommand command = new ConversionCommand();
         command.setOutputFormat(format);

@@ -20,7 +20,9 @@
 - Dependencies for test code
   - Unit test framework is *JUnit5*.
   - Used assertion language in tests is *AssertJ*.
-
+- Code Changes
+  - Document summary of code changes in `CHANGELOG.md`. Add latest change on top.
+  
 ## Naming Conventions for the Project
 
 - The root Java package is `com.giraone.secrets`.

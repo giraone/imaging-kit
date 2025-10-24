@@ -16,7 +16,7 @@ See [java2/ProviderJava2D.java](src/main/java/com/giraone/imaging/java2/Provider
 <dependency>
     <groupId>com.giraone.imaging</groupId>
     <artifactId>imaging-kit</artifactId>
-    <version>1.3.1</version>
+    <version>1.4.0</version>
 </dependency>
 ```
 

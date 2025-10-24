@@ -2,7 +2,7 @@
 [![Maven Central](https://img.shields.io/badge/Maven%20Central-1.3.0-blue)](https://mvnrepository.com/artifact/com.giraone.imaging/imaging-kit)
 [![GitHub issues](https://img.shields.io/github/issues/giraone/imaging-kit)](https://github.com/giraone/imaging-kit/issues)
 [![GitHub stars](https://img.shields.io/github/stars/giraone/imaging-kit)](https://github.com/giraone/imaging-kit/stargazers)
-[![Platform](https://img.shields.io/badge/platform-jre8%2B-blue)](https://github.com/giraone/imaging-kit/pom.xml)
+[![Platform](https://img.shields.io/badge/platform-jre17%2B-blue)](https://github.com/giraone/imaging-kit/pom.xml)
 
 # Imaging Kit
 

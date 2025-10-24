@@ -47,13 +47,12 @@
 - Include comments to explain complex logic.
 - Do not use *var* for variable declarations, use explicit types.
 - Do not use *Lombok*.
-- Do not use mocking frameworks in tests, use test doubles, if needed.
-
 
 ## Convention for Writing Unit Tests
 
 - Unit test framework is *JUnit5*.
 - Used assertion language in tests is *AssertJ*.
+- Do not use mocking frameworks in tests, use test doubles, if needed.
 - Normal unit tests for a class "Clazz.java" are located in the same package as the class under test and named "ClazzTest.java".
   They are perform in the mvn test phase.
 - Use AAA pattern for tests (Arrange, Act, Assert) and separate the sections of the test code

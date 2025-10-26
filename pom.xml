@@ -43,13 +43,13 @@
   <distributionManagement>
     <!-- Repository URL for snapshot deployment and download access -->
     <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+      <id>central-snapshots</id>
+      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
     </snapshotRepository>
     <!-- Repository URL for release deployment, no download access! -->
     <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+      <id>ossrh-staging-api</id>
+      <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
 
@@ -162,11 +162,32 @@
         <artifactId>nexus-staging-maven-plugin</artifactId>
         <version>${nexus-staging-maven-plugin.version}</version>
         <extensions>true</extensions>
+        <!-- Publishing By Using the Portal OSSRH Staging API - since July 2025-->
         <configuration>
-          <serverId>ossrh</serverId>
-          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <!-- The serverId must match <server> in settings.xml -->
+          <serverId>ossrh-staging-api</serverId>
+          <nexusUrl>https://ossrh-staging-api.central.sonatype.com/</nexusUrl>
+          <!-- (Optional) if namespace has a specific staging profile (older OSSRH flows). -->
+          <!-- <stagingProfileId>release-to-central</stagingProfileId> -->
+          <!-- If not true, we must use extra HTTP POST /manual/upload/defaultRepository/com.giraone -->
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
         </configuration>
+        <executions>
+          <execution>
+            <id>default-deploy</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>deploy</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>default-release</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>release</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -295,6 +316,7 @@
       </activation>
       <build>
         <plugins>
+          <!-- GPG plugin (Optional for build, but required for Maven Central) -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>

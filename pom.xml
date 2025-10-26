@@ -228,12 +228,27 @@
           </dependency>
         </dependencies>
       </plugin>
+      <!-- GPG plugin (Optional for build, but required for Maven Central) -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>${maven-gpg-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
         <version>${nexus-staging-maven-plugin.version}</version>
         <extensions>true</extensions>
-        <!-- Publishing By using the Portal OSSRH Staging API - since July 2025-->
+        <!-- Publishing by using the Portal OSSRH Staging API - since July 2025-->
         <configuration>
           <!-- The serverId must match <server> in settings.xml -->
           <serverId>ossrh-staging-api</serverId>
@@ -300,37 +315,5 @@
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <!-- GPG Signature on release -->
-    <profile>
-      <id>release-sign-artifacts</id>
-      <activation>
-        <property>
-          <name>performRelease</name>
-          <value>true</value>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <!-- GPG plugin (Optional for build, but required for Maven Central) -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <version>${maven-gpg-plugin.version}</version>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 
 </project>

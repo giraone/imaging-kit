@@ -1,5 +1,5 @@
 [![GitHub license](https://img.shields.io/github/license/giraone/imaging-kit)](https://github.com/giraone/imaging-kit/blob/master/LICENSE)
-[![Maven Central](https://img.shields.io/badge/Maven%20Central-1.4.2-blue)](https://mvnrepository.com/artifact/com.giraone.imaging/imaging-kit)
+[![Maven Central](https://img.shields.io/badge/Maven%20Central-1.4.3-blue)](https://mvnrepository.com/artifact/com.giraone.imaging/imaging-kit)
 [![GitHub issues](https://img.shields.io/github/issues/giraone/imaging-kit)](https://github.com/giraone/imaging-kit/issues)
 [![GitHub stars](https://img.shields.io/github/stars/giraone/imaging-kit)](https://github.com/giraone/imaging-kit/stargazers)
 [![Platform](https://img.shields.io/badge/platform-jre17%2B-blue)](https://github.com/giraone/imaging-kit/pom.xml)
@@ -16,7 +16,7 @@ See [java2/ProviderJava2D.java](src/main/java/com/giraone/imaging/java2/Provider
 <dependency>
     <groupId>com.giraone.imaging</groupId>
     <artifactId>imaging-kit</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.3</version>
 </dependency>
 ```
 

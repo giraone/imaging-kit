@@ -66,6 +66,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.release>17</maven.compiler.release>
     <java.version>${maven.compiler.release}</java.version>
     <!-- Production dependency versions -->
@@ -127,7 +128,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven-javadoc-plugin.version}</version>
         <configuration>
-          <source>${maven.compiler.source}</source>
+          <source>${maven.compiler.source}></source>
           <encoding>UTF-8</encoding>
           <failOnError>false</failOnError>
         </configuration>
@@ -306,6 +307,7 @@
       <id>release-sign-artifacts</id>
       <activation>
         <property>
+          <!-- performRelease activates the "release-to-central" profile in maven "settings.xml" -->
           <name>performRelease</name>
           <value>true</value>
         </property>

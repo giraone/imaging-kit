@@ -13,6 +13,9 @@ public class ConversionCommand {
     private boolean keepAspectRatio;
     private Float scale;
 
+    /**
+     * Create a new ConversionCommand with default settings (compression=false, quality=0, keepAspectRatio=true).
+     */
     public ConversionCommand() {
         this.compression = false;
         this.quality = 0;

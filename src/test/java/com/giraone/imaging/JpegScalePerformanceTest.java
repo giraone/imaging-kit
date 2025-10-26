@@ -65,26 +65,29 @@ public class JpegScalePerformanceTest {
         int scaledWidthAndHeight = 900;
 
         ImagingProvider provider = new ProviderJava2D();
-        String name = "java2d";
+        String dirName = "java2d";
 
         long totalStart = System.currentTimeMillis();
         for (File inFile : files) {
-            scale(provider, name, inFile, thumbWidthAndHeight, scaledWidthAndHeight);
+            scale(provider, dirName, inFile, thumbWidthAndHeight, scaledWidthAndHeight);
         }
         long totalEnd = System.currentTimeMillis();
-        System.out.println(name + " ==> " + (totalEnd - totalStart) + " msecs");
+        System.out.println(dirName + " ==> " + (totalEnd - totalStart) + " msecs");
     }
 
     private static void scale(ImagingProvider provider, String dirName, File inFile, int thumbWidthAndHeight, int scaledWidthAndHeight) throws Exception {
 
         File outDir = new File(inFile.getParentFile(), dirName);
         boolean ret = outDir.mkdirs();
-        LOG.debug(ret ? "Test directory {} was created" : "Test directory {} already existed", outDir);
-
-        String newName1 = inFile.getName().substring(0, inFile.getName().indexOf('.') - 1) + "-thumb.jpg";
-        String newName2 = inFile.getName().substring(0, inFile.getName().indexOf('.') - 1) + "-small.jpg";
-        String outFile1 = outDir + "/" + newName1;
-        String outFile2 = outDir + "/" + newName2;
+        if (ret) {
+            outDir.deleteOnExit();
+            LOG.debug("Test directory {} was created", outDir);
+        }
+        String baseName = inFile.getName().substring(0, inFile.getName().indexOf('.') - 1);
+        String newName1 = baseName + "-thumb.jpg";
+        String newName2 = baseName + "-small.jpg";
+        File outFile1 = new File(outDir + "/" + newName1);
+        File outFile2 = new File(outDir + "/" + newName2);
 
         long start1 = System.currentTimeMillis();
         try (FileOutputStream outputStream = new FileOutputStream(outFile1)) {
@@ -101,6 +104,9 @@ public class JpegScalePerformanceTest {
         }
         long end2 = System.currentTimeMillis();
         LOG.debug("{}: {} milliseconds", inFile, (end2 - start2));
+        outFile1.delete();
+        outFile2.delete();
+
     }
 
     @SuppressWarnings("unused")

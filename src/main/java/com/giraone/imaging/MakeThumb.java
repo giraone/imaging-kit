@@ -14,6 +14,10 @@ public class MakeThumb {
 
     private static final Logger LOG = LoggerFactory.getLogger(MakeThumb.class);
 
+    /**
+     * Main program to create a thumbnail image.
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
 
         final String packageName = MakeThumb.class.getPackage().getName();

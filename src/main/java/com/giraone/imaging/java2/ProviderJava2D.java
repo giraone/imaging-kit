@@ -19,6 +19,12 @@ import java.nio.file.Path;
  */
 public class ProviderJava2D implements ImagingProvider {
 
+    /**
+     * Create a new ProviderJava2D instance.
+     */
+    public ProviderJava2D() {
+    }
+
     public FileInfo fetchFileInfo(File file) throws IOException, FormatNotSupportedException {
 
         final FileTypeDetector.FileType fileType = FileTypeDetector.getInstance().getFileType(file);
@@ -137,7 +143,7 @@ public class ProviderJava2D implements ImagingProvider {
      * @param out OutputStream, to which the new image is written. Important: Stream is not closed!
      * @param command the image conversion command
      * @throws IOException on any error opening the file, converting the file or writing to the output
-     * @throws ImageConversionException if an error occurs during image conversion or scaling
+     * @throws FormatNotSupportedException if the output format is not supported
      * @deprecated Use {@link #convertAndWriteImage(BufferedImage, OutputStream, ConversionCommand)} instead.
      *             This method is kept for backward compatibility.
      */

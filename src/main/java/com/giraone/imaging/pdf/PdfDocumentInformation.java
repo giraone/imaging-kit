@@ -22,6 +22,12 @@ public class PdfDocumentInformation {
     Calendar modificationDate;
 
     /**
+     * Create a new PdfDocumentInformation with all fields set to null.
+     */
+    public PdfDocumentInformation() {
+    }
+
+    /**
      * Get the document title.
      * @return the document title
      */

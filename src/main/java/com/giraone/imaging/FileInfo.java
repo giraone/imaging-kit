@@ -28,6 +28,9 @@ public class FileInfo {
 
     // ----------------------------------------------------------------------------
 
+    /**
+     * Create a new FileInfo with default values (mimeType="application/octet-stream", compressionFormat=COMPRESSION_FORMAT_NONE).
+     */
     public FileInfo() {
         this.mimeType = "application/octet-stream";
         this.compressionFormat = COMPRESSION_FORMAT_NONE;

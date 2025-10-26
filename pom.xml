@@ -40,6 +40,16 @@
     <tag>HEAD</tag>
   </scm>
 
+  <issueManagement>
+    <system>Github</system>
+    <url>https://github.com/giraone/imaging-kit/issues</url>
+  </issueManagement>
+
+  <ciManagement>
+    <system>Travis</system>
+    <url>https://travis-ci.org/giraone/imaging-kit</url>
+  </ciManagement>
+
   <distributionManagement>
     <!-- Repository URL for snapshot deployment and download access -->
     <snapshotRepository>
@@ -52,16 +62,6 @@
       <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
-
-  <issueManagement>
-    <system>Github</system>
-    <url>https://github.com/giraone/imaging-kit/issues</url>
-  </issueManagement>
-
-  <ciManagement>
-    <system>Travis</system>
-    <url>https://travis-ci.org/giraone/imaging-kit</url>
-  </ciManagement>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -82,7 +82,7 @@
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
     <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
     <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
-    <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
+    <nexus-staging-maven-plugin.version>1.6.4</nexus-staging-maven-plugin.version>
     <maven-scm-provider-gitexe.version>2.2.1</maven-scm-provider-gitexe.version>
     <maven-scm-api.version>2.2.1</maven-scm-api.version>
     <maven-gpg-plugin.version>3.2.1</maven-gpg-plugin.version>
@@ -92,6 +92,57 @@
     <jacoco.reportFolder>${project.build.directory}/jacoco</jacoco.reportFolder>
     <jacoco.utReportFile>${jacoco.reportFolder}/jacoco.exec</jacoco.utReportFile>
   </properties>
+
+  <dependencies>
+
+    <!-- PDFBox for PDF image rendering -->
+    <dependency>
+      <groupId>org.apache.pdfbox</groupId>
+      <artifactId>pdfbox</artifactId>
+      <version>${pdfbox.version}</version>
+    </dependency>
+
+    <!-- SLF4J as logging framework -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+
+    <!-- TEST -->
+    <!-- SLF4J simple implementation for testing -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>${slf4j.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>${junit.jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>${junit.jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junit.jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
 
   <build>
     <plugins>
@@ -155,38 +206,6 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>${nexus-staging-maven-plugin.version}</version>
-        <extensions>true</extensions>
-        <!-- Publishing By Using the Portal OSSRH Staging API - since July 2025-->
-        <configuration>
-          <!-- The serverId must match <server> in settings.xml -->
-          <serverId>ossrh-staging-api</serverId>
-          <nexusUrl>https://ossrh-staging-api.central.sonatype.com/</nexusUrl>
-          <!-- (Optional) if namespace has a specific staging profile (older OSSRH flows). -->
-          <!-- <stagingProfileId>release-to-central</stagingProfileId> -->
-          <!-- If not true, we must use extra HTTP POST /manual/upload/defaultRepository/com.giraone -->
-          <autoReleaseAfterClose>true</autoReleaseAfterClose>
-        </configuration>
-        <executions>
-          <execution>
-            <id>default-deploy</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>deploy</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>default-release</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>release</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
         <version>${maven-release-plugin.version}</version>
@@ -208,6 +227,38 @@
             <version>${maven-scm-api.version}</version>
           </dependency>
         </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>${nexus-staging-maven-plugin.version}</version>
+        <extensions>true</extensions>
+        <!-- Publishing By using the Portal OSSRH Staging API - since July 2025-->
+        <configuration>
+          <!-- The serverId must match <server> in settings.xml -->
+          <serverId>ossrh-staging-api</serverId>
+          <nexusUrl>https://ossrh-staging-api.central.sonatype.com/</nexusUrl>
+          <!-- we have a specific staging profile in "settings.xml" -->
+          <stagingProfileId>release-to-central</stagingProfileId>
+          <!-- If not set to true, we must use extra HTTP POST /manual/upload/defaultRepository/com.giraone -->
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
+        <executions>
+          <execution>
+            <id>default-deploy</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>deploy</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>default-release</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>release</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <!-- Keep versions up-to-date using mvn versions:update-properties && mvn versions:use-latest-versions -->
       <plugin>
@@ -250,64 +301,12 @@
     </plugins>
   </build>
 
-  <dependencies>
-
-    <!-- PDFBox for PDF image rendering -->
-    <dependency>
-      <groupId>org.apache.pdfbox</groupId>
-      <artifactId>pdfbox</artifactId>
-      <version>${pdfbox.version}</version>
-    </dependency>
-
-    <!-- SLF4J as logging framework -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${slf4j.version}</version>
-    </dependency>
-
-    <!-- TEST -->
-    <!-- SLF4J simple implementation for testing -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <version>${slf4j.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit.jupiter.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <version>${junit.jupiter.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit.jupiter.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>${assertj.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-  </dependencies>
-
   <profiles>
     <!-- GPG Signature on release -->
     <profile>
       <id>release-sign-artifacts</id>
       <activation>
         <property>
-          <!-- performRelease activates the "release-to-central" profile in maven "settings.xml" -->
           <name>performRelease</name>
           <value>true</value>
         </property>

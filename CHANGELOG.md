@@ -1,6 +1,6 @@
 # Release Notes and List of Changes
 
-## Version 1.4.1 (2025-10-26)
+## Version 1.4.2 (2025-10-26)
 
 ### New Features
 -  **Added PNG output format support** - images can now be converted to PNG format (lossless compression)

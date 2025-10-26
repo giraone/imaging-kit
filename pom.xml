@@ -240,6 +240,10 @@
             <goals>
               <goal>sign</goal>
             </goals>
+            <configuration>
+              <keyname>${gpg.keyname}</keyname>
+              <passphraseServerId>${gpg.keyname}</passphraseServerId>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -253,8 +257,6 @@
           <!-- The serverId must match <server> in settings.xml -->
           <serverId>ossrh-staging-api</serverId>
           <nexusUrl>https://ossrh-staging-api.central.sonatype.com/</nexusUrl>
-          <!-- we have a specific staging profile in "settings.xml" -->
-          <stagingProfileId>release-to-central</stagingProfileId>
           <!-- If not set to true, we must use extra HTTP POST /manual/upload/defaultRepository/com.giraone -->
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
         </configuration>

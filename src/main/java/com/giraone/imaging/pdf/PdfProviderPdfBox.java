@@ -27,6 +27,10 @@ public class PdfProviderPdfBox implements PdfProvider {
 
     private final static PdfProviderPdfBox _THIS = new PdfProviderPdfBox();
 
+    /**
+     * Get the singleton instance of the PdfProviderPdfBox.
+     * @return the singleton instance
+     */
     @SuppressWarnings("unused")
     public static PdfProviderPdfBox getInstance() {
         return _THIS;

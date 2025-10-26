@@ -71,6 +71,10 @@ public class ConversionCommand {
         return this.quality;
     }
 
+    /**
+     * Check whether compression is enabled.
+     * @return true if compression is enabled, false otherwise
+     */
     @SuppressWarnings("unused")
     public boolean useCompression() {
         return compression;
@@ -136,6 +140,10 @@ public class ConversionCommand {
         this.scale = null;
     }
 
+    /**
+     * Get the scale factor.
+     * @return the scale factor (1.0 = original size, null = use dimension limits instead)
+     */
     @SuppressWarnings("unused")
     public Float getScale() {
         return scale;

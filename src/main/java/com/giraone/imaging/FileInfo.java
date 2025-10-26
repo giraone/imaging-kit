@@ -92,6 +92,10 @@ public class FileInfo {
         return this.width;
     }
 
+    /**
+     * Set the width of the image.
+     * @param value width in pixels
+     */
     public void setWidth(int value) {
         this.width = value;
     }
@@ -104,6 +108,10 @@ public class FileInfo {
         return this.height;
     }
 
+    /**
+     * Set the height of the image.
+     * @param value height in pixels
+     */
     public void setHeight(int value) {
         this.height = value;
     }
@@ -116,6 +124,10 @@ public class FileInfo {
         return this.providerFormat;
     }
 
+    /**
+     * Set the image format as defined by the provider.
+     * @param value provider-specific format object
+     */
     public void setProviderFormat(Object value) {
         this.providerFormat = value;
     }

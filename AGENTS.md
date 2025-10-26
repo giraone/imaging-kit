@@ -44,7 +44,9 @@
   - Use PascalCase for class and interface names.
 - Respect indentation and spacing rules defined in [.editorconfig](.editorconfig).
 - Write modular and reusable code.
-- Include comments to explain complex logic.
+- Include JavaDoc for all public classes and methods.
+- Include JavaDoc for complex methods and classes, even if they are not public, explaining their purpose and usage.
+- Include comments to explain complex logic within methods.
 - Do not use *var* for variable declarations, use explicit types.
 - Do not use *Lombok*.
 

@@ -1,6 +1,6 @@
 # Release Notes and List of Changes
 
-## Version 1.4.0 (unreleased)
+## Version 1.4.1 (2025-10-26)
 
 ### New Features
 -  **Added PNG output format support** - images can now be converted to PNG format (lossless compression)
@@ -34,7 +34,7 @@
 ### Dependency Updates
 -  Upgrade to latest dependencies (e.g. PDFBox 3.0.6)
 
-## Version  1.3.0 (2024-12-28)
+## Version 1.3.0 (2024-12-28)
 -  Upgrade to a JDK 17 build source and target
 -  Upgrade to latest dependencies (e.g. PDFBox 3.0.3)
 -  The seconds implementation based on [IMGSCALR](https://github.com/rkalla/imgscalr](https://github.com/rkalla/imgscalr) was removed.

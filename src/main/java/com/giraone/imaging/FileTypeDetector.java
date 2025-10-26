@@ -23,6 +23,10 @@ public class FileTypeDetector {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileTypeDetector.class);
     private static final FileTypeDetector _THIS = new FileTypeDetector();
 
+    /**
+     * Get the singleton instance of the FileTypeDetector.
+     * @return the singleton instance
+     */
     public static FileTypeDetector getInstance() {
         return _THIS;
     }

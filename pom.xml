@@ -146,6 +146,7 @@
 
   <build>
     <plugins>
+      <!-- Compiler Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -156,11 +157,15 @@
           <showDeprecation>true</showDeprecation>
         </configuration>
       </plugin>
+
+      <!-- Surefire Plugin for Tests -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
       </plugin>
+
+      <!-- Source Plugin - Required for Maven Central -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
@@ -174,6 +179,8 @@
           </execution>
         </executions>
       </plugin>
+
+      <!-- Javadoc Plugin - Required for Maven Central -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
@@ -192,41 +199,8 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>${maven-deploy-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>default-deploy</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>deploy</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>${maven-release-plugin.version}</version>
-        <configuration>
-          <localCheckout>true</localCheckout>
-          <pushChanges>false</pushChanges >
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.maven.scm</groupId>
-            <artifactId>maven-scm-provider-gitexe</artifactId>
-            <version>${maven-scm-provider-gitexe.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.maven.scm</groupId>
-            <artifactId>maven-scm-api</artifactId>
-            <version>${maven-scm-api.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-      <!-- GPG plugin (Optional for build, but required for Maven Central) -->
+
+      <!-- GPG Plugin for Signing - Required for Maven Central -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
@@ -238,12 +212,46 @@
             <goals>
               <goal>sign</goal>
             </goals>
-            <configuration>
-              <passphraseServerId>gpg</passphraseServerId>
-            </configuration>
           </execution>
         </executions>
       </plugin>
+
+      <!-- Release Plugin for Version Management, Git Operations and Deploy to Maven Central -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>${maven-release-plugin.version}</version>
+        <configuration>
+          <!-- Version Management -->
+          <useReleaseProfile>false</useReleaseProfile>
+          <goals>deploy</goals>
+
+          <!-- Git Configuration -->
+          <scmCommentPrefix>[maven-release-plugin]</scmCommentPrefix>
+
+          <!-- Git Operations Control -->
+          <pushChanges>true</pushChanges>
+          <remoteTagging>true</remoteTagging>
+          <suppressCommitBeforeTag>false</suppressCommitBeforeTag>
+          <localCheckout>false</localCheckout>
+
+          <!-- Commit Messages -->
+          <scmReleaseCommitComment>[maven-release-plugin] prepare release @{releaseLabel}</scmReleaseCommitComment>
+          <scmDevelopmentCommitComment>[maven-release-plugin] prepare for next development iteration</scmDevelopmentCommitComment>
+
+          <!-- Build Configuration -->
+          <preparationGoals>clean verify</preparationGoals>
+          <completionGoals>clean</completionGoals>
+
+          <!-- File Exclusions -->
+          <checkModificationExcludes>
+            <checkModificationExclude>pom.xml</checkModificationExclude>
+            <checkModificationExclude>release.properties</checkModificationExclude>
+          </checkModificationExcludes>
+        </configuration>
+      </plugin>
+
+      <!-- Nexus Staging Plugin for Step 2: Central Repository Upload -->
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -258,23 +266,8 @@
           <!-- If not set to true, we must use extra HTTP POST /manual/upload/defaultRepository/com.giraone -->
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
         </configuration>
-        <executions>
-          <execution>
-            <id>default-deploy</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>deploy</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>default-release</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>release</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
+
       <!-- Keep versions up-to-date using mvn versions:update-properties && mvn versions:use-latest-versions -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>

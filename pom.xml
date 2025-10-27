@@ -247,6 +247,7 @@
           <checkModificationExcludes>
             <checkModificationExclude>pom.xml</checkModificationExclude>
             <checkModificationExclude>release.properties</checkModificationExclude>
+            <checkModificationExclude>release.sh</checkModificationExclude>
           </checkModificationExcludes>
         </configuration>
       </plugin>

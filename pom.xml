@@ -80,12 +80,9 @@
     <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
     <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
-    <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
     <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
-    <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
-    <maven-scm-provider-gitexe.version>2.2.1</maven-scm-provider-gitexe.version>
-    <maven-scm-api.version>2.2.1</maven-scm-api.version>
     <maven-gpg-plugin.version>3.2.1</maven-gpg-plugin.version>
+    <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
     <versions-maven-plugin.version>2.19.1</versions-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
     <!-- Plugin properties -->
@@ -174,7 +171,7 @@
           <execution>
             <id>attach-sources</id>
             <goals>
-              <goal>jar</goal>
+              <goal>jar-no-fork</goal>
             </goals>
           </execution>
         </executions>
@@ -186,7 +183,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven-javadoc-plugin.version}</version>
         <configuration>
-          <source>${maven.compiler.source}></source>
+          <source>${maven.compiler.source}</source>
           <encoding>UTF-8</encoding>
           <failOnError>false</failOnError>
         </configuration>
@@ -212,6 +209,10 @@
             <goals>
               <goal>sign</goal>
             </goals>
+            <configuration>
+              <!-- Defined in settings.xml as activation property -->
+              <passphraseEnvName>MAVEN_GPG_PASSPHRASE</passphraseEnvName>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -223,7 +224,9 @@
         <version>${maven-release-plugin.version}</version>
         <configuration>
           <!-- Version Management -->
+          <autoVersionSubmodules>true</autoVersionSubmodules>
           <useReleaseProfile>false</useReleaseProfile>
+          <releaseProfiles>release</releaseProfiles>
           <goals>deploy</goals>
 
           <!-- Git Configuration -->
@@ -240,8 +243,7 @@
           <scmDevelopmentCommitComment>[maven-release-plugin] prepare for next development iteration</scmDevelopmentCommitComment>
 
           <!-- Build Configuration -->
-          <preparationGoals>clean verify</preparationGoals>
-          <completionGoals>clean</completionGoals>
+          <preparationGoals>verify</preparationGoals>
 
           <!-- File Exclusions -->
           <checkModificationExcludes>
@@ -263,9 +265,8 @@
           <!-- The serverId must match <server> in settings.xml -->
           <serverId>ossrh-staging</serverId>
           <nexusUrl>https://ossrh-staging-api.central.sonatype.com/</nexusUrl>
-          <skipStaging>true</skipStaging>
           <!-- If not set to true, we must use extra HTTP POST /manual/upload/defaultRepository/com.giraone -->
-          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+          <autoReleaseAfterClose>false</autoReleaseAfterClose>
         </configuration>
       </plugin>
 
@@ -278,6 +279,8 @@
           <rulesUri>file:///${project.basedir}/mvn-versions-rules.xml</rulesUri>
         </configuration>
       </plugin>
+
+      <!-- JaCoCo Plugin for Code Coverage -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>

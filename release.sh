@@ -161,7 +161,16 @@ prepare_release() {
     print_warning "Release preparation cancelled"
     exit 0
   fi
-  
+
+  while true; do
+    read -p "GPG Passphrase for signing: " MAVEN_GPG_PASSPHRASE
+    read -p "OK to use : \"$MAVEN_GPG_PASSPHRASE\"? (y/N): " ok
+    if [[ "$ok" == "y" ]]; then
+      break
+    fi
+  done
+  export MAVEN_GPG_PASSPHRASE
+
   # Run maven release:prepare
   print_status "Running maven release:prepare..."
   mvn release:prepare \
@@ -177,8 +186,6 @@ prepare_release() {
 perform_release() {
   print_status "Performing release (Step 1: Deploy to staging)..."
 
-  # activate "ossrh-staging" profile
-  export OSSRH_STAGING=true
   # Run maven release:perform
   mvn -Dgpg.skip=false release:perform
   

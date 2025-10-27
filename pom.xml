@@ -35,7 +35,6 @@
 
   <scm>
     <connection>scm:git:git://github.com/giraone/imaging-kit.git</connection>
-    <developerConnection>scm:git:git@github.com:giraone/giraone.git</developerConnection>
     <url>https://github.com/giraone/imaging-kit</url>
     <tag>v1.4.3</tag>
   </scm>

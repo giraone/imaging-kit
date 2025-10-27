@@ -162,8 +162,15 @@ prepare_release() {
     exit 0
   fi
 
+  gpg -ab pom.xml
+  if [[ $? -ne 0 ]]; then
+    print_error "Failed to sign using gpg! Ensure GPG is set up correctly."
+    exit 1
+  fi
+  rm -f pom.xml.asc
+
   while true; do
-    read -p "GPG Passphrase for signing: " MAVEN_GPG_PASSPHRASE
+    read -p "Repeat GPG Passphrase for signing: " MAVEN_GPG_PASSPHRASE
     read -p "OK to use : \"$MAVEN_GPG_PASSPHRASE\"? (y/N): " ok
     if [[ "$ok" == "y" ]]; then
       break

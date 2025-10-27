@@ -36,7 +36,7 @@
   <scm>
     <connection>scm:git:git://github.com/giraone/imaging-kit.git</connection>
     <developerConnection>scm:git:git@github.com:giraone/giraone.git</developerConnection>
-    <url>https://github.com/giraone/imaging-kit.git</url>
+    <url>https://github.com/giraone/imaging-kit</url>
     <tag>HEAD</tag>
   </scm>
 
@@ -58,7 +58,7 @@
     </snapshotRepository>
     <!-- Repository URL for release deployment, no download access! -->
     <repository>
-      <id>ossrh-staging-api</id>
+      <id>ossrh-staging</id>
       <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
@@ -77,8 +77,8 @@
     <assertj.version>3.27.6</assertj.version>
     <!-- Plugin versions -->
     <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
-    <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
     <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+    <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
     <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
     <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
@@ -211,9 +211,8 @@
         <version>${maven-release-plugin.version}</version>
         <configuration>
           <localCheckout>true</localCheckout>
-          <pushChanges>false</pushChanges>
+          <pushChanges>false</pushChanges >
           <mavenExecutorId>forked-path</mavenExecutorId>
-          <arguments>-Dgpg.passphrase=${gpg.passphrase} -Dgpg.keyname=${gpg.keyname}</arguments>
         </configuration>
         <dependencies>
           <dependency>
@@ -241,8 +240,7 @@
               <goal>sign</goal>
             </goals>
             <configuration>
-              <keyname>${gpg.keyname}</keyname>
-              <passphraseServerId>${gpg.keyname}</passphraseServerId>
+              <passphraseServerId>gpg</passphraseServerId>
             </configuration>
           </execution>
         </executions>
@@ -255,7 +253,7 @@
         <!-- Publishing by using the Portal OSSRH Staging API - since July 2025-->
         <configuration>
           <!-- The serverId must match <server> in settings.xml -->
-          <serverId>ossrh-staging-api</serverId>
+          <serverId>ossrh-staging</serverId>
           <nexusUrl>https://ossrh-staging-api.central.sonatype.com/</nexusUrl>
           <skipStaging>true</skipStaging>
           <!-- If not set to true, we must use extra HTTP POST /manual/upload/defaultRepository/com.giraone -->

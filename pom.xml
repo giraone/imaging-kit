@@ -73,7 +73,7 @@
     <slf4j.version>2.0.17</slf4j.version>
     <!-- Test dependency versions -->
     <junit.jupiter.version>6.0.0</junit.jupiter.version>
-    <assertj.version>3.27.6</assertj.version>
+    <assertj.version>3.27.7</assertj.version>
     <!-- Plugin versions -->
     <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>

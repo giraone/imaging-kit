@@ -127,19 +127,23 @@ public class DefaultMarkdownProvider implements MarkdownProvider {
      */
     private static BufferedImage renderHtmlToImage(String html, int width, int height) {
         try (ByteArrayInputStream in = new ByteArrayInputStream(html.getBytes(StandardCharsets.UTF_8))) {
-            return option2(in, width, height);
+            return renderHtmlToImage(in, width, height);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static BufferedImage option2(ByteArrayInputStream in, int width, int height) throws Exception {
+    private static BufferedImage renderHtmlToImage(ByteArrayInputStream in, int width, int height) throws Exception {
         final InputSource inputSource = new InputSource(in);
         final Document document = parseDocument(inputSource);
         final Graphics2DRenderer g2r = new Graphics2DRenderer(document, "");
         final Dimension dim = new Dimension(width, height);
         final BufferedImage bufferedImage = new BufferedImage((int) dim.getWidth(), (int) dim.getHeight(), BufferedImage.TYPE_INT_RGB);
         ImageUtil.withGraphics(bufferedImage, (g) -> {
+            // Fill background with white to avoid black areas on short documents
+            g.setColor(Color.WHITE);
+            g.fillRect(0, 0, (int) dim.getWidth(), (int) dim.getHeight());
+            // Render HTML content
             g2r.layout(g, dim);
             g2r.render(g);
         });

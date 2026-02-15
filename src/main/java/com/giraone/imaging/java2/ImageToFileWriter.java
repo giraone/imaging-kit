@@ -50,15 +50,6 @@ public class ImageToFileWriter {
         jpegParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
         jpegParams.setCompressionQuality(quality);
 
-        /*
-        / Alternative!
-        ImageWriter writer = null;
-          Iterator iter = ImageIO.getImageWritersByFormatName("jpg");
-          if (iter.hasNext()) {
-            writer = (ImageWriter) iter.next();
-          }
-        */
-
         // Performance: we may re-use our ImageWriters
         final ImageWriter writer = ImageWriterThreadLocal.get();
         writer.setOutput(ios);

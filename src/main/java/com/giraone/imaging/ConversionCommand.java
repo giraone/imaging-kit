@@ -48,8 +48,8 @@ public class ConversionCommand {
      * @param value Output quality (compression).
      *  <ul>
      *   <li><code>0</code>: Lossless compression.
-     *   <li><code>1</code>: Lossy compression with best quality.
-     *   <li><code>100</code>: Lossy compression with worst quality.
+     *   <li><code>1</code>: Lossy compression with the best quality.
+     *   <li><code>100</code>: Lossy compression with the worst quality.
      * </ul>
      */
     public void setQuality(int value) {

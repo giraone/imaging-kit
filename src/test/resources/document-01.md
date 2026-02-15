@@ -18,7 +18,7 @@ app/src/main/java
 ├── data/
 │   ├── FileItem.kt            # Data model for archived files
 │   ├── FileRepository.kt      # File management operations
-│   ├── PreferencesManager.kt  # Settings persistence with DataStore
+│   ├── PreferencesManager.kt  # Settings persistence with DataStore and using a very, very long description
 │   ├── FileType.kt            # File type enumeration
 │   ├── SortOrder.kt           # Sort order enumeration
 │   └── FontSize.kt            # Font size enumeration

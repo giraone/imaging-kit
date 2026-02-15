@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
 
+import static com.giraone.imaging.ConversionCommand.MIME_TYPE_GIF;
+import static com.giraone.imaging.ConversionCommand.MIME_TYPE_PNG;
+
 /**
  * Input/Output routines for image load and store.
  */
@@ -85,5 +88,13 @@ public class ImageToFileWriter {
     public static void saveGif(BufferedImage bufferedImage, OutputStream outputStream) throws IOException {
         ImageIO.write(bufferedImage, OUTPUT_FORMAT_GIF, outputStream);
         outputStream.flush();
+    }
+
+    public static String mimeTypeToIoWriteFormat(String imageMimeType) {
+        return switch (imageMimeType) {
+            case MIME_TYPE_PNG -> OUTPUT_FORMAT_PNG;
+            case MIME_TYPE_GIF -> OUTPUT_FORMAT_GIF;
+            default -> OUTPUT_FORMAT_JPEG;
+        };
     }
 }

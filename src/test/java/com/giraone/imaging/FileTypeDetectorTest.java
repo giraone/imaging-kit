@@ -118,10 +118,8 @@ class FileTypeDetectorTest {
         /// act
         List<String> types = FileTypeDetector.FileType.allTypesAsStrings();
         /// assert
-        assertThat(types).hasSize(9);
+        assertThat(types).hasSize(10);
     }
-
-    //------------------------------------------------------------------------------------------------------------------
 
     private void checkExpectedType(String fileName, FileTypeDetector.FileType expectedFileType) {
 

@@ -150,6 +150,10 @@ public class FileTypeDetector {
         if (b0 == 66 && b1 == 77)
             return FileType.BMP;
 
+        // Markdown (very vage!)
+        if (b0 == '#')
+            return FileType.MARKDOWN;
+
         return FileType.UNKNOWN;
     }
 
@@ -169,7 +173,7 @@ public class FileTypeDetector {
      * Enumeration for the supported (detectable) file types.
      */
     public enum FileType {
-        UNKNOWN, JPEG, PNG, TIFF, GIF, BMP, PGM, DICOM, PDF;
+        UNKNOWN, JPEG, PNG, TIFF, GIF, BMP, PGM, DICOM, PDF, MARKDOWN;
 
         public static List<String> allTypesAsStrings() {
             return Arrays.stream(FileType.values()).map(Enum::name).toList();

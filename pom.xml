@@ -3,7 +3,7 @@
 
   <groupId>com.giraone.imaging</groupId>
   <artifactId>imaging-kit</artifactId>
-  <version>1.4.4-SNAPSHOT</version>
+  <version>1.5.0-SNAPSHOT</version>
 
   <packaging>jar</packaging>
 
@@ -36,7 +36,7 @@
   <scm>
     <connection>scm:git:https://github.com/giraone/imaging-kit.git</connection>
     <url>https://github.com/giraone/imaging-kit.git</url>
-    <tag>v1.4.3</tag>
+    <tag>v1.5.0</tag>
   </scm>
 
   <issueManagement>
@@ -65,24 +65,26 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.release>21</maven.compiler.release>
     <java.version>${maven.compiler.release}</java.version>
     <!-- Production dependency versions -->
     <pdfbox.version>3.0.6</pdfbox.version>
+    <flexmark-all.version>0.64.8</flexmark-all.version>
+    <flying-saucer.version>10.0.6</flying-saucer.version>
     <slf4j.version>2.0.17</slf4j.version>
     <!-- Test dependency versions -->
-    <junit.jupiter.version>6.0.0</junit.jupiter.version>
-    <assertj.version>3.27.6</assertj.version>
+    <junit.jupiter.version>6.0.3</junit.jupiter.version>
+    <assertj.version>3.27.7</assertj.version>
     <!-- Plugin versions -->
-    <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+    <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
-    <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+    <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
-    <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
-    <maven-gpg-plugin.version>3.2.1</maven-gpg-plugin.version>
+    <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
+    <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
     <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
-    <versions-maven-plugin.version>2.19.1</versions-maven-plugin.version>
+    <versions-maven-plugin.version>2.21.0</versions-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
     <!-- Plugin properties -->
     <jacoco.reportFolder>${project.build.directory}/jacoco</jacoco.reportFolder>
@@ -96,6 +98,19 @@
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>pdfbox</artifactId>
       <version>${pdfbox.version}</version>
+    </dependency>
+
+    <!-- flexmark for Markdown to HTML -->
+    <dependency>
+      <groupId>com.vladsch.flexmark</groupId>
+      <artifactId>flexmark-all</artifactId>
+      <version>${flexmark-all.version}</version>
+    </dependency>
+    <!-- flying-saucer for HTML to Image (Java2D) -->
+    <dependency>
+      <groupId>org.xhtmlrenderer</groupId>
+      <artifactId>flying-saucer-core</artifactId>
+      <version>${flying-saucer.version}</version>
     </dependency>
 
     <!-- SLF4J as logging framework -->
@@ -196,7 +211,8 @@
         </executions>
       </plugin>
 
-      <!-- GPG Plugin for Signing - Required for Maven Central -->
+      <!-- GPG Plugin for Signing - Required for Maven Central - MAVEN_GPG_PASSPHRASE is defined in settings.xml as activation property -->
+      <!--
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
@@ -209,12 +225,11 @@
               <goal>sign</goal>
             </goals>
             <configuration>
-              <!-- Defined in settings.xml as activation property -->
               <passphraseEnvName>MAVEN_GPG_PASSPHRASE</passphraseEnvName>
             </configuration>
           </execution>
         </executions>
-      </plugin>
+      </plugin>-->
 
       <!-- Release Plugin for Version Management, Git Operations and Deploy to Maven Central -->
       <plugin>

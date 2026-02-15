@@ -1,5 +1,11 @@
 # Release Notes and List of Changes
 
+## Version 1.5.0 (2026-02-15)
+
+- Support for thumbnail generation for Markdown documents (`text/markdown`) added
+- Version is build for Java 21 (!)
+- Dependency upgrades to latest versions
+
 ## Version 1.4.3 (2025-10-26)
 
 ### New Features

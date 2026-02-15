@@ -16,8 +16,12 @@ import java.util.Iterator;
  */
 public class ImageToFileWriter {
 
+    private static final String OUTPUT_FORMAT_JPEG = "jpeg";
+    private static final String OUTPUT_FORMAT_PNG = "png";
+    private static final String OUTPUT_FORMAT_GIF = "gif";
+
     private static final ThreadLocal<ImageWriter> ImageWriterThreadLocal = ThreadLocal.withInitial(() -> {
-        final Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpeg");
+        final Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName(OUTPUT_FORMAT_JPEG);
         if (!writers.hasNext())
             throw new IllegalStateException("No ImageIO writers found");
         return writers.next();
@@ -40,8 +44,7 @@ public class ImageToFileWriter {
      * @param quality 0.0-1.0 setting of desired quality level.
      * @throws IOException On any IO exception
      */
-    public static void saveJpeg(BufferedImage bufferedImage, OutputStream outputStream, float quality)
-        throws IOException {
+    public static void saveJpeg(BufferedImage bufferedImage, OutputStream outputStream, float quality) throws IOException {
 
         // See also: http://www.java2s.com/Code/Java/2D-Graphics-GUI/WritesanimagetoanoutputstreamasaJPEGfileTheJPEGqualitycanbespecifiedinpercent.htm
         final ImageOutputStream ios = ImageIO.createImageOutputStream(outputStream);
@@ -53,8 +56,7 @@ public class ImageToFileWriter {
         // Performance: we may re-use our ImageWriters
         final ImageWriter writer = ImageWriterThreadLocal.get();
         writer.setOutput(ios);
-        writer.write(/* IIOMetadata */ null,
-            new IIOImage(bufferedImage, /* thumbnails */ null, /* IIOMetadata */ null), jpegParams);
+        writer.write(/* IIOMetadata */ null, new IIOImage(bufferedImage, /* thumbnails */ null, /* IIOMetadata */ null), jpegParams);
         //writer.dispose(); // We do not dispose, because of the re-use!!!
         outputStream.flush();
     }
@@ -67,9 +69,8 @@ public class ImageToFileWriter {
      * @param outputStream Stream to write the image to. Stream is flushed, but not closed.
      * @throws IOException On any IO exception
      */
-    public static void savePng(BufferedImage bufferedImage, OutputStream outputStream)
-        throws IOException {
-        ImageIO.write(bufferedImage, "png", outputStream);
+    public static void savePng(BufferedImage bufferedImage, OutputStream outputStream) throws IOException {
+        ImageIO.write(bufferedImage, OUTPUT_FORMAT_PNG, outputStream);
         outputStream.flush();
     }
 
@@ -81,9 +82,8 @@ public class ImageToFileWriter {
      * @param outputStream Stream to write the image to. Stream is flushed, but not closed.
      * @throws IOException On any IO exception
      */
-    public static void saveGif(BufferedImage bufferedImage, OutputStream outputStream)
-        throws IOException {
-        ImageIO.write(bufferedImage, "gif", outputStream);
+    public static void saveGif(BufferedImage bufferedImage, OutputStream outputStream) throws IOException {
+        ImageIO.write(bufferedImage, OUTPUT_FORMAT_GIF, outputStream);
         outputStream.flush();
     }
 }

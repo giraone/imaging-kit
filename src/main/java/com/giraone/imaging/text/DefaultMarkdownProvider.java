@@ -119,15 +119,6 @@ public class DefaultMarkdownProvider implements MarkdownProvider {
         return renderHtmlToImage(fullHtml, width, height);
     }
 
-    private static void dumpHtml(String fullHtml) {
-        try {
-            final File tmpFile = File.createTempFile("markdown-", ".html");
-            Files.writeString(tmpFile.toPath(), fullHtml);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private static String wrapHtml(String bodyHtml) {
         return HTML_WRAP_A4_PORTRAIT
             .replace("%bodyHtml%", bodyHtml);
@@ -174,6 +165,15 @@ public class DefaultMarkdownProvider implements MarkdownProvider {
             return builder.parse(source);
         } catch (SAXParseException spe) {
             throw new Exception(spe.getMessage() + " in Line/Col " + spe.getLineNumber() + "/" + spe.getColumnNumber());
+        }
+    }
+
+    private static void dumpHtml(String fullHtml) {
+        try {
+            final File tmpFile = File.createTempFile("markdown-", ".html");
+            Files.writeString(tmpFile.toPath(), fullHtml);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

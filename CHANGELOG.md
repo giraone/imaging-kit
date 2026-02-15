@@ -3,6 +3,8 @@
 ## Version 1.5.0 (2026-02-15)
 
 - Support for thumbnail generation for Markdown documents (`text/markdown`) added
+- There is an additional interface [com.giraone.imaging.ThumbnailProvider](src/main/java/com/giraone/imaging/ThumbnailProvider.java),
+  that is implemented by all providers (PNG, JPEG, PDF, Markdown) 
 - Version is build for Java 21 (!)
 - Dependency upgrades to latest versions
 

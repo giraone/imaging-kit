@@ -6,8 +6,8 @@
 
 # Imaging Kit
 
-A Java JAR for creating thumbnails and/or scaled versions of bitmap images (PNG, JPEG), PDF and Markdown documents.
-The concrete solutions is wrapped behind an interface. For bitmap images the implementation is based on plain Java2D.
+A Java JAR for creating thumbnails and/or scaled versions of bitmap images (PNG, JPEG) and documents (PDF and Markdown) documents.
+The concrete solutions are wrapped behind an interface. For bitmap images the implementation is based on plain Java2D.
 See [java2/ProviderJava2D.java](src/main/java/com/giraone/imaging/java2/ProviderJava2D.java).
 
 ## Integrating

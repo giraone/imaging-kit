@@ -25,7 +25,7 @@ import java.io.OutputStream;
  */
 public class PdfProviderPdfBox implements PdfProvider {
 
-    private final static PdfProviderPdfBox _THIS = new PdfProviderPdfBox();
+    private static final PdfProviderPdfBox _THIS = new PdfProviderPdfBox();
 
     /**
      * Get the singleton instance of the PdfProviderPdfBox.

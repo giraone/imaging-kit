@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 /**
  * A class to provide thumbnail creation of Markdown documents using a two-step approach with
@@ -33,11 +34,9 @@ import java.nio.charset.StandardCharsets;
  */
 public class DefaultMarkdownProvider implements MarkdownProvider {
 
-    // is thread-safe - see JavaDoc
-    private static final Parser markdownParser = Parser.builder().build();
-    // is thread-safe - see JavaDoc
-    private static final HtmlRenderer htmlRenderer = HtmlRenderer.builder().build();
-
+    // for debugging the HTML generation
+    private static final boolean DUMP_HTML = true;
+    // the HTML document template (DIN A4 portrait mode) to be used
     private static final String HTML_WRAP_A4_PORTRAIT = """
         <!DOCTYPE html>
         <html>
@@ -67,7 +66,12 @@ public class DefaultMarkdownProvider implements MarkdownProvider {
         </html>
         """;
 
-    private final static DefaultMarkdownProvider _THIS = new DefaultMarkdownProvider();
+    private static final DefaultMarkdownProvider _THIS = new DefaultMarkdownProvider();
+
+    // is thread-safe - see JavaDoc
+    private static final Parser markdownParser = Parser.builder().build();
+    // is thread-safe - see JavaDoc
+    private static final HtmlRenderer htmlRenderer = HtmlRenderer.builder().build();
 
     /**
      * Get the singleton instance of the PdfProviderPdfBox.
@@ -110,8 +114,18 @@ public class DefaultMarkdownProvider implements MarkdownProvider {
         final String htmlString = htmlRenderer.render(document);
         // 2. Wrap HTML with CSS for consistent rendering
         final String fullHtml = wrapHtml(htmlString);
+        dumpHtml(fullHtml);
         // 3. Render HTML to BufferedImage
         return renderHtmlToImage(fullHtml, width, height);
+    }
+
+    private static void dumpHtml(String fullHtml) {
+        try {
+            final File tmpFile = File.createTempFile("markdown-", ".html");
+            Files.writeString(tmpFile.toPath(), fullHtml);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static String wrapHtml(String bodyHtml) {

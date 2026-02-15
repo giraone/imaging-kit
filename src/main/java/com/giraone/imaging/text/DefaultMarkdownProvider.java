@@ -49,7 +49,7 @@ public class DefaultMarkdownProvider implements MarkdownProvider {
     public static final int PT12_PX = ptToPixels(12, DEFAULT_DPI);
 
     // for debugging the HTML generation
-    private static final boolean DUMP_HTML = true;
+    private static final boolean DUMP_HTML = false;
     // the HTML document template (DIN A4 portrait mode) to be used
 
     private static final String HTML_WRAP_A4_PORTRAIT = """

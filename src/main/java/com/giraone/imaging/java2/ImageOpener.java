@@ -1,7 +1,5 @@
 package com.giraone.imaging.java2;
 
-//--------------------------------------------------------------------------------
-
 import com.giraone.imaging.FileInfo;
 import com.giraone.imaging.FileTypeDetector;
 import org.slf4j.Logger;
@@ -14,7 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-//--------------------------------------------------------------------------------
+import static com.giraone.imaging.ConversionCommand.*;
 
 public class ImageOpener {
 
@@ -25,8 +23,6 @@ public class ImageOpener {
     private ImageOpener() {
     }
 
-    // --------------------------------------------------------------------------------
-
     /**
      * Open an image file and return the buffered image plus some image information.
      * @param file the image file to open
@@ -36,7 +32,7 @@ public class ImageOpener {
     public static ImagePlusInfo openImage(File file) throws IOException {
         final FileTypeDetector.FileType fileType = FileTypeDetector.getInstance().getFileType(file);
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("openImage: fileType = {}", fileType);
+            LOGGER.debug("openImage (using File): fileType = {}", fileType);
         }
         return openImage(file, fileType);
     }
@@ -50,7 +46,7 @@ public class ImageOpener {
     public static ImagePlusInfo openImage(Path path) throws IOException {
         final FileTypeDetector.FileType fileType = FileTypeDetector.getInstance().getFileType(path);
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("openImage: fileType = {}", fileType);
+            LOGGER.debug("openImage (using Path): fileType = {}", fileType);
         }
         return openImage(path, fileType);
     }
@@ -61,15 +57,15 @@ public class ImageOpener {
         switch (fileType) {
             case JPEG:
                 image = loadImageUsingToolkit(file);
-                fileInfo = getFileInfo(image, "image/jpeg", FileTypeDetector.FileType.JPEG);
+                fileInfo = getFileInfo(image, MIME_TYPE_JPEG, FileTypeDetector.FileType.JPEG);
                 break;
             case GIF:
                 image = loadImageUsingToolkit(file);
-                fileInfo = getFileInfo(image, "image/gif", FileTypeDetector.FileType.GIF);
+                fileInfo = getFileInfo(image, MIME_TYPE_GIF, FileTypeDetector.FileType.GIF);
                 break;
             case PNG:
                 image = loadImageUsingToolkit(file);
-                fileInfo = getFileInfo(image, "image/png", FileTypeDetector.FileType.PNG);
+                fileInfo = getFileInfo(image, MIME_TYPE_PNG, FileTypeDetector.FileType.PNG);
                 break;
             /*
             case TIFF:
@@ -86,7 +82,7 @@ public class ImageOpener {
                 break;
             */
             default:
-                LOGGER.warn("ImageOpener|openImage: {} -> unknown fileType = {}", file, fileType);
+                LOGGER.warn("ImageOpener|openImage (using File): {} -> unknown fileType = {}", file, fileType);
                 return null;
         }
         return new ImagePlusInfo(image, fileInfo);
@@ -98,15 +94,15 @@ public class ImageOpener {
         switch (fileType) {
             case JPEG:
                 image = loadImageUsingToolkit(path);
-                fileInfo = getFileInfo(image, "image/jpeg", FileTypeDetector.FileType.JPEG);
+                fileInfo = getFileInfo(image, MIME_TYPE_JPEG, FileTypeDetector.FileType.JPEG);
                 break;
             case GIF:
                 image = loadImageUsingToolkit(path);
-                fileInfo = getFileInfo(image, "image/gif", FileTypeDetector.FileType.GIF);
+                fileInfo = getFileInfo(image, MIME_TYPE_GIF, FileTypeDetector.FileType.GIF);
                 break;
             case PNG:
                 image = loadImageUsingToolkit(path);
-                fileInfo = getFileInfo(image, "image/png", FileTypeDetector.FileType.PNG);
+                fileInfo = getFileInfo(image, MIME_TYPE_PNG, FileTypeDetector.FileType.PNG);
                 break;
             /*
             case TIFF:
@@ -123,7 +119,7 @@ public class ImageOpener {
                 break;
             */
             default:
-                LOGGER.warn("ImageOpener|openImage: {} -> unknown fileType = {}", path, fileType);
+                LOGGER.warn("ImageOpener|openImage (using Path): {} -> unknown fileType = {}", path, fileType);
                 return null;
         }
         return new ImagePlusInfo(image, fileInfo);

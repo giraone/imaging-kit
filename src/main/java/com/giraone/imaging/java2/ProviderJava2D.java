@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
 
+import static com.giraone.imaging.ConversionCommand.*;
+
 /**
  * Imaging provider based on Java 2 classes
  */
@@ -120,15 +122,15 @@ public class ProviderJava2D implements ImagingProvider {
 
         final String outputFormat = command.getOutputFormat();
         switch (outputFormat) {
-            case "image/jpeg":
+            case MIME_TYPE_JPEG:
                 final int normedQuality = command.getQuality();
                 final float internalQuality = this.getInternalQuality(normedQuality);
                 ImageToFileWriter.saveJpeg(bufferedImage, out, internalQuality);
                 break;
-            case "image/png":
+            case MIME_TYPE_PNG:
                 ImageToFileWriter.savePng(bufferedImage, out);
                 break;
-            case "image/gif":
+            case MIME_TYPE_GIF:
                 ImageToFileWriter.saveGif(bufferedImage, out);
                 break;
             default:
@@ -153,8 +155,6 @@ public class ProviderJava2D implements ImagingProvider {
 
        convertAndWriteImage(bufferedImage, out, command);
     }
-
-    //---------------------------------------------------------------------------------
 
     /**
      * Return internal quality value, when normed value is given

@@ -126,8 +126,6 @@ public class PdfProviderPdfBox implements PdfProvider {
         }
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-
     private PDRectangle getPdRectangle(File imageFile) throws IOException, FormatNotSupportedException {
         final FileInfo imageInfo = imagingProvider.fetchFileInfo(imageFile);
         return new PDRectangle(0, 0, imageInfo.getWidth(), imageInfo.getHeight());

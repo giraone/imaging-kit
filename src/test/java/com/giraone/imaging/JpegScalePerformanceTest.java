@@ -14,6 +14,8 @@ import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.Map;
 
+import static com.giraone.imaging.ConversionCommand.MIME_TYPE_JPEG;
+
 /**
  * A performance test to test different imaging providers.
  */
@@ -88,10 +90,12 @@ public class JpegScalePerformanceTest {
         String newName2 = baseName + "-small.jpg";
         File outFile1 = new File(outDir + "/" + newName1);
         File outFile2 = new File(outDir + "/" + newName2);
+        outFile1.deleteOnExit();
+        outFile2.deleteOnExit();
 
         long start1 = System.currentTimeMillis();
         try (FileOutputStream outputStream = new FileOutputStream(outFile1)) {
-            provider.createThumbnail(inFile, outputStream, "image/jpeg", thumbWidthAndHeight, thumbWidthAndHeight,
+            provider.createThumbnail(inFile, outputStream, MIME_TYPE_JPEG, thumbWidthAndHeight, thumbWidthAndHeight,
                 ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
         }
         long end1 = System.currentTimeMillis();
@@ -99,14 +103,11 @@ public class JpegScalePerformanceTest {
 
         long start2 = System.currentTimeMillis();
         try (FileOutputStream outputStream = new FileOutputStream(outFile2)) {
-            provider.createThumbnail(inFile, outputStream, "image/jpeg", scaledWidthAndHeight, scaledWidthAndHeight,
+            provider.createThumbnail(inFile, outputStream, MIME_TYPE_JPEG, scaledWidthAndHeight, scaledWidthAndHeight,
                 ConversionCommand.CompressionQuality.LOSSY_BEST);
         }
         long end2 = System.currentTimeMillis();
         LOG.debug("{}: {} milliseconds", inFile, (end2 - start2));
-        outFile1.delete();
-        outFile2.delete();
-
     }
 
     @SuppressWarnings("unused")

@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Map;
 
+import static com.giraone.imaging.ConversionCommand.MIME_TYPE_JPEG;
 import static com.giraone.imaging.TestFileHelper.cloneTestFile;
 import static com.giraone.imaging.TestFileHelper.readTestFile;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -175,14 +176,14 @@ class ProviderPdfTest {
         // act
         try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
             providerUnderTest.createThumbnail(file, outputStream,
-                "image/jpeg", thumbPixelMaxSize, thumbPixelMaxSize,
+                MIME_TYPE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize,
                 ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
         }
 
         // assert
         assertThat(outFile.exists()).isTrue();
         FileInfo fileInfo = imagingProvider.fetchFileInfo(outFile);
-        assertThat(fileInfo.getMimeType()).isEqualTo("image/jpeg");
+        assertThat(fileInfo.getMimeType()).isEqualTo(MIME_TYPE_JPEG);
         assertThat(fileInfo.getBitsPerPixel()).isEqualTo(24);
         assertThat(fileInfo.getWidth()).isLessThanOrEqualTo(thumbPixelMaxSize);
         assertThat(fileInfo.getHeight()).isLessThanOrEqualTo(thumbPixelMaxSize);

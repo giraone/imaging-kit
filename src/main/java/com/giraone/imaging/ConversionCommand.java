@@ -6,6 +6,11 @@ import java.awt.*;
  * Definition of an image conversion (command pattern).
  */
 public class ConversionCommand {
+
+    public static final String MIME_TYPE_JPEG = "image/jpeg";
+    public static final String MIME_TYPE_PNG = "image/png";
+    public static final String MIME_TYPE_GIF = "image/gif";
+
     private String outputFormat;
     private boolean compression;
     private int quality;

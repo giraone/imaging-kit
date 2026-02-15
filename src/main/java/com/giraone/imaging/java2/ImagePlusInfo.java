@@ -1,12 +1,8 @@
 package com.giraone.imaging.java2;
 
-//--------------------------------------------------------------------------------
-
 import com.giraone.imaging.FileInfo;
 
 import java.awt.image.BufferedImage;
-
-//--------------------------------------------------------------------------------
 
 /**
  * Value object for image plus its file information.

@@ -100,7 +100,6 @@ public class ProviderJava2D implements ImagingProvider {
     /**
      * Convert a buffered image to the specified output format.
      * Supports JPEG, PNG, and GIF output formats.
-     *
      * @param bufferedImage the image to convert and save
      * @param out OutputStream, to which the new image is written. Important: Stream is not closed!
      * @param command the image conversion command
@@ -147,13 +146,13 @@ public class ProviderJava2D implements ImagingProvider {
      * @throws IOException on any error opening the file, converting the file or writing to the output
      * @throws FormatNotSupportedException if the output format is not supported
      * @deprecated Use {@link #convertAndWriteImage(BufferedImage, OutputStream, ConversionCommand)} instead.
-     *             This method is kept for backward compatibility.
+     * This method is kept for backward compatibility.
      */
     @Deprecated
     public void convertAndWriteImageAsJpeg(BufferedImage bufferedImage, OutputStream out, ConversionCommand command)
         throws IOException, FormatNotSupportedException {
 
-       convertAndWriteImage(bufferedImage, out, command);
+        convertAndWriteImage(bufferedImage, out, command);
     }
 
     /**

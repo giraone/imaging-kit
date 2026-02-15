@@ -25,9 +25,11 @@ class DefaultMarkdownProviderTest {
         File outputFile = File.createTempFile("md-to-thumb-", ".jpg");
         outputFile.deleteOnExit();
         ConversionCommand.CompressionQuality quality = ConversionCommand.CompressionQuality.LOSSY_BEST;
+        int width = A4_WIDTH_MM * 400 / A4_WIDTH_MM;
+        int height = A4_HEIGHT_MM * 400 / A4_WIDTH_MM;
         /// act
         try (FileOutputStream out = new FileOutputStream(outputFile)) {
-            markdownProvider.createThumbnail(inputFile, out, MIME_TYPE_JPEG, A4_WIDTH_MM * 400/A4_WIDTH_MM, A4_HEIGHT_MM * 400/A4_WIDTH_MM, quality);
+            markdownProvider.createThumbnail(inputFile, out, MIME_TYPE_JPEG, width, height, quality);
         }
         /// assert
         assertThat(outputFile.exists());

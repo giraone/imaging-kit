@@ -67,7 +67,6 @@ public class ImageToFileWriter {
     /**
      * Save a bitmap as a PNG image (lossless compression).
      * PNG format supports transparency and provides lossless compression.
-     *
      * @param bufferedImage the image bitmap to be saved
      * @param outputStream Stream to write the image to. Stream is flushed, but not closed.
      * @throws IOException On any IO exception
@@ -80,7 +79,6 @@ public class ImageToFileWriter {
     /**
      * Save a bitmap as a GIF image.
      * Note: GIF format is limited to 256 colors, so images may be color-reduced.
-     *
      * @param bufferedImage the image bitmap to be saved
      * @param outputStream Stream to write the image to. Stream is flushed, but not closed.
      * @throws IOException On any IO exception

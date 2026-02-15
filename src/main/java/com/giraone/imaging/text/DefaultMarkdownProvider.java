@@ -24,6 +24,13 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * A class to provide thumbnail creation of Markdown documents using a two-step approach with
+ * <ul>
+ *     <li>Markdown to HTML conversion using com.vladsch.flexmark:flexmark-all</li>
+ *     <li>HTML to Java2D image conversion using org.xhtmlrenderer:flying-saucer-core</li>
+ * </ul>
+ */
 public class DefaultMarkdownProvider implements MarkdownProvider {
 
     // is thread-safe - see JavaDoc

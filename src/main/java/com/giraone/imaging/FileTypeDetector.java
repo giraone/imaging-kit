@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
@@ -150,6 +151,14 @@ public class FileTypeDetector {
         if (b0 == 66 && b1 == 77)
             return FileType.BMP;
 
+        // MP4 ("<NULL><NULL><NULL>ftypmp4")
+        if (b0 == 0 && b1 == 0 && b2 == 0 && b3 == ' ') {
+            final String tag = new String(Arrays.copyOfRange(firstBytes, 4, 11), StandardCharsets.UTF_8);
+            if ("ftypmp4".equals(tag)) {
+                return FileType.MP4;
+            }
+        }
+
         // Markdown (very vage!)
         if (b0 == '#')
             return FileType.MARKDOWN;
@@ -173,7 +182,7 @@ public class FileTypeDetector {
      * Enumeration for the supported (detectable) file types.
      */
     public enum FileType {
-        UNKNOWN, JPEG, PNG, TIFF, GIF, BMP, PGM, DICOM, PDF, MARKDOWN;
+        UNKNOWN, JPEG, PNG, TIFF, GIF, BMP, PGM, DICOM, PDF, MARKDOWN, MP4;
 
         public static List<String> allTypesAsStrings() {
             return Arrays.stream(FileType.values()).map(Enum::name).toList();

@@ -6,9 +6,20 @@ import java.io.File;
 import java.io.OutputStream;
 
 /**
- *Interface for thumbnail generation operations on PDFs.
+ * Interface for thumbnail generation operations on PDFs.
  */
 public interface PdfProvider extends ThumbnailProvider {
+
+    PdfProvider _THIS = new PdfProviderPdfBox();
+
+    /**
+     * Get the singleton instance of the MarkdownProviderFlexmark.
+     * @return the singleton instance
+     */
+    @SuppressWarnings("unused")
+    static PdfProvider getInstance() {
+        return _THIS;
+    }
 
     /**
      * Extract metadata information from a PDF file.

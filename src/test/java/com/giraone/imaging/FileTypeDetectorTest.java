@@ -35,6 +35,8 @@ class FileTypeDetectorTest {
     private static final String TEST_FILE_DICOM_01 = "image-01.dcm";
     private static final String TEST_FILE_PDF_01 = "document-01-PDF-1.3.pdf";
     private static final String TEST_FILE_PDF_02 = "document-02-PDF-1.4.pdf";
+    private static final String TEST_FILE_MARKDOWN_01 = "document-01.md";
+    private static final String TEST_FILE_MP4_01 = "EKG-960x540.mp4";
 
     // -----------------------------------------------------------------------
 
@@ -86,6 +88,16 @@ class FileTypeDetectorTest {
     }
 
     @Test
+    void markdownIsDetected() {
+        this.checkExpectedType(TEST_FILE_MARKDOWN_01, MARKDOWN);
+    }
+
+    @Test
+    void mp4IsDetected() {
+        this.checkExpectedType(TEST_FILE_MP4_01, MP4);
+    }
+
+    @Test
     void jpegIsDetectedUsingFile() throws IOException {
         /// arrange
         Path parent = Path.of("src/test/resources");
@@ -118,7 +130,7 @@ class FileTypeDetectorTest {
         /// act
         List<String> types = FileTypeDetector.FileType.allTypesAsStrings();
         /// assert
-        assertThat(types).hasSize(10);
+        assertThat(types).hasSize(11);
     }
 
     private void checkExpectedType(String fileName, FileTypeDetector.FileType expectedFileType) {

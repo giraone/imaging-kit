@@ -1,16 +1,24 @@
 package com.giraone.imaging.video;
 
 import com.giraone.imaging.ConversionCommand;
-import de.medstage.common.imaging.ConversionCommand;
-import de.medstage.common.imaging.FileInfo;
-import de.medstage.common.imaging.ImagingProvider;
-import de.medstage.common.imaging.java2.Provider;
-import de.medstage.common.os.OsCommandResult;
-import de.medstage.common.os.OsUtil;
+import com.giraone.imaging.ImagingFactory;
+import com.giraone.imaging.ImagingProvider;
+import com.giraone.imaging.os.OsCommandResult;
+import com.giraone.imaging.os.OsUtil;
 
 import java.io.File;
 
 public class VideoProviderFfmpeg implements VideoProvider {
+
+    static final String FFMPEG_BIN_ENV = "FFMPEG_BIN";
+    static final String FFMPEG_SEEK_SECONDS_ENV = "FFMPEG_SEEK_SECONDS";
+
+    private static final String FFMPEG_BIN = System.getenv(FFMPEG_BIN_ENV);
+    private static String FFMPEG_SEEK_SECONDS = System.getenv(FFMPEG_SEEK_SECONDS_ENV);
+
+    private static final String SECONDS = "SECONDS";
+    private static final String INFILE = "INFILE";
+    private static final String OUTFILE = "OUTFILE";
 
     // -ss 1            Seeks position (1 seconds) - must be given before -i
     // -i <input>       The input video
@@ -19,11 +27,15 @@ public class VideoProviderFfmpeg implements VideoProvider {
     // -v quiet         log level "quiet"
     // -y               overwrite files
 
-    private static final String BINARY_WINDOWS = "C:/Tools/Videos/ffmpeg/bin/ffmpeg.exe";
-    private static final String[] COMMAND_WINDOWS = new String[]{BINARY_WINDOWS, "-ss", "1", "-i", INFILE, "-frames:v", "1", "-q:v", "2", "-v", "quiet", "-y", OUTFILE};
+    private static final String[] COMMAND = new String[]{FFMPEG_BIN, "-ss", SECONDS, "-i", INFILE, "-frames:v", "1", "-q:v", "2", "-v", "quiet", "-y", OUTFILE};
 
-    private static final String BINARY_LINUX = "./ffmpeg";
-    private static final String[] COMMAND_LINUX = new String[]{BINARY_LINUX, "-ss", "1", "-i", INFILE, "-frames:v", "1", "-q:v", "2", "-v", "quiet", "-y", OUTFILE};
+    static {
+        if (FFMPEG_SEEK_SECONDS == null || FFMPEG_SEEK_SECONDS.trim().isEmpty()) {
+            FFMPEG_SEEK_SECONDS = "1";
+        }
+    }
+
+    final ImagingProvider imagingProvider = ImagingFactory.getInstance().getProvider();
 
     /**
      * Create a thumbnail image for a given file.
@@ -33,35 +45,36 @@ public class VideoProviderFfmpeg implements VideoProvider {
      */
     @Override
     public void createThumbnail(File inputFile, ConversionCommand conversionCommand) throws Exception {
-        final File tempFile = File.createTempFile("v2png", ".png");
-        final String tempFilePath = tempFile.getAbsolutePath();
-        // Remove the file in 2 minutes using the background worker
-        // JobUtil.removeFile(tempFilePath, 120);
-        String[] ffmpegCommands;
-        if (System.getProperty("os.name").startsWith("Windows")) {
-            ffmpegCommands = COMMAND_WINDOWS.clone();
-        } else {
-            ffmpegCommands = COMMAND_LINUX.clone();
+
+        if (FFMPEG_BIN != null) {
+
         }
+
+        final File tempPngFileInOriginalSize = File.createTempFile("v2png", ".png");
+        final String[] ffmpegCommands = COMMAND.clone();
         for (int i = 0; i < ffmpegCommands.length; i++) {
-            if (INFILE.equals(ffmpegCommands[i])) ffmpegCommands[i] = inputFilePath;
-            if (OUTFILE.equals(ffmpegCommands[i])) ffmpegCommands[i] = tempFilePath;
+            if (SECONDS.equals(ffmpegCommands[i])) {
+                ffmpegCommands[i] = inputFile.getAbsolutePath();
+            } else if (INFILE.equals(ffmpegCommands[i])) {
+                ffmpegCommands[i] = inputFile.getAbsolutePath();
+            } else if (OUTFILE.equals(ffmpegCommands[i])) {
+                ffmpegCommands[i] = tempPngFileInOriginalSize.getAbsolutePath();
+            }
         }
 
         final OsCommandResult result = OsUtil.runCommandAndReadOutput(ffmpegCommands, 60);
         if (result.getCode() >= 0) {
-            if (tempFile.length() > 100L) {
-                final Provider imagingProvider = new Provider();
-                imagingProvider.convertImage(tempFilePath, conversionCommands);
-                tempFile.delete();
+            if (tempPngFileInOriginalSize.length() > 100L) {
+                imagingProvider.createThumbnail(tempPngFileInOriginalSize, conversionCommand);
+                //tempPngFileInOriginalSize.delete();
             } else {
-                throw new RuntimeException("Cannot create thumbnail for video \"" + inputFilePath + "\"! Empty PNG output.");
+                throw new RuntimeException("Cannot create thumbnail for video \"" + inputFile + "\"! Empty PNG output from ffmpeg.");
             }
         } else {
             if (result.getException() != null) {
-                throw new RuntimeException("Cannot create thumbnail for video \"" + inputFilePath + "\"! ", result.getException());
+                throw new RuntimeException("Cannot create thumbnail for video \"" + inputFile + "\" using \"" + FFMPEG_BIN + "\"!", result.getException());
             } else {
-                throw new RuntimeException("Cannot create thumbnail for video \"" + inputFilePath + "\"! " + result.getOutput());
+                throw new RuntimeException("Cannot create thumbnail for video \"" + inputFile + "\" using \"" + FFMPEG_BIN + "\"!");
             }
         }
     }

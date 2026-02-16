@@ -1,5 +1,7 @@
 package com.giraone.imaging;
 
+import com.giraone.imaging.java2.ProviderJava2D;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,6 +12,18 @@ import java.nio.file.Path;
  * Interface for imaging operation to be implemented by different imaging providers.
  */
 public interface ImagingProvider extends ThumbnailProvider {
+
+    ImagingProvider _THIS = new ProviderJava2D();
+
+    /**
+     * Get the singleton instance of the ProviderJava2D.
+     * @return the singleton instance
+     */
+    @SuppressWarnings("unused")
+    static ImagingProvider getInstance() {
+        return _THIS;
+    }
+
     /**
      * Extract information about a given file including image information.
      * @param inputFile Input file.

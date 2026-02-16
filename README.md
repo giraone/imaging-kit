@@ -6,9 +6,14 @@
 
 # Imaging Kit
 
-A Java JAR for creating thumbnails and/or scaled versions of bitmap images (PNG, JPEG) and documents (PDF and Markdown) documents.
+A Java JAR for creating thumbnails and/or scaled versions of bitmap images (PNG, JPEG), videos and documents (PDF and Markdown) documents.
 The concrete solutions are wrapped behind an interface. For bitmap images the implementation is based on plain Java2D.
 See [java2/ProviderJava2D.java](src/main/java/com/giraone/imaging/java2/ProviderJava2D.java).
+
+## Hint on thumbnails for videos
+
+This feature is based on [ffmpeg](https://www.ffmpeg.org/). The Java code of this lib will only call an existing *ffmpeg* binary
+on the machine. The location has to be defined by setting `FFMPEG_BIN`, e.g. `FFMPEG_BIN=/usr/bin/ffmpeg`.
 
 ## Integrating
 

@@ -38,7 +38,15 @@ public class ProviderJava2D implements ImagingProvider {
                 throw new FormatNotSupportedException("Unknown image format: " + fileType + "!");
         } else if (FileTypeDetector.FileType.PDF == fileType) {
             final FileInfo fileInfo = new FileInfo();
-            fileInfo.setMimeType("application/pdf");
+            fileInfo.setMimeType(MIME_TYPE_PDF);
+            return fileInfo;
+        }  else if (FileTypeDetector.FileType.MARKDOWN == fileType) {
+            final FileInfo fileInfo = new FileInfo();
+            fileInfo.setMimeType(MIME_TYPE_MARKDOWN);
+            return fileInfo;
+        } else if (FileTypeDetector.FileType.MP4 == fileType) {
+            final FileInfo fileInfo = new FileInfo();
+            fileInfo.setMimeType(MIME_TYPE_MP4);
             return fileInfo;
         } else {
             throw new FormatNotSupportedException("Unknown file format: " + fileType + "!");

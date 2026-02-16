@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.OutputStream;
 
 /**
- * Interface for imaging operation on PDFs.
+ *Interface for thumbnail generation operations on PDFs.
  */
 public interface PdfProvider extends ThumbnailProvider {
 

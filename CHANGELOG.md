@@ -3,6 +3,7 @@
 ## Version 2.0.0 (2026-02-16)
 
 - Support for thumbnail generation for Markdown documents (`text/markdown`) added
+- Support for thumbnail generation for video files (e.g. `video/mp4`) using [ffmpeg]() added
 - Support for generating multiple thumbnails with different dimensions and quality without reloading the input file
 - Due to this "multiple generation feature" the interfaces using an `OutputStream` has been removed (**BREAKING CHANGE**)
 - There is an additional interface [com.giraone.imaging.ThumbnailProvider](src/main/java/com/giraone/imaging/ThumbnailProvider.java),

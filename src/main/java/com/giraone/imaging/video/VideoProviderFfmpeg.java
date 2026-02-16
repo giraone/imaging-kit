@@ -38,14 +38,13 @@ public class VideoProviderFfmpeg implements VideoProvider {
     final ImagingProvider imagingProvider = ImagingFactory.getInstance().getProvider();
 
     /**
-     * Create a thumbnail image for a given file.
+     * Create multiple thumbnail images (e.g. different sizes) for a given file.
+     * This implementation reads the input only once!
      * @param inputFile Input file.
-     * @param conversionCommand The command with the definitions of the output (path, format, width, height and quality).
+     * @param conversionCommands Array of commands. Each with the definitions of the output (path, format, width, height and quality).
      * @throws Exception on any error opening the file, converting the file or writing to the output.
      */
-    @Override
-    public void createThumbnail(File inputFile, ConversionCommand conversionCommand) throws Exception {
-
+    public void createThumbnails(File inputFile, ConversionCommand[] conversionCommands) throws Exception {
         if (FFMPEG_BIN == null || FFMPEG_BIN.trim().isEmpty()) {
             throw new IllegalStateException("Environment variable \"" + FFMPEG_BIN_ENV + "\" not set!");
         }
@@ -65,8 +64,10 @@ public class VideoProviderFfmpeg implements VideoProvider {
         final OsCommandResult result = OsUtil.runCommandAndReadOutput(ffmpegCommands, 60);
         if (result.getCode() >= 0) {
             if (tempPngFileInOriginalSize.length() > 100L) {
-                imagingProvider.createThumbnail(tempPngFileInOriginalSize, conversionCommand);
-                //tempPngFileInOriginalSize.delete();
+                for (ConversionCommand conversionCommand: conversionCommands) {
+                    imagingProvider.createThumbnail(tempPngFileInOriginalSize, conversionCommand);
+                }
+                tempPngFileInOriginalSize.delete();
             } else {
                 throw new RuntimeException("Cannot create thumbnail for video \"" + inputFile + "\"! Empty PNG output from ffmpeg.");
             }
@@ -77,5 +78,16 @@ public class VideoProviderFfmpeg implements VideoProvider {
                 throw new RuntimeException("Cannot create thumbnail for video \"" + inputFile + "\" using \"" + FFMPEG_BIN + "\"!");
             }
         }
+    }
+
+    /**
+     * Create a thumbnail image for a given file.
+     * @param inputFile Input file.
+     * @param conversionCommand The command with the definitions of the output (path, format, width, height and quality).
+     * @throws Exception on any error opening the file, converting the file or writing to the output.
+     */
+    @Override
+    public void createThumbnail(File inputFile, ConversionCommand conversionCommand) throws Exception {
+       createThumbnails(inputFile, new ConversionCommand[] { conversionCommand });
     }
 }

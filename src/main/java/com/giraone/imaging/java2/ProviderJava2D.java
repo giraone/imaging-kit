@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Path;
 
 import static com.giraone.imaging.ConversionCommand.*;
 
@@ -46,21 +45,24 @@ public class ProviderJava2D implements ImagingProvider {
         }
     }
 
-    @Override
-    public FileInfo fetchFileInfo(Path path) throws IOException, FormatNotSupportedException {
-        final FileTypeDetector.FileType fileType = FileTypeDetector.getInstance().getFileType(path);
-        if (FileTypeDetector.getInstance().isSupportedImage(fileType)) {
-            final ImagePlusInfo imagePlusInfo = ImageOpener.openImage(path, fileType);
-            if (imagePlusInfo != null)
-                return imagePlusInfo.getFileInfo();
-            else
-                throw new FormatNotSupportedException("Unknown image format: " + fileType + "!");
-        } else if (FileTypeDetector.FileType.PDF == fileType) {
-            final FileInfo fileInfo = new FileInfo();
-            fileInfo.setMimeType("application/pdf");
-            return fileInfo;
-        } else {
-            throw new FormatNotSupportedException("Unknown file format: " + fileType + "!");
+    /**
+     * Create multiple thumbnail images (e.g. different sizes) for a given file.
+     * This implementation reads the input only once!
+     * @param inputFile Input file.
+     * @param conversionCommands Array of commands. Each with the definitions of the output (path, format, width, height and quality).
+     * @throws Exception on any error opening the file, converting the file or writing to the output.
+     */
+    public void createThumbnails(File inputFile, ConversionCommand[] conversionCommands) throws Exception {
+
+        final ImagePlusInfo imagePlusInfo = ImageOpener.openImage(inputFile);
+        if (imagePlusInfo == null) {
+            throw new FormatNotSupportedException("Unsupported input file type for file " + inputFile);
+        }
+        final BufferedImage bufferedImage = imagePlusInfo.getImage();
+        for (ConversionCommand conversionCommand: conversionCommands) {
+            try (final FileOutputStream outputStream = new FileOutputStream(conversionCommand.getOutputFile())) {
+                convertAndWriteImage(bufferedImage, outputStream, conversionCommand);
+            }
         }
     }
 
@@ -72,29 +74,26 @@ public class ProviderJava2D implements ImagingProvider {
      */
     @Override
     public void createThumbnail(File inputFile, ConversionCommand conversionCommand) throws Exception {
-        try (final OutputStream outputStream = new FileOutputStream(conversionCommand.getOutputFile())) {
-            this.convertImage(inputFile, outputStream, conversionCommand);
-        }
+        createThumbnails(inputFile, new ConversionCommand[] { conversionCommand });
     }
 
-    public void convertImage(File inputFile, OutputStream out, ConversionCommand command) throws IOException, FormatNotSupportedException {
+    /**
+     * Convert an image to another image using image conversion functions.
+     * @param inputFile Input file.
+     * @param outputStream OutputStream, to which the new image is written. Important: Stream is not closed!
+     * @param command An image conversion command.
+     * @throws IOException on any error opening the file or writing to the output
+     * @throws FormatNotSupportedException if the input or output format is not supported
+     * @throws ImageConversionException if an error occurs during image conversion or scaling
+     */
+    public void convertImage(File inputFile, OutputStream outputStream, ConversionCommand command) throws IOException, FormatNotSupportedException {
 
         final ImagePlusInfo imagePlusInfo = ImageOpener.openImage(inputFile);
         if (imagePlusInfo == null) {
             throw new FormatNotSupportedException("Unsupported input file type for file " + inputFile);
         }
         final BufferedImage bufferedImage = imagePlusInfo.getImage();
-        convertAndWriteImage(bufferedImage, out, command);
-    }
-
-    @Override
-    public void convertImage(Path inputPath, OutputStream out, ConversionCommand command) throws IOException, FormatNotSupportedException {
-        final ImagePlusInfo imagePlusInfo = ImageOpener.openImage(inputPath);
-        if (imagePlusInfo == null) {
-            throw new FormatNotSupportedException("Unsupported input file type for file " + inputPath);
-        }
-        final BufferedImage bufferedImage = imagePlusInfo.getImage();
-        convertAndWriteImage(bufferedImage, out, command);
+        convertAndWriteImage(bufferedImage, outputStream, command);
     }
 
     /**

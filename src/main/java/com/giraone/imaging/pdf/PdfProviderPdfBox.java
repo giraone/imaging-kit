@@ -43,6 +43,26 @@ public class PdfProviderPdfBox implements PdfProvider {
     }
 
     /**
+     * Create multiple thumbnail images (e.g. different sizes) for a given file.
+     * This implementation reads the input only once!
+     * @param inputFile Input file.
+     * @param conversionCommands Array of commands. Each with the definitions of the output (path, format, width, height and quality).
+     * @throws Exception on any error opening the file, converting the file or writing to the output.
+     */
+    public void createThumbnails(File inputFile, ConversionCommand[] conversionCommands) throws Exception {
+        try (final PDDocument document = Loader.loadPDF(inputFile)) {
+            PDFRenderer renderer = new PDFRenderer(document);
+            // Page 1, do not scale DPIs and use RGB
+            final BufferedImage image = renderer.renderImage(0, 1.0f, ImageType.RGB);
+            for (ConversionCommand conversionCommand: conversionCommands) {
+                try (final FileOutputStream outputStream = new FileOutputStream(conversionCommand.getOutputFile())) {
+                     imagingProvider.convertAndWriteImage(image, outputStream, conversionCommand);
+                }
+            }
+        }
+    }
+
+    /**
      * Create a thumbnail image for a given file.
      * @param inputFile Input file.
      * @param conversionCommand The command with the definitions of the output (path, format, width, height and quality).
@@ -50,15 +70,7 @@ public class PdfProviderPdfBox implements PdfProvider {
      */
     @Override
     public void createThumbnail(File inputFile, ConversionCommand conversionCommand) throws Exception {
-
-        try (final OutputStream outputStream = new FileOutputStream(conversionCommand.getOutputFile())) {
-            try (final PDDocument document = Loader.loadPDF(inputFile)) {
-                PDFRenderer renderer = new PDFRenderer(document);
-                // Page 1, do not scale DPIs and use RGB
-                BufferedImage image = renderer.renderImage(0, 1.0f, ImageType.RGB);
-                imagingProvider.convertAndWriteImage(image, outputStream, conversionCommand);
-            }
-        }
+        createThumbnails(inputFile, new ConversionCommand[] { conversionCommand });
     }
 
     @Override

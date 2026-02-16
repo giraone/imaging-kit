@@ -17,6 +17,20 @@ public interface ThumbnailProvider {
     void createThumbnail(File inputFile, ConversionCommand conversionCommand) throws Exception;
 
     /**
+     * Create multiple thumbnail images (e.g. different sizes) for a given file.
+     * The default implementation just iterates and re-reads the input file multiple times.
+     * Implementing classes should optimize this a read the input only once, then create multiple output thumbnails.
+     * @param inputFile Input file.
+     * @param conversionCommands Array of commands. Each with the definitions of the output (path, format, width, height and quality).
+     * @throws Exception on any error opening the file, converting the file or writing to the output.
+     */
+    default void createThumbnails(File inputFile, ConversionCommand[] conversionCommands) throws Exception {
+        for (ConversionCommand conversionCommand: conversionCommands) {
+            createThumbnail(inputFile, conversionCommand);
+        }
+    }
+
+    /**
      * Create a thumbnail image for a given file.
      * @param inputPath Input file path.
      * @param conversionCommand The command with the definitions of the output (path, format, width, height and quality).

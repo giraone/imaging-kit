@@ -65,7 +65,7 @@ class ProviderPdfTest {
     }
 
     @Test
-    void testThat_countPages_works_for_all_test_files() throws Exception {
+    void countPages_works_for_all_test_files() throws Exception {
 
         /// act
         int pages1 = providerUnderTest.countPages(testFiles.get(TEST_FILE_PDF_01));
@@ -77,7 +77,7 @@ class ProviderPdfTest {
     }
 
     @Test
-    void testThat_getDocumentInformation_works_for_all_test_files() throws Exception {
+    void getDocumentInformation_works_for_all_test_files() throws Exception {
 
         /// act
         PdfDocumentInformation info1 = providerUnderTest.getDocumentInformation(testFiles.get(TEST_FILE_PDF_01));
@@ -89,20 +89,48 @@ class ProviderPdfTest {
     }
 
     @Test
-    void testThat_createThumbnail_works_for_all_test_files_using_output_stream() {
+    void createThumbnail_works_for_all_test_files_using_output_stream() {
 
         int thumbPixelMaxSize = 180;
         for (File file : testFiles.values()) {
             try {
                 createThumbnailUsingOutputStream(thumbPixelMaxSize, file);
             } catch (Exception e) {
-                LOG.error("Test testThat_createThumbnail_works_for_all_test_files_using_output_stream failed!", e);
+                LOG.error("Test createThumbnail_works_for_all_test_files_using_output_stream failed!", e);
             }
         }
     }
 
     @Test
-    void testThat_createPdfFromImages_works() throws Exception {
+    void createThumbnails_works() throws Exception {
+
+        /// arrange
+        File inputFile = new File("src/test/resources/" + TEST_FILE_PDF_01);
+        File outputFile1 = File.createTempFile("pdf-to-thumb-", ".jpg");
+        File outputFile2 = File.createTempFile("pdf-to-thumb-", ".jpg");
+        outputFile1.deleteOnExit();
+        outputFile2.deleteOnExit();
+        ConversionCommand.CompressionQuality quality = ConversionCommand.CompressionQuality.LOSSY_BEST;
+        int thumbPixelMaxSize = 600;
+        ConversionCommand conversionCommand1 = ConversionCommand.buildConversionCommand(
+            outputFile1, MIME_TYPE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize, quality);
+        ConversionCommand conversionCommand2 = ConversionCommand.buildConversionCommand(
+            outputFile2, MIME_TYPE_JPEG, thumbPixelMaxSize / 2, thumbPixelMaxSize / 2, quality);
+        /// act
+        providerUnderTest.createThumbnails(inputFile, new ConversionCommand[] { conversionCommand1, conversionCommand2 });
+        /// assert
+        assertThat(outputFile1.exists());
+        assertThat(outputFile2.exists());
+        FileInfo fileInfo1 = imagingProvider.fetchFileInfo(outputFile1);
+        assertThat(fileInfo1.getWidth()).isEqualTo(424);
+        assertThat(fileInfo1.getHeight()).isEqualTo(600);
+        FileInfo fileInfo2 = imagingProvider.fetchFileInfo(outputFile2);
+        assertThat(fileInfo2.getWidth()).isEqualTo(212);
+        assertThat(fileInfo2.getHeight()).isEqualTo(300);
+    }
+
+    @Test
+    void createPdfFromImages_works() throws Exception {
 
         /// arrange
         File image1 = cloneTestFile(TEST_FILE_JPEG_01);
@@ -139,7 +167,7 @@ class ProviderPdfTest {
     }
 
     @Test
-    void testThat_createPdfFromByteArray_works() throws Exception {
+    void createPdfFromByteArray_works() throws Exception {
 
         /// arrange
         byte[] image1 = readTestFile(TEST_FILE_JPEG_01);

@@ -40,7 +40,9 @@ public interface ImagingProvider extends ThumbnailProvider {
      * @throws IOException on any error opening the file
      * @throws FormatNotSupportedException if the file is opened, but the file type is not supported
      */
-    FileInfo fetchFileInfo(Path inputPath) throws IOException, FormatNotSupportedException;
+    default FileInfo fetchFileInfo(Path inputPath) throws IOException, FormatNotSupportedException {
+        return fetchFileInfo(inputPath.toFile());
+    }
 
     /**
      * Convert an image to another image using image conversion functions.
@@ -63,8 +65,10 @@ public interface ImagingProvider extends ThumbnailProvider {
      * @throws FormatNotSupportedException if the input or output format is not supported
      * @throws ImageConversionException if an error occurs during image conversion or scaling
      */
-    void convertImage(Path inputPath, OutputStream outputStream, ConversionCommand command)
-        throws IOException, FormatNotSupportedException, ImageConversionException;
+    default void convertImage(Path inputPath, OutputStream outputStream, ConversionCommand command)
+        throws IOException, FormatNotSupportedException, ImageConversionException {
+        convertImage(inputPath.toFile(), outputStream, command);
+    }
 
     /**
      * Convert an image to another image using image conversion functions.

@@ -338,11 +338,9 @@ class ProviderBitmapImageTest {
         }
 
         /// act
-        try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
-            providerUnderTest.createThumbnail(file, outputStream,
-                MIME_TYPE_PNG, maxPixelSizeOfLargestDimension, maxPixelSizeOfLargestDimension,
-                ConversionCommand.CompressionQuality.LOSSLESS);
-        }
+        providerUnderTest.createThumbnail(file, outFile,
+            MIME_TYPE_PNG, maxPixelSizeOfLargestDimension, maxPixelSizeOfLargestDimension,
+            ConversionCommand.CompressionQuality.LOSSLESS);
 
         /// assert
         assertThat(outFile.exists()).isTrue();
@@ -366,11 +364,10 @@ class ProviderBitmapImageTest {
         }
 
         /// act
-        try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
-            providerUnderTest.createThumbnail(file, outputStream,
-                MIME_TYPE_GIF, maxPixelSizeOfLargestDimension, maxPixelSizeOfLargestDimension,
-                ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
-        }
+        providerUnderTest.createThumbnail(file, outFile,
+            MIME_TYPE_GIF, maxPixelSizeOfLargestDimension, maxPixelSizeOfLargestDimension,
+            ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
+
 
         /// assert
         assertThat(outFile.exists()).isTrue();
@@ -469,11 +466,10 @@ class ProviderBitmapImageTest {
         }
 
         /// act
-        try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
-            providerUnderTest.createThumbnail(file, outputStream,
-                MIME_TYPE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize,
-                ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
-        }
+        providerUnderTest.createThumbnail(file, outFile,
+            MIME_TYPE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize,
+            ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
+
 
         /// assert
         assertThat(outFile.exists()).isTrue();

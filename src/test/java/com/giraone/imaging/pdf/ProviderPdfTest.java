@@ -51,7 +51,7 @@ class ProviderPdfTest {
     static void initializeTestFiles() {
 
         providerUnderTest = PdfProviderFactory.getInstance().getProvider();
-        // Used to test, whether pixel width is correct
+        // Used to test, whether creates dimensions are correct
         imagingProvider = ImagingFactory.getInstance().getProvider();
         testFiles = TestFileHelper.cloneTestFiles(Arrays.stream(ALL_TEST_FILES));
     }
@@ -67,11 +67,11 @@ class ProviderPdfTest {
     @Test
     void testThat_countPages_works_for_all_test_files() throws Exception {
 
-        // act
+        /// act
         int pages1 = providerUnderTest.countPages(testFiles.get(TEST_FILE_PDF_01));
         int pages2 = providerUnderTest.countPages(testFiles.get(TEST_FILE_PDF_02));
 
-        // assert
+        /// assert
         assertThat(pages1).isEqualTo(3);
         assertThat(pages2).isEqualTo(1);
     }
@@ -79,11 +79,11 @@ class ProviderPdfTest {
     @Test
     void testThat_getDocumentInformation_works_for_all_test_files() throws Exception {
 
-        // act
+        /// act
         PdfDocumentInformation info1 = providerUnderTest.getDocumentInformation(testFiles.get(TEST_FILE_PDF_01));
         PdfDocumentInformation info2 = providerUnderTest.getDocumentInformation(testFiles.get(TEST_FILE_PDF_02));
 
-        // assert
+        /// assert
         assertThat(info1.getProducer()).isEqualTo("FPDF 1.53");
         assertThat(info2.getProducer()).isEqualTo("OpenOffice 4.1.2");
     }
@@ -104,7 +104,7 @@ class ProviderPdfTest {
     @Test
     void testThat_createPdfFromImages_works() throws Exception {
 
-        // arrange
+        /// arrange
         File image1 = cloneTestFile(TEST_FILE_JPEG_01);
         File image2 = cloneTestFile(TEST_FILE_JPEG_02);
         File image3 = cloneTestFile(TEST_FILE_PNG_01);
@@ -122,10 +122,10 @@ class ProviderPdfTest {
         Calendar now = new GregorianCalendar();
         documentInformation.setCreationDate(now);
         documentInformation.setModificationDate(now);
-        // act
+        /// act
         providerUnderTest.createPdfFromImages(imageFiles, documentInformation, pdfFile);
 
-        // assert
+        /// assert
         assertThat(pdfFile.length()).isGreaterThan(1000);
         assertThat(providerUnderTest.countPages(pdfFile)).isEqualTo(imageFiles.length);
         assertThat(providerUnderTest.getDocumentInformation(pdfFile).getTitle()).isEqualTo(documentInformation.getTitle());
@@ -141,7 +141,7 @@ class ProviderPdfTest {
     @Test
     void testThat_createPdfFromByteArray_works() throws Exception {
 
-        // arrange
+        /// arrange
         byte[] image1 = readTestFile(TEST_FILE_JPEG_01);
         byte[] image2 = readTestFile(TEST_FILE_JPEG_02);
         byte[] image3 = readTestFile(TEST_FILE_PNG_01);
@@ -152,12 +152,12 @@ class ProviderPdfTest {
         PdfDocumentInformation documentInformation = new PdfDocumentInformation();
         documentInformation.setTitle("title");
 
-        // act
+        /// act
         try (FileOutputStream outputStream = new FileOutputStream(pdfFile)) {
             providerUnderTest.createPdfFromImages(imageFiles, documentInformation, 1440, 1440, outputStream);
         }
 
-        // assert
+        /// assert
         assertThat(pdfFile.length()).isGreaterThan(1000);
         assertThat(providerUnderTest.countPages(pdfFile)).isEqualTo(imageFiles.length);
         assertThat(providerUnderTest.getDocumentInformation(pdfFile).getTitle()).isEqualTo(documentInformation.getTitle());
@@ -167,20 +167,18 @@ class ProviderPdfTest {
 
     private void createThumbnailUsingOutputStream(int thumbPixelMaxSize, File file) throws Exception {
 
-        // arrange
+        /// arrange
         File outFile = File.createTempFile("provider-thumb-", ".jpg");
         if (CLEAR_OUTPUT_FILES) {
             outFile.deleteOnExit();
         }
 
-        // act
-        try (FileOutputStream outputStream = new FileOutputStream(outFile)) {
-            providerUnderTest.createThumbnail(file, outputStream,
-                MIME_TYPE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize,
-                ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
-        }
+        /// act
+        providerUnderTest.createThumbnail(file, outFile,
+            MIME_TYPE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize,
+            ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
 
-        // assert
+        /// assert
         assertThat(outFile.exists()).isTrue();
         FileInfo fileInfo = imagingProvider.fetchFileInfo(outFile);
         assertThat(fileInfo.getMimeType()).isEqualTo(MIME_TYPE_JPEG);

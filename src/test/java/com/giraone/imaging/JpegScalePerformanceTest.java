@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -94,18 +93,15 @@ public class JpegScalePerformanceTest {
         outFile2.deleteOnExit();
 
         long start1 = System.currentTimeMillis();
-        try (FileOutputStream outputStream = new FileOutputStream(outFile1)) {
-            provider.createThumbnail(inFile, outputStream, MIME_TYPE_JPEG, thumbWidthAndHeight, thumbWidthAndHeight,
-                ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
-        }
+        provider.createThumbnail(inFile, outFile1, MIME_TYPE_JPEG, thumbWidthAndHeight, thumbWidthAndHeight,
+            ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
+
         long end1 = System.currentTimeMillis();
         LOG.debug("{}: {} milliseconds", inFile, (end1 - start1));
 
         long start2 = System.currentTimeMillis();
-        try (FileOutputStream outputStream = new FileOutputStream(outFile2)) {
-            provider.createThumbnail(inFile, outputStream, MIME_TYPE_JPEG, scaledWidthAndHeight, scaledWidthAndHeight,
-                ConversionCommand.CompressionQuality.LOSSY_BEST);
-        }
+        provider.createThumbnail(inFile, outFile2, MIME_TYPE_JPEG, scaledWidthAndHeight, scaledWidthAndHeight,
+            ConversionCommand.CompressionQuality.LOSSY_BEST);
         long end2 = System.currentTimeMillis();
         LOG.debug("{}: {} milliseconds", inFile, (end2 - start2));
     }

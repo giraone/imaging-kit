@@ -1,10 +1,12 @@
 # Release Notes and List of Changes
 
-## Version 1.5.0 (2026-02-15)
+## Version 2.0.0 (2026-02-16)
 
 - Support for thumbnail generation for Markdown documents (`text/markdown`) added
+- Support for generating multiple thumbnails with different dimensions and quality without reloading the input file
+- Due to this "multiple generation feature" the interfaces using an `OutputStream` has been removed (**BREAKING CHANGE**)
 - There is an additional interface [com.giraone.imaging.ThumbnailProvider](src/main/java/com/giraone/imaging/ThumbnailProvider.java),
-  that is implemented by all providers (PNG, JPEG, PDF, Markdown) 
+  that is implemented by all providers (PNG, JPEG, PDF, Markdown)
 - Version is build for Java 21 (!)
 - Dependency upgrades to latest versions
 

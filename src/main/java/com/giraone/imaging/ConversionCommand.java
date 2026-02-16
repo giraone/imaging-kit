@@ -1,6 +1,7 @@
 package com.giraone.imaging;
 
 import java.awt.*;
+import java.io.File;
 
 /**
  * Definition of an image conversion (command pattern).
@@ -11,6 +12,7 @@ public class ConversionCommand {
     public static final String MIME_TYPE_PNG = "image/png";
     public static final String MIME_TYPE_GIF = "image/gif";
 
+    private File outputFile;
     private String outputFormat;
     private boolean compression;
     private int quality;
@@ -25,6 +27,21 @@ public class ConversionCommand {
         this.compression = false;
         this.quality = 0;
         this.keepAspectRatio = true;
+    }
+
+    /**
+     * Set the output file.
+     * @param outputFile output file.
+     */
+    public void setOutputFile(File outputFile) {
+        this.outputFile = outputFile;
+    }
+
+    /**
+     * Get the output file
+     */
+    public File getOutputFile() {
+        return outputFile;
     }
 
     /**
@@ -229,14 +246,16 @@ public class ConversionCommand {
 
     /**
      * Helper method to build ConversionCommand
+     * @param outputFile output file, where thumbnail is written to
      * @param format image format
      * @param width image width
      * @param height image height
      * @param quality image quality
      * @return newly created ConversionCommand
      */
-    public static ConversionCommand buildConversionCommand(String format, int width, int height, ConversionCommand.CompressionQuality quality) {
+    public static ConversionCommand buildConversionCommand(File outputFile, String format, int width, int height, ConversionCommand.CompressionQuality quality) {
         final ConversionCommand command = new ConversionCommand();
+        command.setOutputFile(outputFile);
         command.setOutputFormat(format);
         command.setDimension(new Dimension(width, height));
         final int iQuality = switch (quality) {

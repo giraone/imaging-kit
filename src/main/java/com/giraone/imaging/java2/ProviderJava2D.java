@@ -10,6 +10,7 @@ import com.giraone.imaging.ImagingProvider;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
@@ -63,18 +64,17 @@ public class ProviderJava2D implements ImagingProvider {
         }
     }
 
-    public void createThumbnail(File inputFile, OutputStream out, String format, int width, int height,
-                                ConversionCommand.CompressionQuality quality) throws IOException, FormatNotSupportedException {
-
-        final ConversionCommand command = ConversionCommand.buildConversionCommand(format, width, height, quality);
-        this.convertImage(inputFile, out, command);
-    }
-
+    /**
+     * Create a thumbnail image for a given file.
+     * @param inputFile Input file.
+     * @param conversionCommand The command with the definitions of the output (path, format, width, height and quality).
+     * @throws Exception on any error opening the file, converting the file or writing to the output.
+     */
     @Override
-    public void createThumbnail(Path inputPath, OutputStream out, String format, int width, int height,
-                                ConversionCommand.CompressionQuality quality) throws IOException, FormatNotSupportedException {
-        final ConversionCommand command = ConversionCommand.buildConversionCommand(format, width, height, quality);
-        this.convertImage(inputPath, out, command);
+    public void createThumbnail(File inputFile, ConversionCommand conversionCommand) throws Exception {
+        try (final OutputStream outputStream = new FileOutputStream(conversionCommand.getOutputFile())) {
+            this.convertImage(inputFile, outputStream, conversionCommand);
+        }
     }
 
     public void convertImage(File inputFile, OutputStream out, ConversionCommand command) throws IOException, FormatNotSupportedException {

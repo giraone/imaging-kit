@@ -14,9 +14,9 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -43,29 +43,21 @@ public class PdfProviderPdfBox implements PdfProvider {
     }
 
     /**
-     * Create a thumbnail image for a given PDF file.
+     * Create a thumbnail image for a given file.
      * @param inputFile Input file.
-     * @param outputStream OutputStream, to which the thumbnail is written. Important: Stream is not closed!
-     * @param format Output file format given as a MIME type.
-     * @param width Width in pixel.
-     * @param height Height in pixel.
-     * @param quality Quality factor for output compression.
+     * @param conversionCommand The command with the definitions of the output (path, format, width, height and quality).
+     * @throws Exception on any error opening the file, converting the file or writing to the output.
      */
     @Override
-    public void createThumbnail(File inputFile, OutputStream outputStream, String format, int width, int height,
-                                ConversionCommand.CompressionQuality quality) throws Exception {
-        ConversionCommand command = new ConversionCommand();
-        command.setOutputFormat(format);
-        command.setDimension(new Dimension(width, height));
-        command.setQuality(quality);
+    public void createThumbnail(File inputFile, ConversionCommand conversionCommand) throws Exception {
 
-        try (PDDocument document = Loader.loadPDF(inputFile)) {
-            PDFRenderer renderer = new PDFRenderer(document);
-
-            // Page 1, do not scale DPIs and use RGB
-            BufferedImage image = renderer.renderImage(0, 1.0f, ImageType.RGB);
-
-            imagingProvider.convertAndWriteImage(image, outputStream, command);
+        try (final OutputStream outputStream = new FileOutputStream(conversionCommand.getOutputFile())) {
+            try (final PDDocument document = Loader.loadPDF(inputFile)) {
+                PDFRenderer renderer = new PDFRenderer(document);
+                // Page 1, do not scale DPIs and use RGB
+                BufferedImage image = renderer.renderImage(0, 1.0f, ImageType.RGB);
+                imagingProvider.convertAndWriteImage(image, outputStream, conversionCommand);
+            }
         }
     }
 

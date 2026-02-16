@@ -3,7 +3,7 @@
 
   <groupId>com.giraone.imaging</groupId>
   <artifactId>imaging-kit</artifactId>
-  <version>1.5.0-SNAPSHOT</version>
+  <version>2.0.0-SNAPSHOT</version>
 
   <packaging>jar</packaging>
 
@@ -36,7 +36,7 @@
   <scm>
     <connection>scm:git:https://github.com/giraone/imaging-kit.git</connection>
     <url>https://github.com/giraone/imaging-kit.git</url>
-    <tag>v1.5.0</tag>
+    <tag>v2.0.0</tag>
   </scm>
 
   <issueManagement>

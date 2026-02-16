@@ -87,7 +87,7 @@ class FileTypeDetectorTest {
 
     @Test
     void jpegIsDetectedUsingFile() throws IOException {
-        // arrange
+        /// arrange
         Path parent = Path.of("src/test/resources");
         /// act
         FileTypeDetector.FileType detectedFileType = FileTypeDetector.getInstance().getFileType((parent.resolve(TEST_FILE_JPEG_01)));
@@ -97,7 +97,7 @@ class FileTypeDetectorTest {
 
     @Test
     void jpegIsDetectedUsingPath() throws IOException {
-        // arrange
+        /// arrange
         Path parent = Path.of("src/test/resources");
         /// act
         FileTypeDetector.FileType detectedFileType = FileTypeDetector.getInstance().getFileType(parent.resolve(TEST_FILE_JPEG_01));

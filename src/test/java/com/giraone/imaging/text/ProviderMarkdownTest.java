@@ -2,21 +2,21 @@ package com.giraone.imaging.text;
 
 import com.giraone.imaging.ConversionCommand;
 import com.giraone.imaging.FileInfo;
+import com.giraone.imaging.ImagingFactory;
 import com.giraone.imaging.ImagingProvider;
-import com.giraone.imaging.java2.ProviderJava2D;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.FileOutputStream;
 
 import static com.giraone.imaging.ConversionCommand.MIME_TYPE_JPEG;
-import static com.giraone.imaging.text.DefaultMarkdownProvider.*;
+import static com.giraone.imaging.text.MarkdownProviderFlexmark.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class DefaultMarkdownProviderTest {
+class ProviderMarkdownTest {
 
-    private static final ImagingProvider imagingProvider = new ProviderJava2D();
-    private static final MarkdownProvider markdownProvider = DefaultMarkdownProvider.getInstance();
+    private static final MarkdownProvider markdownProviderUnderTest = MarkdownProviderFlexmark.getInstance();
+    // Used to test, whether creates dimensions are correct
+    private static final ImagingProvider imagingProvider = ImagingFactory.getInstance().getProvider();
 
     @Test
     void createThumbnail() throws Exception {
@@ -28,9 +28,7 @@ class DefaultMarkdownProviderTest {
         int width = A4_WIDTH_MM * 400 / A4_WIDTH_MM;
         int height = A4_HEIGHT_MM * 400 / A4_WIDTH_MM;
         /// act
-        try (FileOutputStream out = new FileOutputStream(outputFile)) {
-            markdownProvider.createThumbnail(inputFile, out, MIME_TYPE_JPEG, width, height, quality);
-        }
+        markdownProviderUnderTest.createThumbnail(inputFile, outputFile, MIME_TYPE_JPEG, width, height, quality);
         /// assert
         assertThat(outputFile.exists());
         FileInfo fileInfo = imagingProvider.fetchFileInfo(outputFile);
@@ -47,9 +45,7 @@ class DefaultMarkdownProviderTest {
         outputFile.deleteOnExit();
         ConversionCommand.CompressionQuality quality = ConversionCommand.CompressionQuality.LOSSY_BEST;
         /// act
-        try (FileOutputStream out = new FileOutputStream(outputFile)) {
-            markdownProvider.createThumbnail(inputFile, out, MIME_TYPE_JPEG, A4_WIDTH_PX, A4_HEIGHT_PX, quality);
-        }
+        markdownProviderUnderTest.createThumbnail(inputFile, outputFile, MIME_TYPE_JPEG, A4_WIDTH_PX, A4_HEIGHT_PX, quality);
         /// assert
         assertThat(outputFile.exists());
         FileInfo fileInfo = imagingProvider.fetchFileInfo(outputFile);

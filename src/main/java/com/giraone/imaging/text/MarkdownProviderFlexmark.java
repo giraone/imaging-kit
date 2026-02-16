@@ -18,6 +18,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,7 +33,7 @@ import java.nio.file.Files;
  *     <li>HTML to Java2D image conversion using org.xhtmlrenderer:flying-saucer-core</li>
  * </ul>
  */
-public class DefaultMarkdownProvider implements MarkdownProvider {
+public class MarkdownProviderFlexmark implements MarkdownProvider {
 
     // DIN A4 dimensions in millimeters
     public static final int A4_WIDTH_MM = 210;
@@ -112,7 +113,7 @@ public class DefaultMarkdownProvider implements MarkdownProvider {
         </html>
         """;
 
-    private static final DefaultMarkdownProvider _THIS = new DefaultMarkdownProvider();
+    private static final MarkdownProviderFlexmark _THIS = new MarkdownProviderFlexmark();
 
     // is thread-safe - see JavaDoc
     private static final Parser markdownParser = Parser.builder().build();
@@ -124,7 +125,7 @@ public class DefaultMarkdownProvider implements MarkdownProvider {
      * @return the singleton instance
      */
     @SuppressWarnings("unused")
-    public static DefaultMarkdownProvider getInstance() {
+    public static MarkdownProviderFlexmark getInstance() {
         return _THIS;
     }
 
@@ -134,6 +135,7 @@ public class DefaultMarkdownProvider implements MarkdownProvider {
      * @param dpi dots per inch
      * @return pixels
      */
+    @SuppressWarnings("SameParameterValue")
     private static int mmToPixels(int mm, int dpi) {
         // 1 inch = 25.4 mm
         return (int) Math.round(mm * dpi / 25.4);
@@ -145,48 +147,47 @@ public class DefaultMarkdownProvider implements MarkdownProvider {
      * @param dpi dots per inch
      * @return pixels
      */
+    @SuppressWarnings("SameParameterValue")
     private static int ptToPixels(int pt, int dpi) {
         // pt × dpi/72
         return pt * dpi / 72;
     }
 
     /**
-     * Create a thumbnail image for a given Markdown file.
+     * Create a thumbnail image for a given file.
      * @param inputFile Input file.
-     * @param outputStream OutputStream, to which the thumbnail is written. Important: Stream is not closed!
-     * @param format Output file format given as a MIME type.
-     * @param width Width in pixel.
-     * @param height Height in pixel.
-     * @param quality Quality factor for output compression.
+     * @param conversionCommand The command with the definitions of the output (path, format, width, height and quality).
      * @throws Exception on any error opening the file, converting the file or writing to the output.
      */
     @Override
-    public void createThumbnail(File inputFile, OutputStream outputStream, String format, int width, int height,
-                                ConversionCommand.CompressionQuality quality) throws Exception {
+    public void createThumbnail(File inputFile, ConversionCommand conversionCommand) throws Exception {
 
-        final BufferedImage image;
-        // 0. Prepare reader
-        try (final FileReader reader = new FileReader(inputFile)) {
-            // 1. Markdown to HTML
-            // 2. Wrap HTML with CSS for consistent rendering
-            // 3. Render HTML to BufferedImage
-            image = createThumbnailAsBufferedImage(reader, width, height);
+        try (final OutputStream outputStream = new FileOutputStream(conversionCommand.getOutputFile())) {
+            final BufferedImage image;
+            // 0. Prepare reader
+            try (final FileReader reader = new FileReader(inputFile)) {
+                // 1. Markdown to HTML
+                // 2. Wrap HTML with CSS for consistent rendering
+                // 3. Render HTML to BufferedImage
+                image = createThumbnailAsBufferedImage(reader, conversionCommand.getDimension());
+            }
+            // 4. Write image
+            ImageIO.write(image, ImageToFileWriter.mimeTypeToIoWriteFormat(conversionCommand.getOutputFormat()), outputStream);
         }
-        // 4. Write image
-        ImageIO.write(image, ImageToFileWriter.mimeTypeToIoWriteFormat(format), outputStream);
+
     }
 
-    public static BufferedImage createThumbnailAsBufferedImage(Reader reader, int width, int height) throws IOException {
+    public static BufferedImage createThumbnailAsBufferedImage(Reader reader, Dimension dimension) throws IOException {
         // 1. Markdown to HTML
         final Node document = markdownParser.parseReader(reader);
         final String htmlString = htmlRenderer.render(document);
         // 2. Wrap HTML with CSS for consistent rendering
-        final String fullHtml = wrapHtml(htmlString, PT12_PX * height / A4_HEIGHT_PX, width, height);
+        final String fullHtml = wrapHtml(htmlString, PT12_PX * dimension.height / A4_HEIGHT_PX, dimension.width, dimension.height);
         if (DUMP_HTML) {
             dumpHtml(fullHtml);
         }
         // 3. Render HTML to BufferedImage
-        return renderHtmlToImage(fullHtml, width, height);
+        return renderHtmlToImage(fullHtml, dimension.width, dimension.height);
     }
 
     private static String wrapHtml(String bodyHtml, int fontSizePx, int bodyWidthPx, int bodyHeightPx) {

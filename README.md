@@ -1,5 +1,5 @@
 [![GitHub license](https://img.shields.io/github/license/giraone/imaging-kit)](https://github.com/giraone/imaging-kit/blob/master/LICENSE)
-[![Maven Central](https://img.shields.io/badge/Maven%20Central-1.5.0-blue)](https://mvnrepository.com/artifact/com.giraone.imaging/imaging-kit)
+[![Maven Central](https://img.shields.io/badge/Maven%20Central-2.0.0-blue)](https://mvnrepository.com/artifact/com.giraone.imaging/imaging-kit)
 [![GitHub issues](https://img.shields.io/github/issues/giraone/imaging-kit)](https://github.com/giraone/imaging-kit/issues)
 [![GitHub stars](https://img.shields.io/github/stars/giraone/imaging-kit)](https://github.com/giraone/imaging-kit/stargazers)
 [![Platform](https://img.shields.io/badge/platform-jre21%2B-blue)](https://github.com/giraone/imaging-kit/pom.xml)
@@ -16,7 +16,7 @@ See [java2/ProviderJava2D.java](src/main/java/com/giraone/imaging/java2/Provider
 <dependency>
     <groupId>com.giraone.imaging</groupId>
     <artifactId>imaging-kit</artifactId>
-    <version>1.5.0</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -24,12 +24,13 @@ See [java2/ProviderJava2D.java](src/main/java/com/giraone/imaging/java2/Provider
 
 ### Test Images
 
-- There are a few test images within `src/test/resources`.
+- There are a few test images and test documents within `src/test/resources`.
 
 ### Tests
 
 - ProviderBitmapImageTest.java - Simple functional tests for bitmap images
 - ProviderPdfTest.java - Simple functional tests for PDF documents
+- DefaultMarkdownProviderTest.java - Simple functional tests for PDF documents
 - JpegScalePerformanceTest.java - A basic performance comparison on the two implementations for bitmap images
 
 ## Release Notes / Changes

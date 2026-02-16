@@ -46,15 +46,15 @@ public class VideoProviderFfmpeg implements VideoProvider {
     @Override
     public void createThumbnail(File inputFile, ConversionCommand conversionCommand) throws Exception {
 
-        if (FFMPEG_BIN != null) {
-
+        if (FFMPEG_BIN == null || FFMPEG_BIN.trim().isEmpty()) {
+            throw new IllegalStateException("Environment variable \"" + FFMPEG_BIN_ENV + "\" not set!");
         }
 
         final File tempPngFileInOriginalSize = File.createTempFile("v2png", ".png");
         final String[] ffmpegCommands = COMMAND.clone();
         for (int i = 0; i < ffmpegCommands.length; i++) {
             if (SECONDS.equals(ffmpegCommands[i])) {
-                ffmpegCommands[i] = inputFile.getAbsolutePath();
+                ffmpegCommands[i] = FFMPEG_SEEK_SECONDS;
             } else if (INFILE.equals(ffmpegCommands[i])) {
                 ffmpegCommands[i] = inputFile.getAbsolutePath();
             } else if (OUTFILE.equals(ffmpegCommands[i])) {

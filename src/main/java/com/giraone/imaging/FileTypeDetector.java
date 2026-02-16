@@ -151,10 +151,10 @@ public class FileTypeDetector {
         if (b0 == 66 && b1 == 77)
             return FileType.BMP;
 
-        // MP4 ("<NULL><NULL><NULL>ftypmp4")
+        // MP4 ("<NULL><NULL><NULL>ftypmp4" or "<NULL><NULL><NULL>ftypisom")
         if (b0 == 0 && b1 == 0 && b2 == 0 && b3 == ' ') {
-            final String tag = new String(Arrays.copyOfRange(firstBytes, 4, 11), StandardCharsets.UTF_8);
-            if ("ftypmp4".equals(tag)) {
+            final String tag = new String(Arrays.copyOfRange(firstBytes, 4, 8), StandardCharsets.UTF_8);
+            if ("ftyp".equals(tag)) {
                 return FileType.MP4;
             }
         }

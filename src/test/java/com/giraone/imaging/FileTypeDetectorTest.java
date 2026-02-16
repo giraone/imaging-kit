@@ -36,7 +36,8 @@ class FileTypeDetectorTest {
     private static final String TEST_FILE_PDF_01 = "document-01-PDF-1.3.pdf";
     private static final String TEST_FILE_PDF_02 = "document-02-PDF-1.4.pdf";
     private static final String TEST_FILE_MARKDOWN_01 = "document-01.md";
-    private static final String TEST_FILE_MP4_01 = "EKG-960x540.mp4";
+    private static final String TEST_FILE_MP4_01 = "EKG-14s-960x540.mp4";
+    private static final String TEST_FILE_MP4_02 = "eyeball-10s-720x304.mp4";
 
     // -----------------------------------------------------------------------
 
@@ -95,6 +96,8 @@ class FileTypeDetectorTest {
     @Test
     void mp4IsDetected() {
         this.checkExpectedType(TEST_FILE_MP4_01, MP4);
+        this.checkExpectedType(TEST_FILE_MP4_02, MP4);
+
     }
 
     @Test

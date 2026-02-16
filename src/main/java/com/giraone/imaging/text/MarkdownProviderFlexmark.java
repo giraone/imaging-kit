@@ -113,21 +113,10 @@ public class MarkdownProviderFlexmark implements MarkdownProvider {
         </html>
         """;
 
-    private static final MarkdownProviderFlexmark _THIS = new MarkdownProviderFlexmark();
-
     // is thread-safe - see JavaDoc
     private static final Parser markdownParser = Parser.builder().build();
     // is thread-safe - see JavaDoc
     private static final HtmlRenderer htmlRenderer = HtmlRenderer.builder().build();
-
-    /**
-     * Get the singleton instance of the PdfProviderPdfBox.
-     * @return the singleton instance
-     */
-    @SuppressWarnings("unused")
-    public static MarkdownProviderFlexmark getInstance() {
-        return _THIS;
-    }
 
     /**
      * Convert millimeters to pixels at a given DPI.

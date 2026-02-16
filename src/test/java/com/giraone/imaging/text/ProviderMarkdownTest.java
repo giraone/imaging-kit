@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ProviderMarkdownTest {
 
-    private static final MarkdownProvider markdownProviderUnderTest = MarkdownProviderFlexmark.getInstance();
+    private static final MarkdownProvider markdownProviderUnderTest = MarkdownProvider.getInstance();
     // Used to test, whether creates dimensions are correct
     private static final ImagingProvider imagingProvider = ImagingFactory.getInstance().getProvider();
 

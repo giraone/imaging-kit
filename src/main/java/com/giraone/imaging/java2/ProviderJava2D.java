@@ -14,7 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static com.giraone.imaging.ConversionCommand.*;
+import static com.giraone.imaging.MimeTypes.*;
 
 /**
  * Imaging provider based on Java 2 classes
@@ -38,15 +38,15 @@ public class ProviderJava2D implements ImagingProvider {
                 throw new FormatNotSupportedException("Unknown image format: " + fileType + "!");
         } else if (FileTypeDetector.FileType.PDF == fileType) {
             final FileInfo fileInfo = new FileInfo();
-            fileInfo.setMimeType(MIME_TYPE_PDF);
+            fileInfo.setMimeType(APPLICATION_PDF);
             return fileInfo;
         }  else if (FileTypeDetector.FileType.MARKDOWN == fileType) {
             final FileInfo fileInfo = new FileInfo();
-            fileInfo.setMimeType(MIME_TYPE_MARKDOWN);
+            fileInfo.setMimeType(TEXT_MARKDOWN);
             return fileInfo;
         } else if (FileTypeDetector.FileType.MP4 == fileType) {
             final FileInfo fileInfo = new FileInfo();
-            fileInfo.setMimeType(MIME_TYPE_MP4);
+            fileInfo.setMimeType(VIDEO_MP4);
             return fileInfo;
         } else {
             throw new FormatNotSupportedException("Unknown file format: " + fileType + "!");
@@ -128,15 +128,15 @@ public class ProviderJava2D implements ImagingProvider {
 
         final String outputFormat = command.getOutputFormat();
         switch (outputFormat) {
-            case MIME_TYPE_JPEG:
+            case IMAGE_JPEG:
                 final int normedQuality = command.getQuality();
                 final float internalQuality = this.getInternalQuality(normedQuality);
                 ImageToFileWriter.saveJpeg(bufferedImage, out, internalQuality);
                 break;
-            case MIME_TYPE_PNG:
+            case IMAGE_PNG:
                 ImageToFileWriter.savePng(bufferedImage, out);
                 break;
-            case MIME_TYPE_GIF:
+            case IMAGE_GIF:
                 ImageToFileWriter.saveGif(bufferedImage, out);
                 break;
             default:

@@ -8,14 +8,6 @@ import java.io.File;
  */
 public class ConversionCommand {
 
-    public static final String MIME_TYPE_JPEG = "image/jpeg";
-    public static final String MIME_TYPE_PNG = "image/png";
-    public static final String MIME_TYPE_GIF = "image/gif";
-    public static final String MIME_TYPE_PDF = "application/pdf";
-    public static final String MIME_TYPE_MARKDOWN = "text/markdown";
-    public static final String MIME_TYPE_MP4 = "video/mp4";
-    public static final String MIME_TYPE_UNKNOWN = "application/octet-stream";
-
     private File outputFile;
     private String outputFormat;
     private boolean compression;

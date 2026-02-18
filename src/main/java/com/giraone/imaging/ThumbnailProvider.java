@@ -1,7 +1,13 @@
 package com.giraone.imaging;
 
+import com.giraone.imaging.pdf.PdfProvider;
+import com.giraone.imaging.text.MarkdownProvider;
+import com.giraone.imaging.video.VideoProvider;
+
 import java.io.File;
 import java.nio.file.Path;
+
+import static com.giraone.imaging.MimeTypes.*;
 
 /**
  * Interface for thumbnail generation operations to be implemented by different imaging providers.
@@ -70,5 +76,22 @@ public interface ThumbnailProvider {
                                  ConversionCommand.CompressionQuality quality) throws Exception {
 
         createThumbnail(inputPath.toFile(), ConversionCommand.buildConversionCommand(outputPath.toFile(), format, width, height, quality));
+    }
+
+    /**
+     * Return default ThumbnailProvider for a given MIME type.
+     * @param mimeType MIME to get the provider for
+     * @return a ThumbnailProvider (singleton) - the default is to return the default {@link ImagingProvider} singleton.
+     */
+    static ThumbnailProvider getThumbnailProvider(String mimeType) {
+        if (mimeType.startsWith(PREFIX_VIDEO)) {
+            return VideoProvider.getInstance();
+        } else if (mimeType.equals(APPLICATION_PDF)) {
+            return PdfProvider.getInstance();
+        } else if (mimeType.startsWith(PREFIX_TEXT)) {
+            return MarkdownProvider.getInstance();
+        } else {
+            return ImagingProvider.getInstance();
+        }
     }
 }

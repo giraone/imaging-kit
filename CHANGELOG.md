@@ -1,6 +1,6 @@
 # Release Notes and List of Changes
 
-## Version 2.0.0 (2026-02-16)
+## Version 2.0.0 (2026-02-17)
 
 - Support for thumbnail generation for Markdown documents (`text/markdown`) added
 - Support for thumbnail generation for video files (e.g. `video/mp4`) using [ffmpeg]() added
@@ -8,6 +8,7 @@
 - Due to this "multiple generation feature" the interfaces using an `OutputStream` has been removed (**BREAKING CHANGE**)
 - There is an additional interface [com.giraone.imaging.ThumbnailProvider](src/main/java/com/giraone/imaging/ThumbnailProvider.java),
   that is implemented by all providers (PNG, JPEG, PDF, Markdown)
+- New class `MimeTypeUtil` to hold some constants for MIME types.
 - Version is build for Java 21 (!)
 - Dependency upgrades to latest versions
 

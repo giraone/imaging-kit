@@ -13,7 +13,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
 
-import static com.giraone.imaging.ConversionCommand.MIME_TYPE_JPEG;
+import static com.giraone.imaging.MimeTypes.IMAGE_JPEG;
 
 /**
  * A performance test to test different imaging providers.
@@ -93,14 +93,14 @@ public class JpegScalePerformanceTest {
         outFile2.deleteOnExit();
 
         long start1 = System.currentTimeMillis();
-        provider.createThumbnail(inFile, outFile1, MIME_TYPE_JPEG, thumbWidthAndHeight, thumbWidthAndHeight,
+        provider.createThumbnail(inFile, outFile1, IMAGE_JPEG, thumbWidthAndHeight, thumbWidthAndHeight,
             ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
 
         long end1 = System.currentTimeMillis();
         LOG.debug("{}: {} milliseconds", inFile, (end1 - start1));
 
         long start2 = System.currentTimeMillis();
-        provider.createThumbnail(inFile, outFile2, MIME_TYPE_JPEG, scaledWidthAndHeight, scaledWidthAndHeight,
+        provider.createThumbnail(inFile, outFile2, IMAGE_JPEG, scaledWidthAndHeight, scaledWidthAndHeight,
             ConversionCommand.CompressionQuality.LOSSY_BEST);
         long end2 = System.currentTimeMillis();
         LOG.debug("{}: {} milliseconds", inFile, (end2 - start2));

@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static com.giraone.imaging.ConversionCommand.*;
+import static com.giraone.imaging.MimeTypes.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -97,7 +97,7 @@ class ProviderBitmapImageTest {
         LOG.debug("fetchFileInfo (usingFile): {} -> {}", testFile, fileInfo.dumpInfo());
 
         /// assert
-        assertThat(fileInfo.getMimeType()).isEqualTo(MIME_TYPE_JPEG);
+        assertThat(fileInfo.getMimeType()).isEqualTo(IMAGE_JPEG);
         assertThat(fileInfo.getBitsPerPixel()).isEqualTo(24);
         assertThat(fileInfo.getWidth()).isEqualTo(1024);
         assertThat(fileInfo.getHeight()).isEqualTo(768);
@@ -114,7 +114,7 @@ class ProviderBitmapImageTest {
         LOG.debug("fetchFileInfo (usingPath): {} -> {}", testPath, fileInfo.dumpInfo());
 
         /// assert
-        assertThat(fileInfo.getMimeType()).isEqualTo(MIME_TYPE_JPEG);
+        assertThat(fileInfo.getMimeType()).isEqualTo(IMAGE_JPEG);
         assertThat(fileInfo.getBitsPerPixel()).isEqualTo(24);
         assertThat(fileInfo.getWidth()).isEqualTo(1024);
         assertThat(fileInfo.getHeight()).isEqualTo(768);
@@ -131,7 +131,7 @@ class ProviderBitmapImageTest {
         LOG.debug("fetchFileInfo (using File): {} -> {}", testFile, fileInfo.dumpInfo());
 
         /// assert
-        assertThat(fileInfo.getMimeType()).isEqualTo(MIME_TYPE_JPEG);
+        assertThat(fileInfo.getMimeType()).isEqualTo(IMAGE_JPEG);
         assertThat(fileInfo.getBitsPerPixel()).isEqualTo(24);
         assertThat(fileInfo.getWidth()).isEqualTo(6000);
         assertThat(fileInfo.getHeight()).isEqualTo(4000);
@@ -148,7 +148,7 @@ class ProviderBitmapImageTest {
         LOG.debug("fetchFileInfo (using File) : {} -> {}", testFile, fileInfo.dumpInfo());
 
         /// assert
-        assertThat(fileInfo.getMimeType()).isEqualTo(MIME_TYPE_PNG);
+        assertThat(fileInfo.getMimeType()).isEqualTo(IMAGE_PNG);
         assertThat(fileInfo.getBitsPerPixel()).isEqualTo(24);
         assertThat(fileInfo.getWidth()).isEqualTo(800);
         assertThat(fileInfo.getHeight()).isEqualTo(600);
@@ -182,7 +182,7 @@ class ProviderBitmapImageTest {
     @Test
     void convertImage_fails_for_wrong_input_format() {
         ConversionCommand command = new ConversionCommand();
-        command.setOutputFormat(MIME_TYPE_JPEG);
+        command.setOutputFormat(IMAGE_JPEG);
         command.setDimension(new Dimension(320, 320));
         command.setQuality(10);
 
@@ -232,7 +232,7 @@ class ProviderBitmapImageTest {
     void convertImage_works_for_all_test_files(File file) throws IOException, FormatNotSupportedException {
         /// arrange
         ConversionCommand command = new ConversionCommand();
-        command.setOutputFormat(MIME_TYPE_JPEG);
+        command.setOutputFormat(IMAGE_JPEG);
         command.setDimension(new Dimension(320, 320));
         command.setQuality(10);
         File outFile = File.createTempFile("providerUnderTest-image-", ".jpg");
@@ -251,7 +251,7 @@ class ProviderBitmapImageTest {
     void convertImage_to_png_no_keep_aspect_works_for_all_test_files(File file) throws IOException, FormatNotSupportedException {
         /// arrange
         ConversionCommand command = new ConversionCommand();
-        command.setOutputFormat(MIME_TYPE_PNG);
+        command.setOutputFormat(IMAGE_PNG);
         command.setDimension(new Dimension(320, 320));
         command.setKeepAspectRatio(false);
         File outFile = File.createTempFile("providerUnderTest-png-", ".png");
@@ -266,7 +266,7 @@ class ProviderBitmapImageTest {
         assertThat(outFile.exists()).isTrue();
         assertThat(outFile.length()).isGreaterThan(0);
         FileInfo fileInfoResult = providerUnderTest.fetchFileInfo(outFile);
-        assertThat(fileInfoResult.getMimeType()).isEqualTo(MIME_TYPE_PNG);
+        assertThat(fileInfoResult.getMimeType()).isEqualTo(IMAGE_PNG);
         assertThat(fileInfoResult.getWidth()).isEqualTo(320);
         assertThat(fileInfoResult.getHeight()).isEqualTo(320);
     }
@@ -279,7 +279,7 @@ class ProviderBitmapImageTest {
         int maxPixelSizeOfLargestDimension = 320;
         Dimension expectedDimension = calculateExpectedDimension(fileInfoSource, maxPixelSizeOfLargestDimension);
         ConversionCommand command = new ConversionCommand();
-        command.setOutputFormat(MIME_TYPE_PNG);
+        command.setOutputFormat(IMAGE_PNG);
         command.setDimension(new Dimension(maxPixelSizeOfLargestDimension, maxPixelSizeOfLargestDimension));
         File outFile = File.createTempFile("providerUnderTest-png-", ".png");
         if (CLEAR_OUTPUT_FILES) {
@@ -293,7 +293,7 @@ class ProviderBitmapImageTest {
         assertThat(outFile.exists()).isTrue();
         assertThat(outFile.length()).isGreaterThan(0);
         FileInfo fileInfoResult = providerUnderTest.fetchFileInfo(outFile);
-        assertThat(fileInfoResult.getMimeType()).isEqualTo(MIME_TYPE_PNG);
+        assertThat(fileInfoResult.getMimeType()).isEqualTo(IMAGE_PNG);
         assertThat(fileInfoResult.getWidth()).isEqualTo(expectedDimension.width);
         assertThat(fileInfoResult.getHeight()).isEqualTo(expectedDimension.height);
     }
@@ -306,7 +306,7 @@ class ProviderBitmapImageTest {
         int maxPixelSizeOfLargestDimension = 100;
         Dimension expectedDimension = calculateExpectedDimension(fileInfoSource, maxPixelSizeOfLargestDimension);
         ConversionCommand command = new ConversionCommand();
-        command.setOutputFormat(MIME_TYPE_GIF);
+        command.setOutputFormat(IMAGE_GIF);
         command.setDimension(new Dimension(maxPixelSizeOfLargestDimension, maxPixelSizeOfLargestDimension));
         File outFile = File.createTempFile("providerUnderTest-gif-", ".gif");
         if (CLEAR_OUTPUT_FILES) {
@@ -320,7 +320,7 @@ class ProviderBitmapImageTest {
         assertThat(outFile.exists()).isTrue();
         assertThat(outFile.length()).isGreaterThan(0);
         FileInfo fileInfoResult = providerUnderTest.fetchFileInfo(outFile);
-        assertThat(fileInfoResult.getMimeType()).isEqualTo(MIME_TYPE_GIF);
+        assertThat(fileInfoResult.getMimeType()).isEqualTo(IMAGE_GIF);
         assertThat(fileInfoResult.getWidth()).isEqualTo(expectedDimension.width);
         assertThat(fileInfoResult.getHeight()).isEqualTo(expectedDimension.height);
     }
@@ -339,14 +339,14 @@ class ProviderBitmapImageTest {
 
         /// act
         providerUnderTest.createThumbnail(file, outFile,
-            MIME_TYPE_PNG, maxPixelSizeOfLargestDimension, maxPixelSizeOfLargestDimension,
+            IMAGE_PNG, maxPixelSizeOfLargestDimension, maxPixelSizeOfLargestDimension,
             ConversionCommand.CompressionQuality.LOSSLESS);
 
         /// assert
         assertThat(outFile.exists()).isTrue();
         assertThat(outFile.length()).isGreaterThan(0);
         FileInfo fileInfoResult = providerUnderTest.fetchFileInfo(outFile);
-        assertThat(fileInfoResult.getMimeType()).isEqualTo(MIME_TYPE_PNG);
+        assertThat(fileInfoResult.getMimeType()).isEqualTo(IMAGE_PNG);
         assertThat(fileInfoResult.getWidth()).isEqualTo(expectedDimension.width);
         assertThat(fileInfoResult.getHeight()).isEqualTo(expectedDimension.height);
     }
@@ -365,7 +365,7 @@ class ProviderBitmapImageTest {
 
         /// act
         providerUnderTest.createThumbnail(file, outFile,
-            MIME_TYPE_GIF, maxPixelSizeOfLargestDimension, maxPixelSizeOfLargestDimension,
+            IMAGE_GIF, maxPixelSizeOfLargestDimension, maxPixelSizeOfLargestDimension,
             ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
 
 
@@ -373,7 +373,7 @@ class ProviderBitmapImageTest {
         assertThat(outFile.exists()).isTrue();
         assertThat(outFile.length()).isGreaterThan(0);
         FileInfo fileInfoResult = providerUnderTest.fetchFileInfo(outFile);
-        assertThat(fileInfoResult.getMimeType()).isEqualTo(MIME_TYPE_GIF);
+        assertThat(fileInfoResult.getMimeType()).isEqualTo(IMAGE_GIF);
         assertThat(fileInfoResult.getWidth()).isEqualTo(expectedDimension.width);
         assertThat(fileInfoResult.getHeight()).isEqualTo(expectedDimension.height);
     }
@@ -383,7 +383,7 @@ class ProviderBitmapImageTest {
         /// arrange
         Path testPath = supportedTestFiles.get(TEST_FILE_JPEG_01).toPath();
         ConversionCommand command = new ConversionCommand();
-        command.setOutputFormat(MIME_TYPE_PNG);
+        command.setOutputFormat(IMAGE_PNG);
         command.setDimension(new Dimension(400, 400));
         Path outPath = Files.createTempFile("providerUnderTest-png-path-", ".png");
         if (CLEAR_OUTPUT_FILES) {
@@ -397,7 +397,7 @@ class ProviderBitmapImageTest {
         assertThat(Files.exists(outPath)).isTrue();
         assertThat(Files.size(outPath)).isGreaterThan(0);
         FileInfo fileInfo = providerUnderTest.fetchFileInfo(outPath);
-        assertThat(fileInfo.getMimeType()).isEqualTo(MIME_TYPE_PNG);
+        assertThat(fileInfo.getMimeType()).isEqualTo(IMAGE_PNG);
     }
 
     @Test
@@ -406,7 +406,7 @@ class ProviderBitmapImageTest {
         File pngTestFile = supportedTestFiles.get(TEST_FILE_PNG_01);
         FileInfo inputInfo = providerUnderTest.fetchFileInfo(pngTestFile);
         ConversionCommand command = new ConversionCommand();
-        command.setOutputFormat(MIME_TYPE_JPEG);
+        command.setOutputFormat(IMAGE_JPEG);
         command.setQuality(ConversionCommand.CompressionQuality.LOSSY_BEST);
         File outFile = File.createTempFile("providerUnderTest-png-to-jpeg-", ".jpg");
         if (CLEAR_OUTPUT_FILES) {
@@ -420,7 +420,7 @@ class ProviderBitmapImageTest {
 
         /// assert
         FileInfo outputInfo = providerUnderTest.fetchFileInfo(outFile);
-        assertThat(outputInfo.getMimeType()).isEqualTo(MIME_TYPE_JPEG);
+        assertThat(outputInfo.getMimeType()).isEqualTo(IMAGE_JPEG);
         assertThat(outputInfo.getWidth()).isEqualTo(inputInfo.getWidth());
         assertThat(outputInfo.getHeight()).isEqualTo(inputInfo.getHeight());
     }
@@ -431,7 +431,7 @@ class ProviderBitmapImageTest {
         File jpegTestFile = supportedTestFiles.get(TEST_FILE_JPEG_01);
         FileInfo inputInfo = providerUnderTest.fetchFileInfo(jpegTestFile);
         ConversionCommand command = new ConversionCommand();
-        command.setOutputFormat(MIME_TYPE_PNG);
+        command.setOutputFormat(IMAGE_PNG);
         File outFile = File.createTempFile("providerUnderTest-jpeg-to-png-", ".png");
         if (CLEAR_OUTPUT_FILES) {
             outFile.deleteOnExit();
@@ -444,7 +444,7 @@ class ProviderBitmapImageTest {
 
         /// assert
         FileInfo outputInfo = providerUnderTest.fetchFileInfo(outFile);
-        assertThat(outputInfo.getMimeType()).isEqualTo(MIME_TYPE_PNG);
+        assertThat(outputInfo.getMimeType()).isEqualTo(IMAGE_PNG);
         assertThat(outputInfo.getWidth()).isEqualTo(inputInfo.getWidth());
         assertThat(outputInfo.getHeight()).isEqualTo(inputInfo.getHeight());
     }
@@ -467,14 +467,14 @@ class ProviderBitmapImageTest {
 
         /// act
         providerUnderTest.createThumbnail(file, outFile,
-            MIME_TYPE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize,
+            IMAGE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize,
             ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
 
 
         /// assert
         assertThat(outFile.exists()).isTrue();
         FileInfo fileInfo = providerUnderTest.fetchFileInfo(outFile);
-        assertThat(fileInfo.getMimeType()).isEqualTo(MIME_TYPE_JPEG);
+        assertThat(fileInfo.getMimeType()).isEqualTo(IMAGE_JPEG);
         assertThat(fileInfo.getBitsPerPixel()).isEqualTo(24);
         assertThat(fileInfo.getWidth()).isLessThanOrEqualTo(thumbPixelMaxSize);
         assertThat(fileInfo.getHeight()).isLessThanOrEqualTo(thumbPixelMaxSize);
@@ -490,13 +490,13 @@ class ProviderBitmapImageTest {
 
         /// act
         providerUnderTest.createThumbnail(file, outFile,
-            MIME_TYPE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize,
+            IMAGE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize,
             ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
 
         /// assert
         assertThat(outFile.exists()).isTrue();
         FileInfo fileInfo = providerUnderTest.fetchFileInfo(outFile);
-        assertThat(fileInfo.getMimeType()).isEqualTo(MIME_TYPE_JPEG);
+        assertThat(fileInfo.getMimeType()).isEqualTo(IMAGE_JPEG);
         assertThat(fileInfo.getBitsPerPixel()).isEqualTo(24);
         assertThat(fileInfo.getWidth()).isLessThanOrEqualTo(thumbPixelMaxSize);
         assertThat(fileInfo.getHeight()).isLessThanOrEqualTo(thumbPixelMaxSize);
@@ -512,13 +512,13 @@ class ProviderBitmapImageTest {
 
         /// act
         providerUnderTest.createThumbnail(path, outPath,
-            MIME_TYPE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize,
+            IMAGE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize,
             ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
 
         /// assert
         assertThat(Files.exists(path)).isTrue();
         FileInfo fileInfo = providerUnderTest.fetchFileInfo(outPath);
-        assertThat(fileInfo.getMimeType()).isEqualTo(MIME_TYPE_JPEG);
+        assertThat(fileInfo.getMimeType()).isEqualTo(IMAGE_JPEG);
         assertThat(fileInfo.getBitsPerPixel()).isEqualTo(24);
         assertThat(fileInfo.getWidth()).isLessThanOrEqualTo(thumbPixelMaxSize);
         assertThat(fileInfo.getHeight()).isLessThanOrEqualTo(thumbPixelMaxSize);

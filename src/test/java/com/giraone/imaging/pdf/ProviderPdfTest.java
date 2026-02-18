@@ -18,7 +18,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Map;
 
-import static com.giraone.imaging.ConversionCommand.MIME_TYPE_JPEG;
+import static com.giraone.imaging.ConversionCommand.CompressionQuality.LOSSY_MEDIUM;
+import static com.giraone.imaging.MimeTypes.IMAGE_JPEG;
 import static com.giraone.imaging.TestFileHelper.cloneTestFile;
 import static com.giraone.imaging.TestFileHelper.readTestFile;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -113,9 +114,9 @@ class ProviderPdfTest {
         ConversionCommand.CompressionQuality quality = ConversionCommand.CompressionQuality.LOSSY_BEST;
         int thumbPixelMaxSize = 600;
         ConversionCommand conversionCommand1 = ConversionCommand.buildConversionCommand(
-            outputFile1, MIME_TYPE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize, quality);
+            outputFile1, IMAGE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize, quality);
         ConversionCommand conversionCommand2 = ConversionCommand.buildConversionCommand(
-            outputFile2, MIME_TYPE_JPEG, thumbPixelMaxSize / 2, thumbPixelMaxSize / 2, quality);
+            outputFile2, IMAGE_JPEG, thumbPixelMaxSize / 2, thumbPixelMaxSize / 2, quality);
         /// act
         providerUnderTest.createThumbnails(inputFile, new ConversionCommand[] { conversionCommand1, conversionCommand2 });
         /// assert
@@ -202,14 +203,12 @@ class ProviderPdfTest {
         }
 
         /// act
-        providerUnderTest.createThumbnail(file, outFile,
-            MIME_TYPE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize,
-            ConversionCommand.CompressionQuality.LOSSY_MEDIUM);
+        providerUnderTest.createThumbnail(file, outFile, IMAGE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize, LOSSY_MEDIUM);
 
         /// assert
         assertThat(outFile.exists()).isTrue();
         FileInfo fileInfo = imagingProvider.fetchFileInfo(outFile);
-        assertThat(fileInfo.getMimeType()).isEqualTo(MIME_TYPE_JPEG);
+        assertThat(fileInfo.getMimeType()).isEqualTo(IMAGE_JPEG);
         assertThat(fileInfo.getBitsPerPixel()).isEqualTo(24);
         assertThat(fileInfo.getWidth()).isLessThanOrEqualTo(thumbPixelMaxSize);
         assertThat(fileInfo.getHeight()).isLessThanOrEqualTo(thumbPixelMaxSize);

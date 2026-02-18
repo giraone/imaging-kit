@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static com.giraone.imaging.ConversionCommand.*;
+import static com.giraone.imaging.MimeTypes.*;
 
 public class ImageOpener {
 
@@ -57,15 +57,15 @@ public class ImageOpener {
         switch (fileType) {
             case JPEG:
                 image = loadImageUsingToolkit(file);
-                fileInfo = getFileInfo(image, MIME_TYPE_JPEG, FileTypeDetector.FileType.JPEG);
+                fileInfo = getFileInfo(image, IMAGE_JPEG, FileTypeDetector.FileType.JPEG);
                 break;
             case GIF:
                 image = loadImageUsingToolkit(file);
-                fileInfo = getFileInfo(image, MIME_TYPE_GIF, FileTypeDetector.FileType.GIF);
+                fileInfo = getFileInfo(image, IMAGE_GIF, FileTypeDetector.FileType.GIF);
                 break;
             case PNG:
                 image = loadImageUsingToolkit(file);
-                fileInfo = getFileInfo(image, MIME_TYPE_PNG, FileTypeDetector.FileType.PNG);
+                fileInfo = getFileInfo(image, IMAGE_PNG, FileTypeDetector.FileType.PNG);
                 break;
             /*
             case TIFF:
@@ -94,15 +94,15 @@ public class ImageOpener {
         switch (fileType) {
             case JPEG:
                 image = loadImageUsingToolkit(path);
-                fileInfo = getFileInfo(image, MIME_TYPE_JPEG, FileTypeDetector.FileType.JPEG);
+                fileInfo = getFileInfo(image, IMAGE_JPEG, FileTypeDetector.FileType.JPEG);
                 break;
             case GIF:
                 image = loadImageUsingToolkit(path);
-                fileInfo = getFileInfo(image, MIME_TYPE_GIF, FileTypeDetector.FileType.GIF);
+                fileInfo = getFileInfo(image, IMAGE_GIF, FileTypeDetector.FileType.GIF);
                 break;
             case PNG:
                 image = loadImageUsingToolkit(path);
-                fileInfo = getFileInfo(image, MIME_TYPE_PNG, FileTypeDetector.FileType.PNG);
+                fileInfo = getFileInfo(image, IMAGE_PNG, FileTypeDetector.FileType.PNG);
                 break;
             /*
             case TIFF:

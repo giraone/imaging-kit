@@ -7,7 +7,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import static com.giraone.imaging.ConversionCommand.MIME_TYPE_JPEG;
+import static com.giraone.imaging.MimeTypes.IMAGE_JPEG;
 
 /**
  * Simple main program to create thumbnails using an imaging provider.
@@ -47,7 +47,7 @@ public class MakeThumb {
                 packageName + "." + providerName);
             ImagingProvider provider = cls.getDeclaredConstructor().newInstance();
             ConversionCommand command = new ConversionCommand();
-            command.setOutputFormat(MIME_TYPE_JPEG);
+            command.setOutputFormat(IMAGE_JPEG);
             command.setDimension(new Dimension(width, height));
             command.setQuality(quality);
             try (FileOutputStream outStream = new FileOutputStream(outFile)) {

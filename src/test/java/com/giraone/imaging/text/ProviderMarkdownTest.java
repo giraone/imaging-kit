@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static com.giraone.imaging.ConversionCommand.MIME_TYPE_JPEG;
+import static com.giraone.imaging.MimeTypes.IMAGE_JPEG;
 import static com.giraone.imaging.text.MarkdownProviderFlexmark.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,11 +28,11 @@ class ProviderMarkdownTest {
         int width = A4_WIDTH_MM * 400 / A4_WIDTH_MM;
         int height = A4_HEIGHT_MM * 400 / A4_WIDTH_MM;
         /// act
-        markdownProviderUnderTest.createThumbnail(inputFile, outputFile, MIME_TYPE_JPEG, width, height, quality);
+        markdownProviderUnderTest.createThumbnail(inputFile, outputFile, IMAGE_JPEG, width, height, quality);
         /// assert
         assertThat(outputFile.exists());
         FileInfo fileInfo = imagingProvider.fetchFileInfo(outputFile);
-        assertThat(fileInfo.getMimeType()).isEqualTo(MIME_TYPE_JPEG);
+        assertThat(fileInfo.getMimeType()).isEqualTo(IMAGE_JPEG);
         assertThat(fileInfo.getWidth()).isEqualTo(400);
         assertThat(fileInfo.getHeight()).isEqualTo(565);
     }
@@ -45,11 +45,11 @@ class ProviderMarkdownTest {
         outputFile.deleteOnExit();
         ConversionCommand.CompressionQuality quality = ConversionCommand.CompressionQuality.LOSSY_BEST;
         /// act
-        markdownProviderUnderTest.createThumbnail(inputFile, outputFile, MIME_TYPE_JPEG, A4_WIDTH_PX, A4_HEIGHT_PX, quality);
+        markdownProviderUnderTest.createThumbnail(inputFile, outputFile, IMAGE_JPEG, A4_WIDTH_PX, A4_HEIGHT_PX, quality);
         /// assert
         assertThat(outputFile.exists());
         FileInfo fileInfo = imagingProvider.fetchFileInfo(outputFile);
-        assertThat(fileInfo.getMimeType()).isEqualTo(MIME_TYPE_JPEG);
+        assertThat(fileInfo.getMimeType()).isEqualTo(IMAGE_JPEG);
         assertThat(fileInfo.getWidth()).isEqualTo(A4_WIDTH_PX);
         assertThat(fileInfo.getHeight()).isEqualTo(A4_HEIGHT_PX);
 

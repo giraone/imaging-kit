@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
-import static com.giraone.imaging.ConversionCommand.MIME_TYPE_JPEG;
+import static com.giraone.imaging.MimeTypes.IMAGE_JPEG;
 import static com.giraone.imaging.video.VideoProviderFfmpeg.FFMPEG_BIN_ENV;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,7 +30,7 @@ class VideoProviderFfmpegTest {
 
         String ffmpegBinary = System.getenv(FFMPEG_BIN_ENV);
         if (ffmpegBinary == null || ffmpegBinary.trim().isEmpty() || !new File(ffmpegBinary).exists()) {
-            LOGGER.warn("Environment variable \"{}\" no set. Skipping test!", FFMPEG_BIN_ENV);
+            LOGGER.warn("Environment variable \"{}\" not set. Skipping test!", FFMPEG_BIN_ENV);
             return;
         }
 
@@ -41,20 +41,20 @@ class VideoProviderFfmpegTest {
         ConversionCommand.CompressionQuality quality = ConversionCommand.CompressionQuality.LOSSY_BEST;
         int thumbPixelMaxSize = 400;
         /// act
-        videoProviderUnderTest.createThumbnail(inputFile, outputFile, MIME_TYPE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize, quality);
+        videoProviderUnderTest.createThumbnail(inputFile, outputFile, IMAGE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize, quality);
         /// assert
         assertThat(outputFile.exists());
         FileInfo fileInfo = imagingProvider.fetchFileInfo(outputFile);
-        assertThat(fileInfo.getMimeType()).isEqualTo(MIME_TYPE_JPEG);
+        assertThat(fileInfo.getMimeType()).isEqualTo(IMAGE_JPEG);
         assertThat(fileInfo.getWidth()).isEqualTo(400);
-        assertThat(fileInfo.getHeight()).isEqualTo(225);
+        assertThat(fileInfo.getHeight()).isEqualTo(168);
     }
 
     @Test
     void createThumbnails() throws Exception {
         String ffmpegBinary = System.getenv(FFMPEG_BIN_ENV);
         if (ffmpegBinary == null || ffmpegBinary.trim().isEmpty() || !new File(ffmpegBinary).exists()) {
-            LOGGER.warn("Environment variable \"{}\" no set. Skipping test!", FFMPEG_BIN_ENV);
+            LOGGER.warn("Environment variable \"{}\" not set. Skipping test!", FFMPEG_BIN_ENV);
             return;
         }
 
@@ -67,9 +67,9 @@ class VideoProviderFfmpegTest {
         ConversionCommand.CompressionQuality quality = ConversionCommand.CompressionQuality.LOSSY_BEST;
         int thumbPixelMaxSize = 400;
         ConversionCommand conversionCommand1 = ConversionCommand.buildConversionCommand(
-            outputFile1, MIME_TYPE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize, quality);
+            outputFile1, IMAGE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize, quality);
         ConversionCommand conversionCommand2 = ConversionCommand.buildConversionCommand(
-            outputFile2, MIME_TYPE_JPEG, thumbPixelMaxSize / 2, thumbPixelMaxSize / 2, quality);
+            outputFile2, IMAGE_JPEG, thumbPixelMaxSize / 2, thumbPixelMaxSize / 2, quality);
         /// act
         videoProviderUnderTest.createThumbnails(inputFile, new ConversionCommand[] { conversionCommand1, conversionCommand2 });
         /// assert

@@ -15,6 +15,12 @@ See [java2/ProviderJava2D.java](src/main/java/com/giraone/imaging/java2/Provider
 This feature is based on [ffmpeg](https://www.ffmpeg.org/). The Java code of this lib will only call an existing *ffmpeg* binary
 on the machine. The location has to be defined by setting `FFMPEG_BIN`, e.g. `FFMPEG_BIN=/usr/bin/ffmpeg`.
 
+## PDF output support
+
+Besides input for thumbnail generation, *PDF* can also be an output format for *Markdown* documents.
+This solution is based on [danfickle/openhtmltopdf](https://github.com/danfickle/openhtmltopdf),
+which is based on [Apache PDFBox](https://pdfbox.apache.org/), that is already used for the PDF to image (thumbnail) feature.
+
 ## Integrating
 
 ```xml

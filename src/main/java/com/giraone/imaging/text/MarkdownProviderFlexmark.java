@@ -38,22 +38,27 @@ public class MarkdownProviderFlexmark implements MarkdownProvider {
     // DIN A4 dimensions in millimeters
     public static final int A4_WIDTH_MM = 210;
     public static final int A4_HEIGHT_MM = 297;
-    // Default DPI for rendering (72 is standard for screen, 300 for print)
-    public static final int DEFAULT_DPI = 96;
+    // Default DPI for screen/image rendering
+    public static final int DEFAULT_DPI_SCREEN = 96;
+    // Default DPI for print rendering
+    public static final int DEFAULT_DPI_PRINT = 300;
 
     // A4 = 210 mm × 297 mm = 8.27 inch × 11.69 inch
     // A4 at 96 DPI = 794 × 1122 pixels
-    public static final int A4_WIDTH_PX = mmToPixels(A4_WIDTH_MM, DEFAULT_DPI);
-    public static final int A4_HEIGHT_PX = mmToPixels(A4_HEIGHT_MM, DEFAULT_DPI);
+    public static final int A4_WIDTH_PX_SCREEN = mmToPixels(A4_WIDTH_MM, DEFAULT_DPI_SCREEN);
+    public static final int A4_HEIGHT_PX_SCREEN = mmToPixels(A4_HEIGHT_MM, DEFAULT_DPI_SCREEN);
+    // A4 at 96 DPI = 794 × 1122 pixels
+    public static final int A4_WIDTH_PX_PRINT = mmToPixels(A4_WIDTH_MM, DEFAULT_DPI_PRINT);
+    public static final int A4_HEIGHT_PX_PRINT = mmToPixels(A4_HEIGHT_MM, DEFAULT_DPI_PRINT);
     // 1 point (pt) = 1/72 inch
     // 12 × 96/72 = 12×1.33 = 16, 12 pt = 16 pixels (CSS pixels / device pixels at 96 DPI)
-    public static final int PT12_PX = ptToPixels(12, DEFAULT_DPI);
+    public static final int PT12_PX = ptToPixels(12, DEFAULT_DPI_SCREEN);
 
     // for debugging the HTML generation
     private static final boolean DUMP_HTML = false;
     // the HTML document template (DIN A4 portrait mode) to be used
 
-    private static final String HTML_WRAP_A4_PORTRAIT = """
+    public static final String HTML_WRAP_A4_PORTRAIT_IMAGE = """
         <!DOCTYPE html>
         <html>
         <head>
@@ -113,10 +118,76 @@ public class MarkdownProviderFlexmark implements MarkdownProvider {
         </html>
         """;
 
-    // is thread-safe - see JavaDoc
+    public static final String HTML_WRAP_A4_PORTRAIT_PDF = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <style>
+        @page {
+          margin: 36px 48px;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12pt;
+            background-color: white;
+        }
+        body {
+            width: 100%;
+            overflow-x: auto;
+        }
+        h1, h2, h3 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+            margin-top: 0.5em;
+            margin-bottom: 0.3em;
+        }
+        h1 { font-size: 1.5em; }
+        h2 { font-size: 1.3em; }
+        h3 { font-size: 1.1em; }
+        
+        p {
+            margin-bottom: 0.5em;
+            page-break-inside: avoid;
+        }
+        ul, ol {
+            margin-left: 0.2em;
+            padding-left: 1.5em;
+            margin-bottom: 0.5em;
+            page-break-inside: avoid;
+        }
+        code {
+            padding: 0.2em 0.2em;
+            border-radius: 0.2em;
+            page-break-inside: avoid;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 0.2em;
+            border-radius: 0.5em;
+            margin-bottom: 0.5em;
+            white-space: pre-wrap;     /* preserve whitespace + allow wrapping */
+            page-break-inside: avoid;
+        }
+        </style>
+        </head>
+        <body>
+        %bodyHtml%
+        </body>
+        </html>
+        """;
+
+    // Flexmark Markdown Parser is thread-safe - see JavaDoc
     private static final Parser markdownParser = Parser.builder().build();
-    // is thread-safe - see JavaDoc
+    // Flexmark HTML renderer is thread-safe - see JavaDoc
     private static final HtmlRenderer htmlRenderer = HtmlRenderer.builder().build();
+    private static final HtmlToPdfProvider htmlToPdfProvider = new HtmlToPdfProviderOpenHtml();
 
     /**
      * Convert millimeters to pixels at a given DPI.
@@ -163,29 +234,71 @@ public class MarkdownProviderFlexmark implements MarkdownProvider {
             // 4. Write image
             ImageIO.write(image, ImageToFileWriter.mimeTypeToIoWriteFormat(conversionCommand.getOutputFormat()), outputStream);
         }
-
     }
 
-    public static BufferedImage createThumbnailAsBufferedImage(Reader reader, Dimension dimension) throws IOException {
+    public BufferedImage createThumbnailAsBufferedImage(Reader reader, Dimension dimension) throws IOException {
+        // 1. Markdown to HTML in given size (dimension)
+        final String fullHtml = convertToHtml(reader, dimension);
+        // 2. Render HTML to BufferedImage
+        return renderHtmlToImage(fullHtml, dimension.width, dimension.height);
+    }
+
+    @Override
+    public void createPdf(File inputMarkdownFile, File outputPdfFile) throws Exception {
+        try (final FileReader reader = new FileReader(inputMarkdownFile)) {
+            // 1. Markdown to HTML in A4 dimension
+            final String fullHtml = convertToHtml(reader, new Dimension(A4_WIDTH_PX_SCREEN, A4_HEIGHT_PX_SCREEN));
+            // 2. Render HTML to PDF
+            htmlToPdfProvider.renderHtmlToPdf(fullHtml, outputPdfFile);
+        }
+    }
+
+    //--- convert to HTML -----------------------------------------------------------------------------------------------
+
+    private static Document parseDocument(InputSource source) throws Exception {
+        final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        dbFactory.setNamespaceAware(true);
+        dbFactory.setExpandEntityReferences(false);
+        dbFactory.setXIncludeAware(false);
+        final DocumentBuilder builder = dbFactory.newDocumentBuilder();
+        try {
+            return builder.parse(source);
+        } catch (SAXParseException spe) {
+            throw new Exception(spe.getMessage() + " in Line/Col " + spe.getLineNumber() + "/" + spe.getColumnNumber());
+        }
+    }
+
+    private static String convertToHtml(Reader reader, Dimension dimension) throws IOException {
         // 1. Markdown to HTML
         final Node document = markdownParser.parseReader(reader);
         final String htmlString = htmlRenderer.render(document);
         // 2. Wrap HTML with CSS for consistent rendering
-        final String fullHtml = wrapHtml(htmlString, PT12_PX * dimension.height / A4_HEIGHT_PX, dimension.width, dimension.height);
+        final String fullHtml = wrapHtml(HTML_WRAP_A4_PORTRAIT_IMAGE, htmlString,
+            PT12_PX * dimension.height / A4_HEIGHT_PX_SCREEN, dimension.width, dimension.height);
         if (DUMP_HTML) {
             dumpHtml(fullHtml);
         }
-        // 3. Render HTML to BufferedImage
-        return renderHtmlToImage(fullHtml, dimension.width, dimension.height);
+        return fullHtml;
     }
 
-    private static String wrapHtml(String bodyHtml, int fontSizePx, int bodyWidthPx, int bodyHeightPx) {
-        return HTML_WRAP_A4_PORTRAIT
+    private static String wrapHtml(String template, String bodyHtml, int fontSizePx, int bodyWidthPx, int bodyHeightPx) {
+        return template
             .replace("%fontSizePx%", Integer.toString(fontSizePx))
             .replace("%bodyWidthPx%", Integer.toString(bodyWidthPx))
             .replace("%bodyHeightPx%", Integer.toString(bodyHeightPx))
             .replace("%bodyHtml%", bodyHtml);
     }
+
+    private static void dumpHtml(String fullHtml) {
+        try {
+            final File tmpFile = File.createTempFile("markdown-", ".html");
+            Files.writeString(tmpFile.toPath(), fullHtml);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //--- convert to image ---------------------------------------------------------------------------------------------
 
     /**
      * Renders HTML into a BufferedImage.
@@ -219,27 +332,5 @@ public class MarkdownProviderFlexmark implements MarkdownProvider {
             g2r.render(g);
         });
         return bufferedImage;
-    }
-
-    private static Document parseDocument(InputSource source) throws Exception {
-        final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        dbFactory.setNamespaceAware(true);
-        dbFactory.setExpandEntityReferences(false);
-        dbFactory.setXIncludeAware(false);
-        final DocumentBuilder builder = dbFactory.newDocumentBuilder();
-        try {
-            return builder.parse(source);
-        } catch (SAXParseException spe) {
-            throw new Exception(spe.getMessage() + " in Line/Col " + spe.getLineNumber() + "/" + spe.getColumnNumber());
-        }
-    }
-
-    private static void dumpHtml(String fullHtml) {
-        try {
-            final File tmpFile = File.createTempFile("markdown-", ".html");
-            Files.writeString(tmpFile.toPath(), fullHtml);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

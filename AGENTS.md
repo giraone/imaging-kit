@@ -9,7 +9,7 @@
   - Use semantic versioning for releases of this project.
   - Use a property for all dependency versions and put it into the properties section of `pom.xml` using a name ending in `.version`.
 - Programming language is *Java*.
-  - Source and target JVM is *JDK 17*.
+  - Source and target JVM is *JDK 21*.
   - File encoding is *UTF-8*.
   - Use installed `java` and `javac` located in directory defined by environment variable `$JAVA_HOME`.
   - Use US English for *JavaDoc*.

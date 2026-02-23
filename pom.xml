@@ -72,13 +72,14 @@
     <pdfbox.version>3.0.6</pdfbox.version>
     <flexmark.version>0.64.8</flexmark.version>
     <flying-saucer.version>10.0.6</flying-saucer.version>
+    <openhtmltopdf.version>1.1.37</openhtmltopdf.version>
     <slf4j.version>2.0.17</slf4j.version>
     <!-- Test dependency versions -->
     <junit.jupiter.version>6.0.3</junit.jupiter.version>
     <assertj.version>3.27.7</assertj.version>
     <!-- Plugin versions -->
     <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
-    <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
     <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
     <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
@@ -118,19 +119,12 @@
     <dependency>
       <groupId>io.github.openhtmltopdf</groupId>
       <artifactId>openhtmltopdf-core</artifactId>
-      <version>1.1.37</version>
+      <version>${openhtmltopdf.version}</version>
     </dependency>
     <dependency>
       <groupId>io.github.openhtmltopdf</groupId>
       <artifactId>openhtmltopdf-pdfbox</artifactId>
-      <version>1.1.37</version>
-    </dependency>
-    <!--Needs jsoup to parse the HTML -->
-    <dependency>
-      <groupId>org.jsoup</groupId>
-      <artifactId>jsoup</artifactId>
-      <version>1.22.1</version>
-      <scope>compile</scope>
+      <version>${openhtmltopdf.version}</version>
     </dependency>
 
     <!-- SLF4J as logging framework -->

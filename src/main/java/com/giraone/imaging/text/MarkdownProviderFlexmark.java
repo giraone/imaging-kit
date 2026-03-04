@@ -253,6 +253,16 @@ public class MarkdownProviderFlexmark implements MarkdownProvider {
         }
     }
 
+    @Override
+    public void createHtml(File inputMarkdownFile, File outputHtmlFile) throws Exception {
+        try (final FileReader reader = new FileReader(inputMarkdownFile)) {
+            // 1. Markdown to HTML in A4 dimension
+            final String fullHtml = convertToHtml(reader, new Dimension(A4_WIDTH_PX_SCREEN, A4_HEIGHT_PX_SCREEN));
+            // 2. Store HTML in file
+            Files.writeString(outputHtmlFile.toPath(), fullHtml, StandardCharsets.UTF_8);
+        }
+    }
+
     //--- convert to HTML -----------------------------------------------------------------------------------------------
 
     private static Document parseDocument(InputSource source) throws Exception {

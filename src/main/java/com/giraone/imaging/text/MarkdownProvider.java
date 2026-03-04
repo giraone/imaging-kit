@@ -27,4 +27,12 @@ public interface MarkdownProvider extends ThumbnailProvider {
      * @throws Exception on any error
      */
     void createPdf(File inputMarkdownFile, File outputPdfFile) throws Exception;
+
+    /**
+     * Convert a markdown file to a printable PDF
+     * @param inputMarkdownFile input MD file
+     * @param outputHtmlFile output PDF file
+     * @throws Exception on any error
+     */
+    void createHtml(File inputMarkdownFile, File outputHtmlFile) throws Exception;
 }

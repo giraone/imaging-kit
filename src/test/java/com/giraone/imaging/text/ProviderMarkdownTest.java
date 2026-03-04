@@ -29,7 +29,7 @@ class ProviderMarkdownTest {
         /// arrange
         File inputFile = new File("src/test/resources/" + fileName);
         File outputFile = File.createTempFile("md-to-thumb-" + fileName + "-", ".jpg");
-        //outputFile.deleteOnExit();
+        outputFile.deleteOnExit();
         ConversionCommand.CompressionQuality quality = ConversionCommand.CompressionQuality.LOSSY_BEST;
         int width = A4_WIDTH_MM * 400 / A4_WIDTH_MM;
         int height = A4_HEIGHT_MM * 400 / A4_WIDTH_MM;
@@ -52,7 +52,7 @@ class ProviderMarkdownTest {
         /// arrange
         File inputFile = new File("src/test/resources/" + fileName);
         File outputFile = File.createTempFile("md-to-a4-" + fileName + "-", ".jpg");
-        //outputFile.deleteOnExit();
+        outputFile.deleteOnExit();
         ConversionCommand.CompressionQuality quality = ConversionCommand.CompressionQuality.LOSSY_BEST;
         /// act
         markdownProviderUnderTest.createThumbnail(inputFile, outputFile, IMAGE_JPEG, A4_WIDTH_PX_PRINT, A4_HEIGHT_PX_PRINT, quality);
@@ -73,7 +73,7 @@ class ProviderMarkdownTest {
         /// arrange
         File inputFile = new File("src/test/resources/" + mdFileName);
         File outputFile = File.createTempFile("md-to-pdf-" + mdFileName + "-", ".pdf");
-        //outputFile.deleteOnExit();
+        outputFile.deleteOnExit();
         /// act
         markdownProviderUnderTest.createPdf(inputFile, outputFile);
         /// assert

@@ -1,5 +1,9 @@
 # Release Notes and List of Changes
 
+## Version 2.1.0 (2026-09-04)
+
+- imaging-kit: Dependency upgrades to latest versions
+
 ## Version 2.0.0 (2026-02-17)
 
 - Support for thumbnail generation for Markdown documents (`text/markdown`) added

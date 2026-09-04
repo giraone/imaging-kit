@@ -3,6 +3,7 @@
 ## Version 2.1.0 (2026-09-04)
 
 - imaging-kit: Dependency upgrades to latest versions
+- imaging-kit-jmh: Dependency upgrades to latest versions
 
 ## Version 2.0.0 (2026-02-17)
 

@@ -1,6 +1,5 @@
 package com.giraone.imaging.text;
 
-import com.giraone.imaging.ConversionCommand;
 import com.giraone.imaging.FileInfo;
 import com.giraone.imaging.ImagingFactory;
 import com.giraone.imaging.ImagingProvider;
@@ -27,14 +26,14 @@ class HtmlToPdfProviderOpenHtmlTest {
         "document-02.html",
     })
     void createA4Document(String fileName) throws Exception {
-        /// arrange
+        // arrange
         File inputFile = new File("src/test/resources/" + fileName);
         String inputHtml = Files.readString(inputFile.toPath(), StandardCharsets.UTF_8);
         File outputFile = File.createTempFile("html-to-pdf-" + fileName + "-", ".pdf");
         //outputFile.deleteOnExit();
-        /// act
+        // act
         htmlToPdfProviderOpenHtmlTestUnderTest.renderHtmlToPdf(inputHtml, outputFile);
-        /// assert
+        // assert
         assertThat(outputFile.exists());
         FileInfo fileInfo = imagingProvider.fetchFileInfo(outputFile);
         assertThat(fileInfo.getMimeType()).isEqualTo(APPLICATION_PDF);

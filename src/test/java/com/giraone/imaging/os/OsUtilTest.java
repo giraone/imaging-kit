@@ -11,9 +11,9 @@ class OsUtilTest {
         ///  arrange
         String osName = System.getProperty("os.name");
         String cmd = osName.startsWith("Windows") ? "C:/Windows/System32/whoami.exe" : "/usr/bin/ls";
-        /// act
+        // act
         OsCommandResult result = OsUtil.runCommandAndReadOutput(new String[] {cmd});
-        /// assert
+        // assert
         assertThat(result).isNotNull();
         assertThat(result.getException()).isNull();
     }

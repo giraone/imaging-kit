@@ -34,15 +34,15 @@ class VideoProviderFfmpegTest {
             return;
         }
 
-        /// arrange
+        // arrange
         File inputFile = new File("src/test/resources/" + TEST_FILE_MP4_02);
         File outputFile = File.createTempFile("mp4-to-thumb-", ".jpg");
         outputFile.deleteOnExit();
         ConversionCommand.CompressionQuality quality = ConversionCommand.CompressionQuality.LOSSY_BEST;
         int thumbPixelMaxSize = 400;
-        /// act
+        // act
         videoProviderUnderTest.createThumbnail(inputFile, outputFile, IMAGE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize, quality);
-        /// assert
+        // assert
         assertThat(outputFile.exists());
         FileInfo fileInfo = imagingProvider.fetchFileInfo(outputFile);
         assertThat(fileInfo.getMimeType()).isEqualTo(IMAGE_JPEG);
@@ -58,7 +58,7 @@ class VideoProviderFfmpegTest {
             return;
         }
 
-        /// arrange
+        // arrange
         File inputFile = new File("src/test/resources/" + TEST_FILE_MP4_01);
         File outputFile1 = File.createTempFile("mp4-to-thumb-", ".jpg");
         File outputFile2 = File.createTempFile("mp4-to-thumb-", ".jpg");
@@ -70,9 +70,9 @@ class VideoProviderFfmpegTest {
             outputFile1, IMAGE_JPEG, thumbPixelMaxSize, thumbPixelMaxSize, quality);
         ConversionCommand conversionCommand2 = ConversionCommand.buildConversionCommand(
             outputFile2, IMAGE_JPEG, thumbPixelMaxSize / 2, thumbPixelMaxSize / 2, quality);
-        /// act
+        // act
         videoProviderUnderTest.createThumbnails(inputFile, new ConversionCommand[] { conversionCommand1, conversionCommand2 });
-        /// assert
+        // assert
         assertThat(outputFile1.exists());
         assertThat(outputFile2.exists());
         FileInfo fileInfo1 = imagingProvider.fetchFileInfo(outputFile1);

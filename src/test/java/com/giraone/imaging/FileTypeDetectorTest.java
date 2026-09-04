@@ -102,37 +102,37 @@ class FileTypeDetectorTest {
 
     @Test
     void jpegIsDetectedUsingFile() throws IOException {
-        /// arrange
+        // arrange
         Path parent = Path.of("src/test/resources");
-        /// act
+        // act
         FileTypeDetector.FileType detectedFileType = FileTypeDetector.getInstance().getFileType((parent.resolve(TEST_FILE_JPEG_01)));
-        /// assert
+        // assert
         assertThat(detectedFileType).isEqualTo(JPEG);
     }
 
     @Test
     void jpegIsDetectedUsingPath() throws IOException {
-        /// arrange
+        // arrange
         Path parent = Path.of("src/test/resources");
-        /// act
+        // act
         FileTypeDetector.FileType detectedFileType = FileTypeDetector.getInstance().getFileType(parent.resolve(TEST_FILE_JPEG_01));
-        /// assert
+        // assert
         assertThat(detectedFileType).isEqualTo(JPEG);
     }
 
     @Test
     void jpegIsDetectedUsingString() throws IOException {
-        /// act
+        // act
         FileTypeDetector.FileType detectedFileType = FileTypeDetector.getInstance().getFileType("src/test/resources/" + TEST_FILE_JPEG_01);
-        /// assert
+        // assert
         assertThat(detectedFileType).isEqualTo(JPEG);
     }
 
     @Test
     void allTypesAsStrings() {
-        /// act
+        // act
         List<String> types = FileTypeDetector.FileType.allTypesAsStrings();
-        /// assert
+        // assert
         assertThat(types).hasSize(11);
     }
 

@@ -27,7 +27,7 @@ which is based on [Apache PDFBox](https://pdfbox.apache.org/), that is already u
 <dependency>
     <groupId>com.giraone.imaging</groupId>
     <artifactId>imaging-kit</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
 </dependency>
 ```
 

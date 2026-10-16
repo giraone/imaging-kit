@@ -225,26 +225,6 @@
         </executions>
       </plugin>
 
-      <!-- GPG Plugin for Signing - Required for Maven Central - MAVEN_GPG_PASSPHRASE is defined in settings.xml as activation property -->
-      <!--
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>${maven-gpg-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>sign-artifacts</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-            <configuration>
-              <passphraseEnvName>MAVEN_GPG_PASSPHRASE</passphraseEnvName>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>-->
-
       <!-- Release Plugin for Version Management, Git Operations and Deploy to Maven Central -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -340,5 +320,34 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <!-- Activated by maven-release-plugin (releaseProfiles) during release:perform -->
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <!-- GPG Plugin for Signing - Required for Maven Central - passphrase is taken from env MAVEN_GPG_PASSPHRASE -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>${maven-gpg-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <configuration>
+                  <passphraseEnvName>MAVEN_GPG_PASSPHRASE</passphraseEnvName>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>

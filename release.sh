@@ -169,19 +169,9 @@ prepare_release() {
   fi
   rm -f pom.xml.asc
 
-  while true; do
-    read -p "Repeat GPG Passphrase for signing: " MAVEN_GPG_PASSPHRASE
-    read -p "OK to use : \"$MAVEN_GPG_PASSPHRASE\"? (y/N): " ok
-    if [[ "$ok" == "y" ]]; then
-      break
-    fi
-  done
-  export MAVEN_GPG_PASSPHRASE
-
   # Run maven release:prepare
   print_status "Running maven release:prepare..."
   mvn release:prepare \
-    -Dgpg.skip=false \
     -DreleaseVersion="$RELEASE_VERSION" \
     -DdevelopmentVersion="$NEXT_VERSION" \
     -Dtag="v${RELEASE_VERSION}"
@@ -189,12 +179,33 @@ prepare_release() {
   print_success "Release preparation completed"
 }
 
+# Function to read the GPG passphrase (hidden input) into MAVEN_GPG_PASSPHRASE
+read_gpg_passphrase() {
+  if [[ -n "$MAVEN_GPG_PASSPHRASE" ]]; then
+    return
+  fi
+  while true; do
+    read -s -p "GPG Passphrase for signing: " MAVEN_GPG_PASSPHRASE
+    echo
+    read -s -p "Repeat GPG Passphrase: " passphrase_repeat
+    echo
+    if [[ -n "$MAVEN_GPG_PASSPHRASE" && "$MAVEN_GPG_PASSPHRASE" == "$passphrase_repeat" ]]; then
+      break
+    fi
+    print_error "Passphrases are empty or do not match. Please try again."
+  done
+  unset passphrase_repeat
+  export MAVEN_GPG_PASSPHRASE
+}
+
 # Function to perform release (Step 1)
 perform_release() {
   print_status "Performing release (Step 1: Deploy to staging)..."
 
-  # Run maven release:perform
-  mvn -Dgpg.skip=false release:perform
+  read_gpg_passphrase
+
+  # Run maven release:perform - signing is done by the "release" profile
+  mvn release:perform
   
   print_success "Release performed - artifacts deployed to OSSRH staging repository"
 }

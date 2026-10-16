@@ -210,59 +210,20 @@ perform_release() {
   print_success "Release performed - artifacts deployed to OSSRH staging repository"
 }
 
-# Function to manage deployments at Central Portal (Step 2)
+# Function to publish deployments at Central Portal (Step 2)
+# release:perform (nexus-staging-maven-plugin with autoReleaseAfterClose=false) already uploads and closes
+# the staging repository, so the deployment is transferred to the Central Portal in state "VALIDATED".
+# The legacy goals nexus-staging:close/release/drop do not apply anymore; publish or drop in the portal.
 manage_staging() {
-  print_status "Managing deployments at Central Portal (Step 2: Promote to Maven Central)..."
-
+  print_status "Publishing at Central Portal (Step 2: Promote to Maven Central)..."
   echo
-  print_warning "Please review the deployments in Maven Central Repository:"
+  print_warning "The deployment should now be in state \"VALIDATED\" at:"
   print_warning "https://central.sonatype.com/publishing/deployments"
   echo
-  
-  # Ask what to do
-  echo "What would you like to do with the deployments?"
-  echo "1) Close and release (promote to Maven Central)"
-  echo "2) Close only (validate but don't release yet)"
-  echo "3) Drop (delete the staging repository)"
-  echo "4) Exit"
-  
-  while true; do
-    read -p "Choose an option (1-5): " choice
-    case $choice in
-      1)
-          print_status "Closing and releasing staging repository..."
-          mvn nexus-staging:close
-          mvn nexus-staging:release
-          print_success "Artifacts released to Maven Central!"
-          print_status "Artifacts will be available in ~10 minutes, searchable in ~2 hours"
-          break
-          ;;
-      2)
-          print_status "Closing staging repository..."
-          mvn nexus-staging:close
-          print_success "Staging repository closed and validated"
-          print_status "You can release it later with: mvn nexus-staging:release"
-          break
-          ;;
-      3)
-          print_warning "Dropping staging repository..."
-          read -p "Are you sure? This cannot be undone (y/N): " -n 1 -r
-          echo
-          if [[ $REPLY =~ ^[Yy]$ ]]; then
-              mvn nexus-staging:drop
-              print_success "Staging repository dropped"
-          fi
-          break
-          ;;
-      4)
-          print_status "Exiting..."
-          exit 0
-          ;;
-      *)
-          print_error "Invalid option. Please choose 1-5."
-          ;;
-    esac
-  done
+  echo "  - Click \"Publish\" to release it to Maven Central"
+  echo "  - Click \"Drop\" to discard it"
+  echo
+  print_status "After publishing, artifacts will be available in ~10-30 minutes, searchable in ~2 hours"
 }
 
 # Function to clean up after failed release
@@ -299,7 +260,7 @@ OPTIONS:
   test                Run tests only
   prepare             Prepare release (Step 1a)
   perform             Perform release (Step 1b)
-  staging             Manage staging repository (Step 2)
+  staging             Show how to publish the deployment (Step 2)
   full                Run complete release process (prepare + perform + staging)
   cleanup             Clean up failed release
 
@@ -308,12 +269,12 @@ EXAMPLES:
   $0 full             # Complete release process
   $0 prepare          # Just prepare the release
   $0 perform          # Perform the release when it is prepared
-  $0 staging          # Just manage staging repository
+  $0 staging          # Show how to publish the deployment
 
 RELEASE PROCESS:
   1. Prepare: Update versions, create tag, commit changes
   2. Perform: Build and deploy artifacts to OSSRH staging
-  3. Staging: Close/validate and promote to Maven Central
+  3. Staging: Publish the validated deployment in the Central Portal
 
 For more information, see the README.md file.
 EOF

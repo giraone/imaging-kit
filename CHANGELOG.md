@@ -4,6 +4,7 @@
 
 - OSCommandResult switch from class to record
 - JavaDoc and tests improved
+- module-info.java added
 
 ## Version 2.1.1 (2026-10-16)
 

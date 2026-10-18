@@ -83,6 +83,7 @@
     <maven-surefire-plugin.version>3.6.0</maven-surefire-plugin.version>
     <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+    <maven-dependencies-plugin.version>3.11.0</maven-dependencies-plugin.version>
     <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
     <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
     <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
@@ -322,7 +323,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.6.0</version>
+        <version>${maven-dependencies-plugin.version}</version>
         <executions>
           <execution>
             <id>copy</id>
@@ -333,43 +334,6 @@
           </execution>
         </executions>
       </plugin>
-      <!--
- <plugin>
-   <groupId>org.moditect</groupId>
-   <artifactId>moditect-maven-plugin</artifactId>
-   <version>1.3.0.Final</version>
-   <executions>
-     <execution>
-       <id>generate-module-info</id>
-       <phase>generate-sources</phase>
-       <goals>
-         <goal>generate-module-info</goal>
-       </goals>
-       <configuration>
-         <modules>
-           <module>
-             <artifact>
-               <groupId>com.giraone.imaging</groupId>
-               <artifactId>imaging-kit</artifactId>
-               <version>2.1.2</version>
-             </artifact>
-             <additionalDependencies>
-               <dependency>
-                 <groupId>org.apache.pdfbox</groupId>
-                 <artifactId>pdfbox</artifactId>
-                 <version>3.0.8</version>
-               </dependency>
-             </additionalDependencies>
-           </module>
-           <moduleInfo>
-             <name>com.giraone.imaging</name>
-           </moduleInfo>
-         </modules>
-         <outputDirectory>${project.basedir}/src/main/java</outputDirectory>
-       </configuration>
-     </execution>
-   </executions>
- </plugin>-->
     </plugins>
   </build>
 

@@ -38,6 +38,9 @@ public class PdfProviderPdfBox implements PdfProvider {
 
     private final ProviderJava2D imagingProvider = new ProviderJava2D();
 
+    /**
+     * Create new instance.
+     */
     public PdfProviderPdfBox() {
         System.setProperty("sun.java2d.cmm", "sun.java2d.cmm.kcms.KcmsServiceProvider");
     }

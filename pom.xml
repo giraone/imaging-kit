@@ -269,7 +269,7 @@
         <extensions>true</extensions>
         <!-- Publishing by using the Portal OSSRH Staging API - since July 2025-->
         <configuration>
-          <!-- The serverId must match <server> in settings.xml -->
+          <!-- The serverId must match <server><id> in settings.xml -->
           <serverId>ossrh-staging</serverId>
           <nexusUrl>https://ossrh-staging-api.central.sonatype.com/</nexusUrl>
           <!-- If not set to true, we must use extra HTTP POST /manual/upload/defaultRepository/com.giraone -->

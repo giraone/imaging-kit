@@ -1,5 +1,10 @@
 # Release Notes and List of Changes
 
+## Version 2.1.2 (2026-10-18)
+
+- OSCommandResult switch from class to record
+- JavaDoc and tests improved
+
 ## Version 2.1.1 (2026-10-16)
 
 - Dependency upgrades to latest versions

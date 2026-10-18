@@ -107,6 +107,10 @@ public class MimeTypes {
         MAP_MIME2EXT.put("video/x-msvideo", "avi");
     }
 
+    // Hide
+    private MimeTypes() {
+    }
+
     /**
      * Return MIME type for a file name or path
      * @param fileName file name

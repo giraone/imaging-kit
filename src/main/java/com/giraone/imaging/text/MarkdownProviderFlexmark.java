@@ -190,6 +190,12 @@ public class MarkdownProviderFlexmark implements MarkdownProvider {
     private static final HtmlToPdfProvider htmlToPdfProvider = new HtmlToPdfProviderOpenHtml();
 
     /**
+     * Create new instance
+     */
+    MarkdownProviderFlexmark() {
+    }
+
+    /**
      * Convert millimeters to pixels at a given DPI.
      * @param mm millimeters
      * @param dpi dots per inch

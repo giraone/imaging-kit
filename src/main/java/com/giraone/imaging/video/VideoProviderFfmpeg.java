@@ -8,6 +8,9 @@ import com.giraone.imaging.os.OsUtil;
 
 import java.io.File;
 
+/**
+ * VideoProvider based on ffmpeg executable
+ */
 public class VideoProviderFfmpeg implements VideoProvider {
 
     static final String FFMPEG_BIN_ENV = "FFMPEG_BIN";
@@ -37,6 +40,9 @@ public class VideoProviderFfmpeg implements VideoProvider {
 
     final ImagingProvider imagingProvider = ImagingFactory.getInstance().getProvider();
 
+    VideoProviderFfmpeg() {
+    }
+
     /**
      * Create multiple thumbnail images (e.g. different sizes) for a given file.
      * This implementation reads the input only once!
@@ -62,7 +68,7 @@ public class VideoProviderFfmpeg implements VideoProvider {
         }
 
         final OsCommandResult result = OsUtil.runCommandAndReadOutput(ffmpegCommands, 60);
-        if (result.getCode() >= 0) {
+        if (result.code() >= 0) {
             if (tempPngFileInOriginalSize.length() > 100L) {
                 for (ConversionCommand conversionCommand: conversionCommands) {
                     imagingProvider.createThumbnail(tempPngFileInOriginalSize, conversionCommand);
@@ -72,8 +78,8 @@ public class VideoProviderFfmpeg implements VideoProvider {
                 throw new RuntimeException("Cannot create thumbnail for video \"" + inputFile + "\"! Empty PNG output from ffmpeg.");
             }
         } else {
-            if (result.getException() != null) {
-                throw new RuntimeException("Cannot create thumbnail for video \"" + inputFile + "\" using \"" + FFMPEG_BIN + "\"!", result.getException());
+            if (result.exception() != null) {
+                throw new RuntimeException("Cannot create thumbnail for video \"" + inputFile + "\" using \"" + FFMPEG_BIN + "\"!", result.exception());
             } else {
                 throw new RuntimeException("Cannot create thumbnail for video \"" + inputFile + "\" using \"" + FFMPEG_BIN + "\"!");
             }

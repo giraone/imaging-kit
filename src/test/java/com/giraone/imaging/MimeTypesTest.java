@@ -1,6 +1,5 @@
 package com.giraone.imaging;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -27,5 +26,14 @@ class MimeTypesTest {
         """})
     void getExtension(String mimeType, String expectedExtension) {
         assertThat(MimeTypes.getExtension(mimeType)).isEqualTo(expectedExtension);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"""
+        text/plain,false
+        image/jpeg,true
+        """})
+    void isImage(String mimeType, boolean expectedIsImage) {
+        assertThat(MimeTypes.isImage(mimeType)).isEqualTo(expectedIsImage);
     }
 }

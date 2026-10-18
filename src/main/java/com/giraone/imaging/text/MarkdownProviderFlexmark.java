@@ -297,6 +297,7 @@ public class MarkdownProviderFlexmark implements MarkdownProvider {
         return fullHtml;
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static String wrapHtml(String template, String bodyHtml, int fontSizePx, int bodyWidthPx, int bodyHeightPx) {
         return template
             .replace("%fontSizePx%", Integer.toString(fontSizePx))

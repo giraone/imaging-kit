@@ -15,13 +15,27 @@ public class OsUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OsUtil.class);
 
+    // Hide
+    private OsUtil() {
+    }
+
+    /**
+     * Run OS command with a default maximum time to wait for completion of 30 seconds
+     * @param command Array with command and its CLI arguments.
+     * @return structured result (exit code, STDOUT exception)
+     */
     public static OsCommandResult runCommandAndReadOutput(String[] command) {
         return runCommandAndReadOutput(command, 30);
     }
 
+    /**
+     * Run OS command
+     * @param command array with command and its CLI arguments.
+     * @param maxWaitTimeInSeconds the maximum time to wait for completion of command
+     * @return structured result (exit code, STDOUT exception)
+     */
     public static OsCommandResult runCommandAndReadOutput(String[] command, int maxWaitTimeInSeconds) {
-        StringBuilder builder = new StringBuilder();
-
+        final StringBuilder builder = new StringBuilder();
         Process p = null;
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("OsCommandResult.runCommandAndReadOutput: {}", commandStringFromArray(command));

@@ -1,43 +1,28 @@
 package com.giraone.imaging.os;
 
-public class OsCommandResult {
-    int code;
-    String output;
-    Exception exception;
+/**
+ * Result of a operating system (OS) command.
+ * @param code exit code
+ * @param output STDOUT
+ * @param exception exception caught when starting/executing the command
+ */
+public record OsCommandResult(int code, String output, Exception exception) {
 
+    /**
+     * Result of a operating system (OS) command, where no exception was caught.
+     * @param code exit code
+     * @param output STDOUT
+     */
     public OsCommandResult(int code, String output) {
-        super();
-        this.code = code;
-        this.output = output;
+        this(code, output, null);
     }
 
+    /**
+     * Result of a operating system (OS) command, where an exception was caught.
+     * @param code exit code
+     * @param exception exception caught when starting/executing the command
+     */
     public OsCommandResult(int code, Exception exception) {
-        super();
-        this.code = code;
-        this.exception = exception;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getOutput() {
-        return output;
-    }
-
-    public void setOutput(String output) {
-        this.output = output;
-    }
-
-    public Exception getException() {
-        return exception;
-    }
-
-    public void setException(Exception exception) {
-        this.exception = exception;
+        this(code, null, exception);
     }
 }

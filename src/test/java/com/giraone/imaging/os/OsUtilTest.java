@@ -15,6 +15,6 @@ class OsUtilTest {
         OsCommandResult result = OsUtil.runCommandAndReadOutput(new String[] {cmd});
         // assert
         assertThat(result).isNotNull();
-        assertThat(result.getException()).isNull();
+        assertThat(result.exception()).isNull();
     }
 }

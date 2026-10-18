@@ -25,8 +25,8 @@ module com.giraone.imaging {
     // 3. (Optional) Pass a dependency downstream to consumers of your library
     requires transitive java.desktop;
 
-    // Erlaubt JUnit den Zugriff auf Testklassen per Reflection
     //uses org.xhtmlrenderer.simple.Graphics2DRenderer;
+
     // Allows JUnit to access test classes via reflection
     //opens com.giraone.imaging to org.junit.platform.commons;
 }

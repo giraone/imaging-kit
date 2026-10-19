@@ -218,7 +218,7 @@ manage_staging() {
   print_status "Publishing at Central Portal (Step 2: Promote to Maven Central)..."
   echo
   print_warning "The deployment should now be in state \"VALIDATED\" at:"
-  print_warning "https://central.sonatype.com/publishing/deployments"
+  print_warning "https://central.sonatype.com/publishing"
   echo
   echo "  - Click \"Publish\" to release it to Maven Central"
   echo "  - Click \"Drop\" to discard it"

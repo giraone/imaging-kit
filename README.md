@@ -43,6 +43,7 @@ which is based on [Apache PDFBox](https://pdfbox.apache.org/), that is already u
 - ProviderPdfTest.java - Simple functional tests for PDF documents
 - DefaultMarkdownProviderTest.java - Simple functional tests for PDF documents
 - JpegScalePerformanceTest.java - A basic performance comparison on the two implementations for bitmap images
+- ImageOpenerTest.java - Tests whether images can be opened and if their properties can be extracted
 
 ## Release Notes / Changes
 

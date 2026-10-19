@@ -45,6 +45,10 @@ public class MimeTypes {
      */
     public static final String IMAGE_GIF = "image/gif";
     /**
+     * Useful MIME type "image/tiff" as a string constant
+     */
+    public static final String IMAGE_TIFF = "image/tiff";
+    /**
      * Useful MIME type "video/mp4" as a string constant
      */
     public static final String VIDEO_MP4 = "video/mp4";
@@ -69,8 +73,8 @@ public class MimeTypes {
         MAP_EXT2MIME.put("jpeg", IMAGE_JPEG);
         MAP_EXT2MIME.put("jpg", IMAGE_JPEG);
         MAP_EXT2MIME.put("jp2", "image/jp2");
-        MAP_EXT2MIME.put("tif", "image/tiff");
-        MAP_EXT2MIME.put("tiff", "image/tiff");
+        MAP_EXT2MIME.put("tif", IMAGE_TIFF);
+        MAP_EXT2MIME.put("tiff", IMAGE_TIFF);
         MAP_EXT2MIME.put("png", IMAGE_PNG);
         MAP_EXT2MIME.put("bmp", "image/bmp");
         MAP_EXT2MIME.put("gif", IMAGE_GIF);
@@ -90,7 +94,7 @@ public class MimeTypes {
 
         MAP_MIME2EXT.put(IMAGE_JPEG, "jpg");
         MAP_MIME2EXT.put("image/jp2", "jp2");
-        MAP_MIME2EXT.put("image/tiff", "tif");
+        MAP_MIME2EXT.put(IMAGE_TIFF, "tif");
         MAP_MIME2EXT.put(IMAGE_PNG, "png");
         MAP_MIME2EXT.put("image/bmp", "bmp");
         MAP_MIME2EXT.put(IMAGE_GIF, "gif");

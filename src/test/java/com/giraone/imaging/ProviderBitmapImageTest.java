@@ -38,6 +38,7 @@ class ProviderBitmapImageTest {
     private static final String TEST_FILE_JPEG_EXIF_03 = "image-exif-03.jpg";
     private static final String TEST_FILE_PNG_01 = "image-01.png";
     private static final String TEST_FILE_PNG_02 = "image-02.png";
+    private static final String TEST_FILE_TIFF_01 = "image-01.tif";
 
     private static final String TEST_FILE_JPEG_SMALL = "small.jpg";
     private static final String TEST_FILE_PNG_SMALL = "small.png";
@@ -45,19 +46,18 @@ class ProviderBitmapImageTest {
     private static final String TEST_FILE_PNG_WIDE = "wide.png";
 
     private static final String UNSUPPORTED_TEST_FILE_TEXT = "text.txt";
-    private static final String UNSUPPORTED_TEST_FILE_TIFF_01 = "image-01.tif";
 
     private static final String[] ALL_TEST_FILES = {
         TEST_FILE_JPEG_01, TEST_FILE_JPEG_02,
         TEST_FILE_JPEG_EXIF_01, TEST_FILE_JPEG_EXIF_02, TEST_FILE_JPEG_EXIF_03,
         TEST_FILE_PNG_01, TEST_FILE_PNG_02,
+        TEST_FILE_TIFF_01,
         TEST_FILE_JPEG_SMALL, TEST_FILE_PNG_SMALL,
         TEST_FILE_JPEG_WIDE, TEST_FILE_PNG_WIDE
     };
 
     private static final String[] ALL_UNSUPPORTED_FILES = {
-        UNSUPPORTED_TEST_FILE_TEXT,
-        UNSUPPORTED_TEST_FILE_TIFF_01
+        UNSUPPORTED_TEST_FILE_TEXT
     };
 
     private static ImagingProvider providerUnderTest;

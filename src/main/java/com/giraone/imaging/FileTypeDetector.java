@@ -169,11 +169,11 @@ public class FileTypeDetector {
     /**
      * Check if the given file type is supported for image processing.
      * @param fileType the file type to check
-     * @return true if the file type is supported (JPEG, PNG, or GIF), false otherwise
+     * @return true if the file type is supported (JPEG, PNG, GIF or TIFF), false otherwise
      */
     public boolean isSupportedImage(FileType fileType) {
         return switch (fileType) {
-            case JPEG, PNG, GIF -> true;
+            case JPEG, PNG, GIF, TIFF -> true;
             default -> false;
         };
     }

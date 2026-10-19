@@ -5,12 +5,20 @@ import com.giraone.imaging.FileTypeDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Iterator;
 
 import static com.giraone.imaging.MimeTypes.*;
 
@@ -51,7 +59,7 @@ public class ImageOpener {
         return openImage(path, fileType);
     }
 
-    static ImagePlusInfo openImage(File file, FileTypeDetector.FileType fileType) {
+    static ImagePlusInfo openImage(File file, FileTypeDetector.FileType fileType) throws IOException {
         BufferedImage image;
         FileInfo fileInfo;
         switch (fileType) {
@@ -67,20 +75,14 @@ public class ImageOpener {
                 image = loadImageUsingToolkit(file);
                 fileInfo = getFileInfo(image, IMAGE_PNG, FileTypeDetector.FileType.PNG);
                 break;
-            /*
             case TIFF:
-                fileInfo = new FileInfo();
-                fileInfo.setMimeType("image/tiff");
-                fileInfo.setProviderFormat(FileTypeDetector.FileType.TIFF.toString());
-                try (FileInputStream in = new FileInputStream(file)) {
-                    MemoryImageSource imageSource = Decoder_tiff.getImageSource(in, fileInfo);
-                    image = new BufferedImage(fileInfo.getWidth(), fileInfo.getHeight(), BufferedImage.TYPE_INT_RGB);
-                    Image image2 = Toolkit.getDefaultToolkit().createImage(imageSource);
-                    Graphics g = image.getGraphics();
-                    g.drawImage(image2, 0, 0, LoggerImageObserver.getInstance());
+                {
+                    final TiffResult tiffResult = readTiff(file);
+                    image = tiffResult.image();
+                    fileInfo = getFileInfo(image, IMAGE_TIFF, FileTypeDetector.FileType.TIFF);
+                    fileInfo.setCompressionFormat(tiffResult.compressionFormat());
                 }
                 break;
-            */
             default:
                 LOGGER.warn("ImageOpener|openImage (using File): {} -> unknown fileType = {}", file, fileType);
                 return null;
@@ -88,7 +90,7 @@ public class ImageOpener {
         return new ImagePlusInfo(image, fileInfo);
     }
 
-    static ImagePlusInfo openImage(Path path, FileTypeDetector.FileType fileType) {
+    static ImagePlusInfo openImage(Path path, FileTypeDetector.FileType fileType) throws IOException {
         BufferedImage image;
         FileInfo fileInfo;
         switch (fileType) {
@@ -104,20 +106,14 @@ public class ImageOpener {
                 image = loadImageUsingToolkit(path);
                 fileInfo = getFileInfo(image, IMAGE_PNG, FileTypeDetector.FileType.PNG);
                 break;
-            /*
             case TIFF:
-                fileInfo = new FileInfo();
-                fileInfo.setMimeType("image/tiff");
-                fileInfo.setProviderFormat(FileTypeDetector.FileType.TIFF.toString());
-                try (FileInputStream in = new FileInputStream(file)) {
-                    MemoryImageSource imageSource = Decoder_tiff.getImageSource(in, fileInfo);
-                    image = new BufferedImage(fileInfo.getWidth(), fileInfo.getHeight(), BufferedImage.TYPE_INT_RGB);
-                    Image image2 = Toolkit.getDefaultToolkit().createImage(imageSource);
-                    Graphics g = image.getGraphics();
-                    g.drawImage(image2, 0, 0, LoggerImageObserver.getInstance());
+                {
+                    final TiffResult tiffResult = readTiff(path);
+                    image = tiffResult.image();
+                    fileInfo = getFileInfo(image, IMAGE_TIFF, FileTypeDetector.FileType.TIFF);
+                    fileInfo.setCompressionFormat(tiffResult.compressionFormat());
                 }
                 break;
-            */
             default:
                 LOGGER.warn("ImageOpener|openImage (using Path): {} -> unknown fileType = {}", path, fileType);
                 return null;
@@ -183,6 +179,83 @@ public class ImageOpener {
         return bufferedImage;
     }
 
+    /**
+     * Result of reading a TIFF file.
+     * @param image the decoded image as RGB image
+     * @param compressionFormat one of the FileInfo.COMPRESSION_FORMAT_* constants
+     */
+    private record TiffResult(BufferedImage image, int compressionFormat) {
+    }
+
+    private static TiffResult readTiff(File file) throws IOException {
+        try (ImageInputStream inputStream = ImageIO.createImageInputStream(file)) {
+            return readTiff(inputStream, file.toString());
+        }
+    }
+
+    private static TiffResult readTiff(Path path) throws IOException {
+        try (ImageInputStream inputStream = ImageIO.createImageInputStream(path.toFile())) {
+            return readTiff(inputStream, path.toString());
+        }
+    }
+
+    /**
+     * Decode the first page of a TIFF using the TIFF reader of the JDK (ImageIO).
+     * The result is always converted to RGB, because later scaling expects it.
+     */
+    private static TiffResult readTiff(ImageInputStream inputStream, String name) throws IOException {
+        if (inputStream == null) {
+            throw new IOException("Cannot open TIFF \"" + name + "\"");
+        }
+        final Iterator<ImageReader> readers = ImageIO.getImageReaders(inputStream);
+        if (!readers.hasNext()) {
+            throw new IOException("No TIFF reader available for \"" + name + "\"");
+        }
+        final ImageReader reader = readers.next();
+        try {
+            reader.setInput(inputStream, true, false);
+            final BufferedImage source = reader.read(0);
+            final int compressionFormat = getTiffCompressionFormat(reader);
+            final BufferedImage image = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_RGB);
+            final Graphics2D graphics2D = image.createGraphics();
+            try {
+                // white background for images with transparency
+                graphics2D.setColor(Color.WHITE);
+                graphics2D.fillRect(0, 0, image.getWidth(), image.getHeight());
+                graphics2D.drawImage(source, 0, 0, null);
+            } finally {
+                graphics2D.dispose();
+            }
+            return new TiffResult(image, compressionFormat);
+        } finally {
+            reader.dispose();
+        }
+    }
+
+    private static int getTiffCompressionFormat(ImageReader reader) {
+        try {
+            final IIOMetadata metadata = reader.getImageMetadata(0);
+            final Node root = metadata.getAsTree("javax_imageio_1.0");
+            final NodeList nodes = ((org.w3c.dom.Element) root).getElementsByTagName("CompressionTypeName");
+            if (nodes.getLength() == 0) {
+                return FileInfo.COMPRESSION_FORMAT_UNKNOWN;
+            }
+            final String name = ((org.w3c.dom.Element) nodes.item(0)).getAttribute("value");
+            return switch (name) {
+                case "LZW" -> FileInfo.COMPRESSION_FORMAT_LZW;
+                case "ZLib", "Deflate" -> FileInfo.COMPRESSION_FORMAT_LZ77;
+                case "JPEG", "Old JPEG" -> FileInfo.COMPRESSION_FORMAT_JPEG;
+                case "PackBits", "CCITT RLE" -> FileInfo.COMPRESSION_FORMAT_RLE;
+                case "CCITT T.4" -> FileInfo.COMPRESSION_FORMAT_G3;
+                case "CCITT T.6" -> FileInfo.COMPRESSION_FORMAT_G4;
+                case "None" -> FileInfo.COMPRESSION_FORMAT_NONE;
+                default -> FileInfo.COMPRESSION_FORMAT_UNKNOWN;
+            };
+        } catch (IOException | RuntimeException e) {
+            return FileInfo.COMPRESSION_FORMAT_UNKNOWN;
+        }
+    }
+
     private static FileInfo getFileInfo(BufferedImage bufferedImage, String mimeType, FileTypeDetector.FileType providerType) {
         final int infoBits = bufferedImage.getColorModel().getPixelSize();
         final int infoWidth = bufferedImage.getWidth();
@@ -202,6 +275,8 @@ public class ImageOpener {
                 break;
             case JPEG:
                 fileInfo.setCompressionFormat(FileInfo.COMPRESSION_FORMAT_JPEG);
+                break;
+            case TIFF:
                 break;
             default:
                 throw new IllegalArgumentException("Invalid image type " + providerType);

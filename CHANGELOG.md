@@ -1,10 +1,11 @@
 # Release Notes and List of Changes
 
-## Version 2.1.2 (2026-10-18)
+## Version 2.2.0 (2026-10-19)
 
 - OSCommandResult switch from class to record
 - JavaDoc and tests improved
-- module-info.java added
+- module-info.java added (with `uses` clauses for the service loaders)
+- TIFF support re-enabled in `ImageOpener` using the JDK ImageIO TIFF reader (replaces the removed legacy decoder)
 
 ## Version 2.1.1 (2026-10-16)
 

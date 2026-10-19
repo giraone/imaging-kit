@@ -25,7 +25,8 @@ module com.giraone.imaging {
     // 3. (Optional) Pass a dependency downstream to consumers of your library
     requires transitive java.desktop;
 
-    //uses org.xhtmlrenderer.simple.Graphics2DRenderer;
+    uses com.giraone.imaging.ImagingProvider;
+    uses com.giraone.imaging.pdf.PdfProvider;
 
     // Allows JUnit to access test classes via reflection
     //opens com.giraone.imaging to org.junit.platform.commons;

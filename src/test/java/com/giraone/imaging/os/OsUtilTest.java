@@ -8,9 +8,11 @@ class OsUtilTest {
 
     @Test
     void runCommandAndReadOutput() {
-        ///  arrange
+        //  arrange
         String osName = System.getProperty("os.name");
-        String cmd = osName.startsWith("Windows") ? "C:/Windows/System32/whoami.exe" : "/usr/bin/ls";
+        String cmd = osName.startsWith("Windows")
+            ? "C:/Windows/System32/whoami.exe"
+            : osName.startsWith("Mac") ? "/bin/ls" : "/usr/bin/ls";
         // act
         OsCommandResult result = OsUtil.runCommandAndReadOutput(new String[] {cmd});
         // assert

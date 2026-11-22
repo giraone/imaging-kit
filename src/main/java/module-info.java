@@ -29,5 +29,5 @@ module com.giraone.imaging {
     uses com.giraone.imaging.pdf.PdfProvider;
 
     // Allows JUnit to access test classes via reflection
-    //opens com.giraone.imaging to org.junit.platform.commons;
+    // opens com.giraone.imaging to org.junit.platform.commons, org.junit.jupiter.params;
 }

@@ -19,4 +19,12 @@ class OsUtilTest {
         assertThat(result).isNotNull();
         assertThat(result.exception()).isNull();
     }
+
+    @Test
+    void commandStringFromArray() {
+        // act
+        String actual = OsUtil.commandStringFromArray(new String[]{ "one", "two"});
+        // assert
+        assertThat(actual).isEqualTo("\"one\" \"two\"");
+    }
 }

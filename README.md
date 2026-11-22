@@ -1,8 +1,8 @@
 [![GitHub license](https://img.shields.io/github/license/giraone/imaging-kit)](https://github.com/giraone/imaging-kit/blob/master/LICENSE)
-[![Maven Central](https://img.shields.io/badge/Maven%20Central-2.2.0-blue)](https://mvnrepository.com/artifact/com.giraone.imaging/imaging-kit)
+[![Maven Central](https://img.shields.io/badge/Maven%20Central-2.3.0-blue)](https://mvnrepository.com/artifact/com.giraone.imaging/imaging-kit)
 [![GitHub issues](https://img.shields.io/github/issues/giraone/imaging-kit)](https://github.com/giraone/imaging-kit/issues)
 [![GitHub stars](https://img.shields.io/github/stars/giraone/imaging-kit)](https://github.com/giraone/imaging-kit/stargazers)
-[![Platform](https://img.shields.io/badge/platform-jre25%2B-blue)](https://github.com/giraone/imaging-kit/pom.xml)
+[![Platform](https://img.shields.io/badge/platform-jre25-blue)](https://github.com/giraone/imaging-kit/pom.xml)
 
 # Imaging Kit
 
@@ -27,7 +27,7 @@ which is based on [Apache PDFBox](https://pdfbox.apache.org/), that is already u
 <dependency>
     <groupId>com.giraone.imaging</groupId>
     <artifactId>imaging-kit</artifactId>
-    <version>2.2.0</version>
+    <version>2.3.0</version>
 </dependency>
 ```
 

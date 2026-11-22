@@ -1,5 +1,10 @@
 # Release Notes and List of Changes
 
+## Version 2.2.1 (unreleased)
+
+- PDF assertions (test dependency) added
+- ProviderImgScalr removed
+
 ## Version 2.2.0 (2026-10-19)
 
 - OSCommandResult switch from class to record

@@ -71,7 +71,7 @@ class VideoProviderFfmpegTest {
         ConversionCommand conversionCommand2 = ConversionCommand.buildConversionCommand(
             outputFile2, IMAGE_JPEG, thumbPixelMaxSize / 2, thumbPixelMaxSize / 2, quality);
         // act
-        videoProviderUnderTest.createThumbnails(inputFile, new ConversionCommand[] { conversionCommand1, conversionCommand2 });
+        videoProviderUnderTest.createThumbnails(inputFile, new ConversionCommand[]{conversionCommand1, conversionCommand2});
         // assert
         assertThat(outputFile1.exists());
         assertThat(outputFile2.exists());

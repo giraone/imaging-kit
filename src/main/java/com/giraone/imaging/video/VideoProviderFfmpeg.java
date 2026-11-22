@@ -70,7 +70,7 @@ public class VideoProviderFfmpeg implements VideoProvider {
         final OsCommandResult result = OsUtil.runCommandAndReadOutput(ffmpegCommands, 60);
         if (result.code() >= 0) {
             if (tempPngFileInOriginalSize.length() > 100L) {
-                for (ConversionCommand conversionCommand: conversionCommands) {
+                for (ConversionCommand conversionCommand : conversionCommands) {
                     imagingProvider.createThumbnail(tempPngFileInOriginalSize, conversionCommand);
                 }
                 tempPngFileInOriginalSize.delete();
@@ -94,6 +94,6 @@ public class VideoProviderFfmpeg implements VideoProvider {
      */
     @Override
     public void createThumbnail(File inputFile, ConversionCommand conversionCommand) throws Exception {
-       createThumbnails(inputFile, new ConversionCommand[] { conversionCommand });
+        createThumbnails(inputFile, new ConversionCommand[]{conversionCommand});
     }
 }

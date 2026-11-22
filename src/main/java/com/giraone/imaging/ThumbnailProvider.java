@@ -31,7 +31,7 @@ public interface ThumbnailProvider {
      * @throws Exception on any error opening the file, converting the file or writing to the output.
      */
     default void createThumbnails(File inputFile, ConversionCommand[] conversionCommands) throws Exception {
-        for (ConversionCommand conversionCommand: conversionCommands) {
+        for (ConversionCommand conversionCommand : conversionCommands) {
             createThumbnail(inputFile, conversionCommand);
         }
     }

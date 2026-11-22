@@ -14,7 +14,7 @@ class OsUtilTest {
             ? "C:/Windows/System32/whoami.exe"
             : osName.startsWith("Mac") ? "/bin/ls" : "/usr/bin/ls";
         // act
-        OsCommandResult result = OsUtil.runCommandAndReadOutput(new String[] {cmd});
+        OsCommandResult result = OsUtil.runCommandAndReadOutput(new String[]{cmd});
         // assert
         assertThat(result).isNotNull();
         assertThat(result.exception()).isNull();

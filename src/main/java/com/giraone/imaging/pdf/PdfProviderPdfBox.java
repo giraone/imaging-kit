@@ -57,9 +57,9 @@ public class PdfProviderPdfBox implements PdfProvider {
             PDFRenderer renderer = new PDFRenderer(document);
             // Page 1, do not scale DPIs and use RGB
             final BufferedImage image = renderer.renderImage(0, 1.0f, ImageType.RGB);
-            for (ConversionCommand conversionCommand: conversionCommands) {
+            for (ConversionCommand conversionCommand : conversionCommands) {
                 try (final FileOutputStream outputStream = new FileOutputStream(conversionCommand.getOutputFile())) {
-                     imagingProvider.convertAndWriteImage(image, outputStream, conversionCommand);
+                    imagingProvider.convertAndWriteImage(image, outputStream, conversionCommand);
                 }
             }
         }
@@ -73,7 +73,7 @@ public class PdfProviderPdfBox implements PdfProvider {
      */
     @Override
     public void createThumbnail(File inputFile, ConversionCommand conversionCommand) throws Exception {
-        createThumbnails(inputFile, new ConversionCommand[] { conversionCommand });
+        createThumbnails(inputFile, new ConversionCommand[]{conversionCommand});
     }
 
     @Override

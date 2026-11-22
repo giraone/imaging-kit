@@ -4,7 +4,6 @@ import com.giraone.imaging.FileInfo;
 import com.giraone.imaging.FileTypeDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -75,14 +74,13 @@ public class ImageOpener {
                 image = loadImageUsingToolkit(file);
                 fileInfo = getFileInfo(image, IMAGE_PNG, FileTypeDetector.FileType.PNG);
                 break;
-            case TIFF:
-                {
-                    final TiffResult tiffResult = readTiff(file);
-                    image = tiffResult.image();
-                    fileInfo = getFileInfo(image, IMAGE_TIFF, FileTypeDetector.FileType.TIFF);
-                    fileInfo.setCompressionFormat(tiffResult.compressionFormat());
-                }
-                break;
+            case TIFF: {
+                final TiffResult tiffResult = readTiff(file);
+                image = tiffResult.image();
+                fileInfo = getFileInfo(image, IMAGE_TIFF, FileTypeDetector.FileType.TIFF);
+                fileInfo.setCompressionFormat(tiffResult.compressionFormat());
+            }
+            break;
             default:
                 LOGGER.warn("ImageOpener|openImage (using File): {} -> unknown fileType = {}", file, fileType);
                 return null;
@@ -106,14 +104,13 @@ public class ImageOpener {
                 image = loadImageUsingToolkit(path);
                 fileInfo = getFileInfo(image, IMAGE_PNG, FileTypeDetector.FileType.PNG);
                 break;
-            case TIFF:
-                {
-                    final TiffResult tiffResult = readTiff(path);
-                    image = tiffResult.image();
-                    fileInfo = getFileInfo(image, IMAGE_TIFF, FileTypeDetector.FileType.TIFF);
-                    fileInfo.setCompressionFormat(tiffResult.compressionFormat());
-                }
-                break;
+            case TIFF: {
+                final TiffResult tiffResult = readTiff(path);
+                image = tiffResult.image();
+                fileInfo = getFileInfo(image, IMAGE_TIFF, FileTypeDetector.FileType.TIFF);
+                fileInfo.setCompressionFormat(tiffResult.compressionFormat());
+            }
+            break;
             default:
                 LOGGER.warn("ImageOpener|openImage (using Path): {} -> unknown fileType = {}", path, fileType);
                 return null;

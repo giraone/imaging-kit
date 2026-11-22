@@ -87,7 +87,7 @@ class ProviderMarkdownTest {
         PdfContentAssertion.assertThat(outputFile)
             .isValidPdf()
             .hasNumberOfPages(expectedNumberOfPages)
-            ;
+        ;
     }
 
     @Test
@@ -104,7 +104,7 @@ class ProviderMarkdownTest {
         PdfContentAssertion.assertThat(outputFile)
             .isValidPdf()
             .containsTextStringAtPosition(1, new RectangleInMm(
-                12.7f, 71.8f, 194.1f, 74.3f),
+                    12.7f, 71.8f, 194.1f, 74.3f),
                 "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed HERE COMES THE LINE BREAK")
             .containsTextStringAtPosition(1, new RectangleInMm(
                     12.7f, 76.4f, 190.8f, 78.9f),

@@ -40,7 +40,7 @@ public class ProviderJava2D implements ImagingProvider {
             final FileInfo fileInfo = new FileInfo();
             fileInfo.setMimeType(APPLICATION_PDF);
             return fileInfo;
-        }  else if (FileTypeDetector.FileType.MARKDOWN == fileType) {
+        } else if (FileTypeDetector.FileType.MARKDOWN == fileType) {
             final FileInfo fileInfo = new FileInfo();
             fileInfo.setMimeType(TEXT_MARKDOWN);
             return fileInfo;
@@ -67,7 +67,7 @@ public class ProviderJava2D implements ImagingProvider {
             throw new FormatNotSupportedException("Unsupported input file type for file " + inputFile);
         }
         final BufferedImage bufferedImage = imagePlusInfo.getImage();
-        for (ConversionCommand conversionCommand: conversionCommands) {
+        for (ConversionCommand conversionCommand : conversionCommands) {
             try (final FileOutputStream outputStream = new FileOutputStream(conversionCommand.getOutputFile())) {
                 convertAndWriteImage(bufferedImage, outputStream, conversionCommand);
             }
@@ -82,7 +82,7 @@ public class ProviderJava2D implements ImagingProvider {
      */
     @Override
     public void createThumbnail(File inputFile, ConversionCommand conversionCommand) throws Exception {
-        createThumbnails(inputFile, new ConversionCommand[] { conversionCommand });
+        createThumbnails(inputFile, new ConversionCommand[]{conversionCommand});
     }
 
     /**

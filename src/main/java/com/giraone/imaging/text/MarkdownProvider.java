@@ -145,7 +145,7 @@ public interface MarkdownProvider extends ThumbnailProvider {
      * @throws Exception on any error
      */
     default void createHtml(File inputMarkdownFile, File outputPdfFile) throws Exception {
-        createHtml(inputMarkdownFile, outputPdfFile,  DIMENSION_A4_PORTRAIT, HTML_WRAP_A4_PORTRAIT);
+        createHtml(inputMarkdownFile, outputPdfFile, DIMENSION_A4_PORTRAIT, HTML_WRAP_A4_PORTRAIT);
     }
 
 

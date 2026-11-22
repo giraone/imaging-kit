@@ -1,6 +1,6 @@
 # Sample Document One
 
-This is **Markdown** content, that should fit on one DIN A4 page.
+This is **Markdown** content, that should fit on one DIN A4 page (portrait).
 
 - Item one
   - Item One Alpha is *italic*

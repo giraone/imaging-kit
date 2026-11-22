@@ -1,5 +1,7 @@
 package com.giraone.imaging.text;
 
+import com.giraone.assertions.pdf.PdfContentAssertion;
+import com.giraone.assertions.pdf.model.RectangleInMm;
 import com.giraone.imaging.FileInfo;
 import com.giraone.imaging.ImagingFactory;
 import com.giraone.imaging.ImagingProvider;
@@ -12,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 import static com.giraone.imaging.MimeTypes.APPLICATION_PDF;
+import static com.giraone.imaging.text.MarkdownProvider.DIMENSION_A4_PORTRAIT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class HtmlToPdfProviderOpenHtmlTest {
@@ -22,21 +25,25 @@ class HtmlToPdfProviderOpenHtmlTest {
 
     @ParameterizedTest
     @CsvSource({
-        "document-01.html",
-        "document-02.html",
+        "document-01,3", // document-01 has its own CSS-based sizing and overwrites A3_PORTRAIT!
+        "document-02,2",
     })
-    void createA4Document(String fileName) throws Exception {
+    void createA4Document(String fileBaseName, int numberOfPages) throws Exception {
         // arrange
-        File inputFile = new File("src/test/resources/" + fileName);
+        File inputFile = new File("src/test/resources/" + fileBaseName + ".html");
         String inputHtml = Files.readString(inputFile.toPath(), StandardCharsets.UTF_8);
-        File outputFile = File.createTempFile("html-to-pdf-" + fileName + "-", ".pdf");
-        //outputFile.deleteOnExit();
+        File outputFile = File.createTempFile("html-to-pdf-" + fileBaseName + "-", ".pdf");
+        outputFile.deleteOnExit();
         // act
-        htmlToPdfProviderOpenHtmlTestUnderTest.renderHtmlToPdf(inputHtml, outputFile);
+        htmlToPdfProviderOpenHtmlTestUnderTest.renderHtmlToPdf(inputHtml, outputFile, DIMENSION_A4_PORTRAIT);
         // assert
         assertThat(outputFile.exists());
         FileInfo fileInfo = imagingProvider.fetchFileInfo(outputFile);
         assertThat(fileInfo.getMimeType()).isEqualTo(APPLICATION_PDF);
-        // TODO: Add PDF assertion lib
+        // assert (PDF assertions)
+        PdfContentAssertion.assertThat(outputFile)
+            .isValidPdf()
+            .hasNumberOfPages(numberOfPages)
+        ;
     }
 }

@@ -16,6 +16,7 @@ module com.giraone.imaging {
     // 2. Declare what external modules this library depends on
     requires org.apache.pdfbox;
     requires openhtmltopdf.pdfbox;
+    requires openhtmltopdf.core;
     requires flexmark;
     requires flexmark.util.ast;
     requires java.xml;

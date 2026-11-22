@@ -2,6 +2,7 @@
 
 ## Version 2.2.1 (unreleased)
 
+- Support for multiple page formats in Markdown to PDF rendering (A4, Letter, portrait/landscape)
 - PDF assertions (test dependency) added
 - ProviderImgScalr removed
 

@@ -34,8 +34,8 @@ class ProviderMarkdownTest {
         File outputFile = File.createTempFile("md-to-thumb-" + fileName + "-", ".jpg");
         outputFile.deleteOnExit();
         ConversionCommand.CompressionQuality quality = ConversionCommand.CompressionQuality.LOSSY_BEST;
-        int width = A4_WIDTH_MM * 400 / A4_WIDTH_MM;
-        int height = A4_HEIGHT_MM * 400 / A4_WIDTH_MM;
+        int width = 400;
+        int height = (int) (A4_PORTRAIT_HEIGHT_MM * 400 / A4_PORTRAIT_WIDTH_MM);
         // act
         markdownProviderUnderTest.createThumbnail(inputFile, outputFile, IMAGE_JPEG, width, height, quality);
         // assert
@@ -58,13 +58,13 @@ class ProviderMarkdownTest {
         outputFile.deleteOnExit();
         ConversionCommand.CompressionQuality quality = ConversionCommand.CompressionQuality.LOSSY_BEST;
         // act
-        markdownProviderUnderTest.createThumbnail(inputFile, outputFile, IMAGE_JPEG, A4_WIDTH_PX_PRINT, A4_HEIGHT_PX_PRINT, quality);
+        markdownProviderUnderTest.createThumbnail(inputFile, outputFile, IMAGE_JPEG, A4_PORTRAIT_WIDTH_PX_PRINT, A4_PORTRAIT_HEIGHT_PX_PRINT, quality);
         // assert
         assertThat(outputFile.exists());
         FileInfo fileInfo = imagingProvider.fetchFileInfo(outputFile);
         assertThat(fileInfo.getMimeType()).isEqualTo(IMAGE_JPEG);
-        assertThat(fileInfo.getWidth()).isEqualTo(A4_WIDTH_PX_PRINT);
-        assertThat(fileInfo.getHeight()).isEqualTo(A4_HEIGHT_PX_PRINT);
+        assertThat(fileInfo.getWidth()).isEqualTo(A4_PORTRAIT_WIDTH_PX_PRINT);
+        assertThat(fileInfo.getHeight()).isEqualTo(A4_PORTRAIT_HEIGHT_PX_PRINT);
     }
 
     @ParameterizedTest
@@ -76,9 +76,9 @@ class ProviderMarkdownTest {
         // arrange
         File inputFile = new File("src/test/resources/" + mdFileName);
         File outputFile = File.createTempFile("md-to-pdf-" + mdFileName + "-", ".pdf");
-        outputFile.deleteOnExit();
+        //outputFile.deleteOnExit();
         // act
-        markdownProviderUnderTest.createPdf(inputFile, outputFile);
+        markdownProviderUnderTest.createPdf(inputFile, outputFile, DIMENSION_A4_PORTRAIT);
         // assert (simple)
         assertThat(outputFile.exists());
         FileInfo fileInfo = imagingProvider.fetchFileInfo(outputFile);
@@ -91,13 +91,13 @@ class ProviderMarkdownTest {
     }
 
     @Test
-    void createPdfLineBreaksWork() throws Exception {
+    void createPdfLineBreaksWork_A4_Portrait() throws Exception {
         // arrange
         File inputFile = new File("src/test/resources/document-01.md");
-        File outputFile = File.createTempFile("md-to-pdf-line-breaks", ".pdf");
-        //outputFile.deleteOnExit();
+        File outputFile = File.createTempFile("md-to-pdf-a4-portrait-", ".pdf");
+        outputFile.deleteOnExit();
         // act
-        markdownProviderUnderTest.createPdf(inputFile, outputFile);
+        markdownProviderUnderTest.createPdf(inputFile, outputFile, DIMENSION_A4_PORTRAIT);
         // assert (simple)
         assertThat(outputFile.exists());
         // assert (PDF assertions)
@@ -109,6 +109,72 @@ class ProviderMarkdownTest {
             .containsTextStringAtPosition(1, new RectangleInMm(
                     12.7f, 76.4f, 190.8f, 78.9f),
                 "NEW LINE et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo")
+        ;
+    }
+
+    @Test
+    void createPdfLineBreaksWork_A4_Landscape() throws Exception {
+        // arrange
+        File inputFile = new File("src/test/resources/document-01.md");
+        File outputFile = File.createTempFile("md-to-pdf-a4-landscape-", ".pdf");
+        outputFile.deleteOnExit();
+        // act
+        markdownProviderUnderTest.createPdf(inputFile, outputFile, DIMENSION_A4_LANDSCAPE);
+        // assert (simple)
+        assertThat(outputFile.exists());
+        // assert (PDF assertions)
+        PdfContentAssertion.assertThat(outputFile)
+            .isValidPdf()
+            .containsTextStringAtPosition(1, new RectangleInMm(
+                    12.7f, 71.8f, 283.3f, 74.3f),
+                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed HERE COMES THE LINE BREAK NEW LINE et dolore magna aliquyam erat, sed")
+            .containsTextStringAtPosition(1, new RectangleInMm(
+                    12.7f, 76.4f, 148.7f, 78.9f),
+                "diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.")
+        ;
+    }
+
+    @Test
+    void createPdfLineBreaksWork_Letter_Portrait() throws Exception {
+        // arrange
+        File inputFile = new File("src/test/resources/document-01.md");
+        File outputFile = File.createTempFile("md-to-pdf-letter-portrait-", ".pdf");
+        outputFile.deleteOnExit();
+        // act
+        markdownProviderUnderTest.createPdf(inputFile, outputFile, DIMENSION_LETTER_PORTRAIT);
+        // assert (simple)
+        assertThat(outputFile.exists());
+        // assert (PDF assertions)
+        PdfContentAssertion.assertThat(outputFile)
+            .isValidPdf()
+            .containsTextStringAtPosition(1, new RectangleInMm(
+                    12.7f, 71.8f, 194.1f, 74.3f),
+                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed HERE COMES THE LINE BREAK")
+            .containsTextStringAtPosition(1, new RectangleInMm(
+                    12.7f, 76.4f, 199.1f, 78.9f),
+                "NEW LINE et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo")
+        ;
+    }
+
+    @Test
+    void createPdfLineBreaksWork_Letter_Landscape() throws Exception {
+        // arrange
+        File inputFile = new File("src/test/resources/document-01.md");
+        File outputFile = File.createTempFile("md-to-pdf-letter-landscape-", ".pdf");
+        //outputFile.deleteOnExit();
+        // act
+        markdownProviderUnderTest.createPdf(inputFile, outputFile, DIMENSION_LETTER_LANDSCAPE);
+        // assert (simple)
+        assertThat(outputFile.exists());
+        // assert (PDF assertions)
+        PdfContentAssertion.assertThat(outputFile)
+            .isValidPdf()
+            .containsTextStringAtPosition(1, new RectangleInMm(
+                    12.7f, 71.8f, 283.3f, 74.3f),
+                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed HERE COMES THE LINE BREAK NEW LINE et dolore magna aliquyam erat, sed")
+            .containsTextStringAtPosition(1, new RectangleInMm(
+                    12.7f, 76.4f, 148.7f, 78.9f),
+                "diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.")
         ;
     }
 }

@@ -26,6 +26,8 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
+import static com.giraone.imaging.text.PixelMath.PT12_PX;
+
 /**
  * A class to provide thumbnail creation of Markdown documents using a two-step approach with
  * <ul>
@@ -36,7 +38,7 @@ import java.nio.file.Files;
 public class MarkdownProviderFlexmark implements MarkdownProvider {
 
     // for debugging the HTML generation
-    private static final boolean DUMP_HTML = true;
+    private static final boolean DUMP_HTML = false;
 
     // Flexmark Markdown Parser is thread-safe - see Javadoc
     private static final Parser markdownParser = Parser.builder().build();
@@ -75,7 +77,7 @@ public class MarkdownProviderFlexmark implements MarkdownProvider {
 
     public BufferedImage createThumbnailAsBufferedImage(Reader reader, Dimension dimension) throws IOException {
         // 1. Markdown to HTML in given size (dimension)
-        final String fullHtml = convertToHtml(reader, dimension, MarkdownProvider.HTML_WRAP_A4_PORTRAIT);
+        final String fullHtml = convertToHtml(reader, dimension, MarkdownProvider.HTML_WRAP_DEFAULT);
         // 2. Render HTML to BufferedImage
         return renderHtmlToImage(fullHtml, dimension.width, dimension.height);
     }
@@ -83,17 +85,17 @@ public class MarkdownProviderFlexmark implements MarkdownProvider {
     @Override
     public void createPdf(File inputMarkdownFile, File outputPdfFile, Dimension dimension, String htmlWrapTemplate) throws Exception {
         try (final FileReader reader = new FileReader(inputMarkdownFile)) {
-            // 1. Markdown to HTML in A4 dimension
+            // 1. Markdown to HTML in given dimension
             final String fullHtml = convertToHtml(reader, dimension, htmlWrapTemplate);
             // 2. Render HTML to PDF
-            htmlToPdfProvider.renderHtmlToPdf(fullHtml, outputPdfFile);
+            htmlToPdfProvider.renderHtmlToPdf(fullHtml, outputPdfFile, dimension);
         }
     }
 
     @Override
     public void createHtml(File inputMarkdownFile, File outputHtmlFile, Dimension dimension, String htmlWrapTemplate) throws Exception {
         try (final FileReader reader = new FileReader(inputMarkdownFile)) {
-            // 1. Markdown to HTML in A4 dimension
+            // 1. Markdown to HTML in given dimension
             final String fullHtml = convertToHtml(reader, dimension, htmlWrapTemplate);
             // 2. Store HTML in file
             Files.writeString(outputHtmlFile.toPath(), fullHtml, StandardCharsets.UTF_8);
@@ -121,7 +123,7 @@ public class MarkdownProviderFlexmark implements MarkdownProvider {
         final String htmlString = htmlRenderer.render(document);
         // 2. Wrap HTML with CSS for consistent rendering
         final String fullHtml = wrapHtml(htmlWrapTemplate, htmlString,
-            PT12_PX * dimension.height / A4_HEIGHT_PX_SCREEN, dimension.width, dimension.height);
+            PT12_PX * dimension.height / A4_PORTRAIT_HEIGHT_PX_SCREEN, dimension.width, dimension.height);
         if (DUMP_HTML) {
             dumpHtml(fullHtml);
         }

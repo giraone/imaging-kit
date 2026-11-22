@@ -5,34 +5,52 @@ import com.giraone.imaging.ThumbnailProvider;
 import java.awt.*;
 import java.io.File;
 
+import static com.giraone.imaging.text.PixelMath.*;
+
 /**
  * Interface for thumbnail generation operations on Markdown documents.
  */
 public interface MarkdownProvider extends ThumbnailProvider {
 
-    // DIN A4 dimensions in millimeters
-    int A4_WIDTH_MM = 210;
-    int A4_HEIGHT_MM = 297;
-    // Default DPI for screen/image rendering
-    int DEFAULT_DPI_SCREEN = 96;
-    // Default DPI for print rendering
-    int DEFAULT_DPI_PRINT = 300;
+    //--- DIN A4 Portrait ---
 
-    // A4 = 210 mm × 297 mm = 8.27 inch × 11.69 inch
-    // A4 at 96 DPI = 794 × 1122 pixels
-    int A4_WIDTH_PX_SCREEN = mmToPixels(A4_WIDTH_MM, DEFAULT_DPI_SCREEN);
-    int A4_HEIGHT_PX_SCREEN = mmToPixels(A4_HEIGHT_MM, DEFAULT_DPI_SCREEN);
-    // A4 at 96 DPI = 794 × 1122 pixels
-    int A4_WIDTH_PX_PRINT = mmToPixels(A4_WIDTH_MM, DEFAULT_DPI_PRINT);
-    int A4_HEIGHT_PX_PRINT = mmToPixels(A4_HEIGHT_MM, DEFAULT_DPI_PRINT);
+    // Dimensions in millimeters
+    float A4_PORTRAIT_WIDTH_MM = 210.0f;
+    float A4_PORTRAIT_HEIGHT_MM = 297.0f;
+    int A4_PORTRAIT_WIDTH_PX_SCREEN = mmToPixels(A4_PORTRAIT_WIDTH_MM, DEFAULT_DPI_SCREEN);
+    int A4_PORTRAIT_HEIGHT_PX_SCREEN = mmToPixels(A4_PORTRAIT_HEIGHT_MM, DEFAULT_DPI_SCREEN);
+    int A4_PORTRAIT_WIDTH_PX_PRINT = mmToPixels(A4_PORTRAIT_WIDTH_MM, DEFAULT_DPI_PRINT);
+    int A4_PORTRAIT_HEIGHT_PX_PRINT = mmToPixels(A4_PORTRAIT_HEIGHT_MM, DEFAULT_DPI_PRINT);
+    Dimension DIMENSION_A4_PORTRAIT = new Dimension(A4_PORTRAIT_WIDTH_PX_PRINT, A4_PORTRAIT_HEIGHT_PX_PRINT);
 
-    // 1 point (pt) = 1/72 inch
-    // 12 × 96/72 = 12×1.33 = 16, 12 pt = 16 pixels (CSS pixels / device pixels at 96 DPI)
-    int PT12_PX = ptToPixels(12, DEFAULT_DPI_SCREEN);
+    //--- DIN A4 Landscape ---
 
-    Dimension DIMENSION_A4_PORTRAIT = new Dimension(A4_WIDTH_PX_SCREEN, A4_HEIGHT_PX_SCREEN);
+    // Dimensions in millimeters
+    float A4_LANDSCAPE_WIDTH_MM = 297.0f;
+    float A4_LANDSCAPE_HEIGHT_MM = 210.0f;
+    int A4_LANDSCAPE_WIDTH_PX_PRINT = mmToPixels(A4_LANDSCAPE_WIDTH_MM, DEFAULT_DPI_PRINT);
+    int A4_LANDSCAPE_HEIGHT_PX_PRINT = mmToPixels(A4_LANDSCAPE_HEIGHT_MM, DEFAULT_DPI_PRINT);
+    Dimension DIMENSION_A4_LANDSCAPE = new Dimension(A4_LANDSCAPE_WIDTH_PX_PRINT, A4_LANDSCAPE_HEIGHT_PX_PRINT);
 
-    String HTML_WRAP_A4_PORTRAIT = """
+    //--- US Letter Portrait ---
+
+    float LETTER_PORTRAIT_WIDTH_MM = 215.9f;
+    float LETTER_PORTRAIT_HEIGHT_MM = 279.4f;
+    int LETTER_PORTRAIT_WIDTH_PX_PRINT = mmToPixels(LETTER_PORTRAIT_WIDTH_MM, DEFAULT_DPI_PRINT);
+    int LETTER_PORTRAIT_HEIGHT_PX_PRINT = mmToPixels(LETTER_PORTRAIT_HEIGHT_MM, DEFAULT_DPI_PRINT);
+    Dimension DIMENSION_LETTER_PORTRAIT = new Dimension(LETTER_PORTRAIT_WIDTH_PX_PRINT, LETTER_PORTRAIT_HEIGHT_PX_PRINT);
+
+    //--- US Letter Landscape ---
+
+    float LETTER_LANDSCAPE_WIDTH_MM = 279.4f;
+    float LETTER_LANDSCAPE_HEIGHT_MM = 215.9f;
+    int LETTER_LANDSCAPE_WIDTH_PX_PRINT = mmToPixels(A4_LANDSCAPE_WIDTH_MM, DEFAULT_DPI_PRINT);
+    int LETTER_LANDSCAPE_HEIGHT_PX_PRINT = mmToPixels(A4_LANDSCAPE_HEIGHT_MM, DEFAULT_DPI_PRINT);
+    Dimension DIMENSION_LETTER_LANDSCAPE = new Dimension(A4_LANDSCAPE_WIDTH_PX_PRINT, A4_LANDSCAPE_HEIGHT_PX_PRINT);
+
+    //------------------------
+
+    String HTML_WRAP_DEFAULT = """
         <!DOCTYPE html>
         <html>
         <head>
@@ -112,7 +130,7 @@ public interface MarkdownProvider extends ThumbnailProvider {
      * Convert a Markdown file to a printable PDF
      * @param inputMarkdownFile input MD file
      * @param outputPdfFile output PDF file
-     * @param dimension Dimension, e.g. DIMENSION_A4_PORTRAIT
+     * @param dimension Dimension, e.g. DIMENSION_A4_PORTRAIT, DIMENSION_A4_LANDSCAPE
      * @param htmlWrapTemplate HTML template to be used.
      * @throws Exception on any error
      */
@@ -122,7 +140,7 @@ public interface MarkdownProvider extends ThumbnailProvider {
      * Convert a Markdown file to a printable HTML
      * @param inputMarkdownFile input MD file
      * @param outputHtmlFile output HTML file
-     * @param dimension Dimension, e.g. DIMENSION_A4_PORTRAIT
+     * @param dimension Dimension, e.g. DIMENSION_A4_PORTRAIT, DIMENSION_A4_LANDSCAPE
      * @param htmlWrapTemplate HTML template to be used.
      * @throws Exception on any error
      */
@@ -132,44 +150,21 @@ public interface MarkdownProvider extends ThumbnailProvider {
      * Convert a Markdown file to a printable PDF
      * @param inputMarkdownFile input MD file
      * @param outputPdfFile output PDF file
+     * @param dimension Dimension, e.g. DIMENSION_A4_PORTRAIT, DIMENSION_A4_LANDSCAPE
      * @throws Exception on any error
      */
-    default void createPdf(File inputMarkdownFile, File outputPdfFile) throws Exception {
-        createPdf(inputMarkdownFile, outputPdfFile, DIMENSION_A4_PORTRAIT, HTML_WRAP_A4_PORTRAIT);
+    default void createPdf(File inputMarkdownFile, File outputPdfFile, Dimension dimension) throws Exception {
+        createPdf(inputMarkdownFile, outputPdfFile, dimension, HTML_WRAP_DEFAULT);
     }
 
     /**
      * Convert a Markdown file to a printable HTML
      * @param inputMarkdownFile input MD file
      * @param outputPdfFile output HTML file
+     * @param dimension Dimension, e.g. DIMENSION_A4_PORTRAIT, DIMENSION_A4_LANDSCAPE
      * @throws Exception on any error
      */
-    default void createHtml(File inputMarkdownFile, File outputPdfFile) throws Exception {
-        createHtml(inputMarkdownFile, outputPdfFile, DIMENSION_A4_PORTRAIT, HTML_WRAP_A4_PORTRAIT);
-    }
-
-
-    /**
-     * Convert millimeters to pixels at a given DPI.
-     * @param mm millimeters
-     * @param dpi dots per inch
-     * @return pixels
-     */
-    @SuppressWarnings("SameParameterValue")
-    static int mmToPixels(int mm, int dpi) {
-        // 1 inch = 25.4 mm
-        return (int) Math.round(mm * dpi / 25.4);
-    }
-
-    /**
-     * Convert pt to pixels at a given DPI.
-     * @param pt pt (Punkt)
-     * @param dpi dots per inch
-     * @return pixels
-     */
-    @SuppressWarnings("SameParameterValue")
-    static int ptToPixels(int pt, int dpi) {
-        // pt × dpi/72
-        return pt * dpi / 72;
+    default void createHtml(File inputMarkdownFile, File outputPdfFile, Dimension dimension) throws Exception {
+        createHtml(inputMarkdownFile, outputPdfFile, dimension, HTML_WRAP_DEFAULT);
     }
 }

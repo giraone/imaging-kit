@@ -1,8 +1,6 @@
 package com.giraone.imaging.text;
 
-import com.giraone.imaging.video.VideoProvider;
-import com.giraone.imaging.video.VideoProviderFfmpeg;
-
+import java.awt.*;
 import java.io.File;
 
 public interface HtmlToPdfProvider {
@@ -22,7 +20,8 @@ public interface HtmlToPdfProvider {
      * Convert HTML input into PDF output
      * @param inputHtml input HTML content
      * @param outputPdfFile Path of the Output PDF file
+     * @param dimension Page dimension in pixels
      * @throws Exception on any error
      */
-    void renderHtmlToPdf(String inputHtml, File outputPdfFile) throws Exception;
+    void renderHtmlToPdf(String inputHtml, File outputPdfFile, Dimension dimension) throws Exception;
 }

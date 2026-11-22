@@ -170,11 +170,11 @@ class ProviderMarkdownTest {
         PdfContentAssertion.assertThat(outputFile)
             .isValidPdf()
             .containsTextStringAtPosition(1, new RectangleInMm(
-                    12.7f, 71.8f, 283.3f, 74.3f),
-                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed HERE COMES THE LINE BREAK NEW LINE et dolore magna aliquyam erat, sed")
+                    12.7f, 71.8f, 265.6f, 74.3f),
+                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed HERE COMES THE LINE BREAK NEW LINE et dolore magna aliquyam")
             .containsTextStringAtPosition(1, new RectangleInMm(
-                    12.7f, 76.4f, 148.7f, 78.9f),
-                "diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.")
+                    12.7f, 76.4f, 166.4f, 78.9f),
+                "erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum")
         ;
     }
 }

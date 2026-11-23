@@ -76,7 +76,7 @@ class ProviderMarkdownTest {
         // arrange
         File inputFile = new File("src/test/resources/" + mdFileName);
         File outputFile = File.createTempFile("md-to-pdf-" + mdFileName + "-", ".pdf");
-        //outputFile.deleteOnExit();
+        outputFile.deleteOnExit();
         // act
         markdownProviderUnderTest.createPdf(inputFile, outputFile, DIMENSION_A4_PORTRAIT);
         // assert (simple)
